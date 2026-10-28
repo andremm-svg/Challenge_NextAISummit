@@ -1,0 +1,86 @@
+﻿Banca Demo SA - Extras de cont
+IBAN;RO80BDEM8039159496558211
+Perioada;10.10.2025 - 25.09.2026
+
+Data tranzactiei;Detalii tranzactie;Debit;Credit
+10.10.2025;Plată salarii luna 10;27.753,76;
+18.10.2025;Plată furnizor servicii;47.122,28;
+23.10.2025;OP primit de la CLIENT ALFA SRL;;50.881,07
+24.10.2025;Încasare factură CLIENT ALFA SRL;;60.890,27
+25.10.2025;Plată ANAF contribuții sociale;19.642,31;
+04.11.2025;Transfer primit CLIENT BETA SA contravaloare factura;;44.712,90
+04.11.2025;Transfer primit CLIENT GAMMA SRL contravaloare factura;;73.795,14
+10.11.2025;Drepturi salariale 11/2026;28.374,47;
+19.11.2025;OP primit de la CLIENT DELTA SRL;;14.286,48
+20.11.2025;Plată furnizor servicii;49.633,54;
+25.11.2025;Plată ANAF contribuții sociale;19.642,31;
+09.12.2025;Transfer primit CLIENT DELTA SRL contravaloare factura;;29.808,07
+10.12.2025;Plată furnizor servicii;75.628,07;
+10.12.2025;Stat de plată luna 12;28.529,31;
+16.12.2025;OP primit de la CLIENT ZETA SRL;;6.541,91
+22.12.2025;OP primit de la CLIENT DELTA SRL;;40.452,81
+24.12.2025;OP primit de la CLIENT GAMMA SRL;;59.104,13
+25.12.2025;Plată ANAF contribuții sociale;19.642,31;
+10.01.2026;Stat de plată luna 01;28.589,71;
+11.01.2026;Încasare factură CLIENT ZETA SRL;;31.406,73
+20.01.2026;Plată furnizor servicii;34.400,46;
+21.01.2026;Încasare factură CLIENT DELTA SRL;;80.043,29
+25.01.2026;Plată ANAF contribuții sociale;19.642,31;
+02.02.2026;Încasare factură CLIENT ZETA SRL;;62.200,12
+07.02.2026;Încasare factură CLIENT ALFA SRL;;70.859,72
+10.02.2026;Plată furnizor servicii;66.625,07;
+10.02.2026;Plată salarii luna 02;27.844,47;
+14.02.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;2.652,40
+21.02.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;20.924,26
+25.02.2026;Plată ANAF contribuții sociale;19.642,31;
+10.03.2026;Stat de plată luna 03;27.975,78;
+12.03.2026;Încasare factură CLIENT DELTA SRL;;13.352,80
+14.03.2026;OP primit de la CLIENT ALFA SRL;;10.121,73
+14.03.2026;Încasare factură CLIENT GAMMA SRL;;19.050,44
+15.03.2026;OP primit de la CLIENT GAMMA SRL;;46.785,13
+23.03.2026;Încasare factură CLIENT EPSILON SA;;26.614,89
+25.03.2026;Plată ANAF contribuții sociale;19.642,31;
+25.03.2026;Plată furnizor servicii;64.309,62;
+03.04.2026;Încasare factură CLIENT ALFA SRL;;3.684,93
+03.04.2026;OP primit de la CLIENT GAMMA SRL;;18.163,93
+05.04.2026;OP primit de la CLIENT ALFA SRL;;3.340,93
+10.04.2026;Plată salarii luna 04;27.294,75;
+11.04.2026;Plată furnizor servicii;82.239,48;
+18.04.2026;Transfer primit CLIENT BETA SA contravaloare factura;;32.191,14
+20.04.2026;OP primit de la CLIENT EPSILON SA;;100.240,46
+25.04.2026;Plată ANAF contribuții sociale;19.642,31;
+10.05.2026;Plată furnizor servicii;48.712,56;
+10.05.2026;Drepturi salariale 05/2026;28.461,34;
+13.05.2026;OP primit de la CLIENT EPSILON SA;;28.423,64
+16.05.2026;Transfer primit CLIENT ALFA SRL contravaloare factura;;46.041,05
+16.05.2026;Încasare factură CLIENT EPSILON SA;;19.624,16
+23.05.2026;Transfer primit CLIENT ALFA SRL contravaloare factura;;723,07
+25.05.2026;Plată ANAF contribuții sociale;19.642,31;
+10.06.2026;Stat de plată luna 06;27.233,67;
+13.06.2026;Plată furnizor servicii;54.701,07;
+16.06.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;43.700,94
+24.06.2026;Încasare factură CLIENT EPSILON SA;;62.588,02
+25.06.2026;Plată ANAF contribuții sociale;19.642,31;
+04.07.2026;Plată furnizor servicii;66.391,04;
+10.07.2026;Stat de plată luna 07;27.476,60;
+16.07.2026;Încasare factură CLIENT DELTA SRL;;53.348,35
+17.07.2026;OP primit de la CLIENT EPSILON SA;;54.119,21
+18.07.2026;OP primit de la CLIENT EPSILON SA;;3.657,36
+20.07.2026;OP primit de la CLIENT ALFA SRL;;26.226,12
+24.07.2026;OP primit de la CLIENT EPSILON SA;;15.686,25
+25.07.2026;Plată ANAF contribuții sociale;19.642,31;
+03.08.2026;Încasare factură CLIENT GAMMA SRL;;33.061,91
+07.08.2026;Plată furnizor servicii;48.222,07;
+10.08.2026;Stat de plată luna 08;28.380,74;
+13.08.2026;Încasare factură CLIENT GAMMA SRL;;17.536,42
+16.08.2026;OP primit de la CLIENT ALFA SRL;;36.334,11
+23.08.2026;OP primit de la CLIENT ALFA SRL;;36.928,22
+25.08.2026;Plată ANAF contribuții sociale;19.642,31;
+05.09.2026;Transfer primit CLIENT DELTA SRL contravaloare factura;;40.386,00
+07.09.2026;Încasare factură CLIENT BETA SA;;8.385,18
+10.09.2026;Plată salarii luna 09;28.201,95;
+11.09.2026;OP primit de la CLIENT ALFA SRL;;40.593,98
+13.09.2026;Plată furnizor servicii;74.918,45;
+16.09.2026;Transfer primit CLIENT BETA SA contravaloare factura;;4.002,17
+21.09.2026;Încasare factură CLIENT DELTA SRL;;39.009,63
+25.09.2026;Plată ANAF contribuții sociale;19.642,31;

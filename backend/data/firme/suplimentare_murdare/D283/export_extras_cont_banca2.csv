@@ -1,0 +1,29 @@
+﻿Banca Demo SA - Extras de cont
+IBAN;RO80BDEM4339079710439259
+Perioada;12.10.2025 - 16.09.2026
+
+Data tranzactiei;Detalii tranzactie;Debit;Credit
+12.10.2025;Comision administrare cont;35,36;
+18.10.2025;Încasare factură CLIENT EPSILON SA;;8.800,03
+11.11.2025;Comision administrare cont;21,09;
+11.11.2025;OP primit de la CLIENT ZETA SRL;;10.080,84
+03.12.2025;Încasare factură CLIENT DELTA SRL;;9.816,44
+17.12.2025;Comision administrare cont;35,70;
+06.01.2026;Comision administrare cont;23,12;
+09.01.2026;Transfer primit CLIENT DELTA SRL contravaloare factura;;11.023,31
+15.02.2026;Comision administrare cont;18,24;
+23.02.2026;Transfer primit CLIENT BETA SA contravaloare factura;;9.981,09
+21.03.2026;Încasare factură CLIENT EPSILON SA;;8.687,43
+22.03.2026;Comision administrare cont;35,87;
+04.04.2026;OP primit de la CLIENT BETA SA;;10.727,61
+26.04.2026;Comision administrare cont;29,87;
+16.05.2026;OP primit de la CLIENT ALFA SRL;;9.380,37
+21.05.2026;Comision administrare cont;38,91;
+19.06.2026;Încasare factură CLIENT GAMMA SRL;;8.387,50
+27.06.2026;Comision administrare cont;17,36;
+03.07.2026;OP primit de la CLIENT GAMMA SRL;;9.726,10
+04.07.2026;Comision administrare cont;34,98;
+06.08.2026;Comision administrare cont;30,86;
+16.08.2026;OP primit de la CLIENT DELTA SRL;;10.812,25
+05.09.2026;Comision administrare cont;35,13;
+16.09.2026;OP primit de la CLIENT ALFA SRL;;9.639,67

@@ -1,0 +1,88 @@
+﻿Banca Demo SA - Extras de cont
+IBAN;RO83BDEM1480376918643944
+Perioada;07.10.2025 - 25.09.2026
+
+Data tranzactiei;Detalii tranzactie;Debit;Credit
+07.10.2025;Încasare factură CLIENT ZETA SRL;;50.129,66
+07.10.2025;Plată furnizor servicii;105.099,03;
+10.10.2025;Stat de plată luna 10;71.139,29;
+18.10.2025;OP primit de la CLIENT DELTA SRL;;79.159,10
+18.10.2025;Transfer primit CLIENT ZETA SRL contravaloare factura;;67.275,38
+20.10.2025;OP primit de la CLIENT ZETA SRL;;18.229,08
+25.10.2025;Plată ANAF contribuții sociale;49.432,56;
+27.10.2025;Transfer primit CLIENT DELTA SRL contravaloare factura;;22.381,45
+03.11.2025;OP primit de la CLIENT GAMMA SRL;;120.816,80
+10.11.2025;Drepturi salariale 11/2026;69.736,50;
+18.11.2025;Plată furnizor servicii;74.148,24;
+25.11.2025;Plată ANAF contribuții sociale;49.432,56;
+27.11.2025;Încasare factură CLIENT GAMMA SRL;;46.500,06
+06.12.2025;Încasare factură CLIENT EPSILON SA;;49.562,72
+07.12.2025;OP primit de la CLIENT BETA SA;;74.603,07
+10.12.2025;Plată salarii luna 12;71.543,50;
+20.12.2025;OP primit de la CLIENT DELTA SRL;;65.614,02
+23.12.2025;OP primit de la CLIENT EPSILON SA;;57.083,67
+23.12.2025;Plată furnizor servicii;141.996,82;
+25.12.2025;Plată ANAF contribuții sociale;49.432,56;
+10.01.2026;Stat de plată luna 01;72.071,92;
+12.01.2026;Transfer primit CLIENT ALFA SRL contravaloare factura;;37.232,69
+19.01.2026;Încasare factură CLIENT BETA SA;;73.137,53
+20.01.2026;Plată furnizor servicii;130.218,52;
+24.01.2026;Încasare factură CLIENT EPSILON SA;;104.132,47
+25.01.2026;Plată ANAF contribuții sociale;49.432,56;
+27.01.2026;Transfer primit CLIENT DELTA SRL contravaloare factura;;21.217,34
+04.02.2026;OP primit de la MAGNUS FOOD SRL;;60.768,13
+09.02.2026;OP primit de la CLIENT ALFA SRL;;14.143,37
+10.02.2026;Stat de plată luna 02;71.816,93;
+18.02.2026;Plată furnizor servicii;76.777,65;
+21.02.2026;OP primit de la CLIENT GAMMA SRL;;50.455,79
+22.02.2026;Încasare factură CLIENT GAMMA SRL;;25.279,27
+23.02.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;44.426,32
+25.02.2026;Plată ANAF contribuții sociale;49.432,56;
+09.03.2026;Plată furnizor servicii;80.148,65;
+10.03.2026;Plată salarii luna 03;69.539,75;
+19.03.2026;OP primit de la CLIENT GAMMA SRL;;80.182,97
+25.03.2026;OP primit de la MAGNUS FOOD SRL;;122.420,39
+25.03.2026;Plată ANAF contribuții sociale;49.432,56;
+05.04.2026;Transfer primit MAGNUS FOOD SRL contravaloare factura;;52.657,29
+07.04.2026;OP primit de la CLIENT GAMMA SRL;;52.616,05
+09.04.2026;Plată furnizor servicii;87.245,98;
+10.04.2026;Plată salarii luna 04;72.107,34;
+13.04.2026;OP primit de la CLIENT GAMMA SRL;;48.758,45
+20.04.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;5.548,08
+23.04.2026;OP primit de la CLIENT ZETA SRL;;25.767,52
+25.04.2026;Plată ANAF contribuții sociale;49.432,56;
+05.05.2026;Plată furnizor servicii;51.112,32;
+08.05.2026;OP primit de la CLIENT ALFA SRL;;78.244,53
+10.05.2026;Stat de plată luna 05;70.421,15;
+15.05.2026;OP primit de la MAGNUS FOOD SRL;;81.103,30
+25.05.2026;Plată ANAF contribuții sociale;49.432,56;
+05.06.2026;OP primit de la CLIENT ALFA SRL;;13.583,35
+09.06.2026;OP primit de la CLIENT ALFA SRL;;74.856,73
+10.06.2026;Drepturi salariale 06/2026;70.382,55;
+13.06.2026;Plată furnizor servicii;114.700,09;
+14.06.2026;OP primit de la CLIENT DELTA SRL;;58.093,13
+15.06.2026;Încasare factură MAGNUS FOOD SRL;;101.795,97
+25.06.2026;Plată ANAF contribuții sociale;49.432,56;
+27.06.2026;Încasare factură CLIENT ZETA SRL;;13.635,31
+10.07.2026;Plată salarii luna 07;72.325,63;
+11.07.2026;Transfer primit CLIENT EPSILON SA contravaloare factura;;15.855,02
+14.07.2026;Transfer primit CLIENT ALFA SRL contravaloare factura;;4.426,81
+16.07.2026;OP primit de la CLIENT GAMMA SRL;;60.371,90
+21.07.2026;Transfer primit MAGNUS FOOD SRL contravaloare factura;;73.576,31
+21.07.2026;OP primit de la CLIENT GAMMA SRL;;73.384,29
+25.07.2026;Plată ANAF contribuții sociale;49.432,56;
+25.07.2026;Plată furnizor servicii;91.204,52;
+05.08.2026;OP primit de la CLIENT EPSILON SA;;37.168,47
+07.08.2026;Plată furnizor servicii;73.929,56;
+09.08.2026;Încasare factură CLIENT ZETA SRL;;22.861,70
+10.08.2026;Stat de plată luna 08;69.325,94;
+19.08.2026;Transfer primit MAGNUS FOOD SRL contravaloare factura;;60.121,93
+21.08.2026;Încasare factură CLIENT EPSILON SA;;59.854,23
+25.08.2026;Plată ANAF contribuții sociale;49.432,56;
+02.09.2026;OP primit de la CLIENT GAMMA SRL;;16.720,28
+10.09.2026;Plată salarii luna 09;72.059,83;
+15.09.2026;Încasare factură CLIENT ZETA SRL;;40.695,85
+15.09.2026;Plată furnizor servicii;76.019,40;
+17.09.2026;Încasare factură MAGNUS FOOD SRL;;93.146,32
+22.09.2026;OP primit de la CLIENT ZETA SRL;;30.306,25
+25.09.2026;Plată ANAF contribuții sociale;49.432,56;

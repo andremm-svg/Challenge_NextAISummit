@@ -6,6 +6,14 @@ Produce:
   data/firme/dosare/<id>/       documentele fiecarui dosar: cerere_credit.pdf,
                                 situatii_financiare.pdf (SRL) sau declaratie_unica.pdf (PFA), extras_cont.csv
   data/firme/etichete.json      eticheta reala a fiecarui dosar (FOLOSITA DOAR LA EVALUARE, agentul nu o vede)
+  data/firme/suplimentare/      documentele trimise de client la cerere (extrase de la alte banci)
+  data/firme/dosare_murdare/    aceleasi dosare in formate "murdare" (alte etichete, diacritice, tabele, alte banci, scanari)
+  demo_dosare/                  doua dosare de incarcat din aplicatie in demo (generate_demo.py)
+
+Setul are doua parti, generate in aceeasi rulare:
+  D001-D198  setul initial (40 fraude, 158 legitime), neschimbat
+  D199-...   extensia: fraude cu contract fictiv si ~300 de dosare legitime in plus, multe "grele"
+             (seamana cu frauda, dar sunt legitime), ca rata alarmelor false sa fie masurata pe mai multe exemple negative
 
 Rulare:  pip install reportlab pypdf  &&  python tools_dev/generate_firme.py
 Toate firmele, persoanele, adresele si conturile sunt INVENTATE.
@@ -121,7 +129,7 @@ def months_back(d: date, n: int) -> date:
 def write_pdf(path: Path, title: str, lines: list[str], hidden: str | None = None):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp.pdf")
-    c = canvas.Canvas(str(tmp), pagesize=A4)
+    c = canvas.Canvas(str(tmp), pagesize=A4, invariant=1)
     w, h = A4
     c.setFont("Helvetica-Bold", 13)
     c.drawString(55, h - 65, title)
@@ -207,7 +215,11 @@ def statement(e, incasari_anuale, salarii_lunare, luni=12):
     return rows
 
 
-def write_case(case_id, e, loan, doc_cifre, rows, hidden=False):
+WRITTEN = []  # tot ce s-a scris, pentru varianta "murdara"
+
+
+def write_case(case_id, e, loan, doc_cifre, rows, hidden=False, contract=None):
+    WRITTEN.append((case_id, e, loan, doc_cifre, rows, hidden, contract))
     d = OUT / "dosare" / case_id
     if e["tip"] == "SRL":
         hdr, idl = "CERERE DE FINANTARE - PERSOANE JURIDICE", f"CUI: {e['cui']}"
@@ -243,6 +255,8 @@ def write_case(case_id, e, loan, doc_cifre, rows, hidden=False):
         w.writerow(["data", "descriere", "suma"])
         for dt, desc, s in rows:
             w.writerow([dt.isoformat(), desc, f"{s:.2f}"])
+    if contract:
+        write_pdf(d / "contract.pdf", contract["titlu"], contract["linii"])
 
 
 R2 = random.Random(SEED + 1)  # RNG separat: documentele suplimentare nu schimba restul setului
@@ -449,3 +463,11 @@ def build():
 
 if __name__ == "__main__":
     build()
+    import generate_extensii  # noqa: E402
+
+    G = sys.modules[__name__]  # starea generatorului (RNG, valori unice deja folosite) continua in extensie
+    generate_extensii.extensii(G)
+    generate_extensii.murdare(G)
+    import generate_demo  # noqa: E402
+
+    generate_demo.demo()  # cele doua dosare de incarcat in demo (firmele lor intra in registre)

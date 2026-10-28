@@ -33,3 +33,66 @@ statut_fiscal:
 retea:
   fereastra_zile: 180               # cereri depuse in aceasta perioada
   critic_de_la: 2                   # alte firme legate -> suspiciune de retea
+
+contracte:
+  # contracte cu clientii, aduse ca dovada a veniturilor viitoare
+  capacitate_avertizare: 0.5        # valoarea anuala a contractului / cifra de afaceri a beneficiarului
+  capacitate_critic: 1.0            # beneficiarul nu poate plati mai mult decat incaseaza intr-un an
+  beneficiar_nou_luni: 6            # beneficiar infiintat cu putin inainte de contract
+  luni_fara_plati_admise: 2         # dupa atatea luni de derulare, platile trebuie sa apara in extras
+  plati_avertizare_sub: 0.5         # plati primite de la beneficiar / plati asteptate
+  plati_critic_sub: 0.1
+
+calitate_documente:
+  text_minim_caractere: 30          # sub acest prag un PDF e considerat scanat (fara strat de text)
+
+citire:
+  # Documente "murdare": etichete alternative, cu majuscule si fara diacritice (textul e normalizat inainte)
+  continut:
+    cerere_credit: ["CERERE DE FINANTARE", "CERERE DE CREDIT", "CERERE FINANTARE", "SOLICITARE DE FINANTARE", "SOLICITARE CREDIT"]
+    situatii_financiare: ["SITUATII FINANCIARE", "SITUATIILE FINANCIARE", "BILANT", "CONTUL DE PROFIT SI PIERDERE", "DATE DIN BILANT"]
+    declaratie_unica: ["DECLARATIE UNICA", "DECLARATIA UNICA", "FORMULAR 212", "D212"]
+    contract: ["CONTRACT DE PRESTARI", "CONTRACT DE SERVICII", "CONTRACT DE VANZARE", "CONTRACT DE FURNIZARE", "CONTRACT DE EXECUTIE", "CONTRACT CADRU", "CONTRACT NR"]
+  nume_fisier:
+    cerere_credit: ["CERERE", "SOLICITARE"]
+    situatii_financiare: ["SITUATII", "BILANT", "FINANCIAR"]
+    declaratie_unica: ["DECLARATIE", "D212", "DECL"]
+    contract: ["CONTRACT"]
+  campuri:
+    cerere_credit:
+      denumire: {tip: text, etichete: ["DENUMIRE SOLICITANT", "DENUMIREA SOLICITANTULUI", "SOLICITANT", "DENUMIRE", "NUME FIRMA", "FIRMA"]}
+      forma: {tip: text, etichete: ["FORMA JURIDICA", "FORMA DE ORGANIZARE", "TIP ENTITATE"]}
+      cui: {tip: cui, etichete: ["CUI/CIF", "COD UNIC DE INREGISTRARE", "COD DE IDENTIFICARE FISCALA", "COD FISCAL", "CUI", "CIF"]}
+      reprezentant: {tip: text, etichete: ["REPREZENTANT LEGAL", "REPREZENTANTUL LEGAL", "ADMINISTRATOR", "REPREZENTANT"]}
+      adresa: {tip: text, etichete: ["SEDIU SOCIAL", "SEDIUL SOCIAL", "ADRESA SEDIU", "SEDIU", "ADRESA"]}
+      telefon: {tip: text, etichete: ["TELEFON", "NR. TELEFON", "TEL."]}
+      caen: {tip: intreg, etichete: ["COD CAEN", "CAEN", "ACTIVITATE PRINCIPALA"]}
+      suma: {tip: suma, etichete: ["SUMA SOLICITATA", "VALOARE CREDIT SOLICITATA", "VALOAREA CREDITULUI SOLICITAT", "VALOAREA FINANTARII", "SUMA"]}
+      luni: {tip: durata, etichete: ["PERIOADA DE RAMBURSARE", "PERIOADA", "DURATA CREDITULUI", "DURATA", "TERMEN"]}
+      rata_lunara: {tip: suma, etichete: ["RATA LUNARA ESTIMATA", "RATA LUNARA", "RATA ESTIMATA"]}
+      scop: {tip: text, etichete: ["SCOPUL CREDITULUI", "DESTINATIA CREDITULUI", "DESTINATIA FINANTARII", "SCOP", "DESTINATIE"]}
+      data_cerere: {tip: data, etichete: ["DATA CERERII", "DATA DEPUNERII", "DATA SOLICITARII", "DATA"]}
+    situatii_financiare:
+      cui: {tip: cui, etichete: ["CUI/CIF", "COD UNIC DE INREGISTRARE", "COD FISCAL", "CUI", "CIF"]}
+      an: {tip: intreg, etichete: ["EXERCITIUL FINANCIAR", "EXERCITIUL", "AN FISCAL", "ANUL"]}
+      cifra_afaceri: {tip: suma, etichete: ["CIFRA DE AFACERI NETA", "CIFRA DE AFACERI", "CIFRA AFACERI"]}
+      venituri: {tip: suma, etichete: ["VENITURI TOTALE", "TOTAL VENITURI", "VENITURI - TOTAL"]}
+      cheltuieli: {tip: suma, etichete: ["CHELTUIELI TOTALE", "TOTAL CHELTUIELI", "CHELTUIELI - TOTAL"]}
+      profit_net: {tip: suma, etichete: ["PROFIT NET", "PROFITUL NET", "REZULTATUL NET AL EXERCITIULUI", "REZULTATUL NET", "REZULTAT NET"]}
+      angajati: {tip: intreg, etichete: ["NUMAR MEDIU DE SALARIATI", "NUMARUL MEDIU DE SALARIATI", "NUMAR MEDIU SALARIATI", "EFECTIV MEDIU DE PERSONAL", "NR. MEDIU SALARIATI", "NUMAR SALARIATI"]}
+    declaratie_unica:
+      cui: {tip: cui, etichete: ["CUI/CIF", "COD FISCAL", "CIF"]}
+      an: {tip: intreg, etichete: ["ANUL DE REALIZARE A VENITULUI", "AN FISCAL", "ANUL"]}
+      cifra_afaceri: {tip: suma, etichete: ["VENIT BRUT REALIZAT", "VENITUL BRUT", "VENIT BRUT"]}
+      cheltuieli: {tip: suma, etichete: ["CHELTUIELI DEDUCTIBILE", "CHELTUIELILE DEDUCTIBILE"]}
+      profit_net: {tip: suma, etichete: ["VENIT NET ANUAL", "VENITUL NET ANUAL", "VENIT NET"]}
+  extras:
+    coloane:
+      data: ["DATA", "DATA TRANZACTIEI", "DATA OPERATIUNII", "DATA OPERATIEI", "DATE", "DATA VALUTA", "DATA INREGISTRARII"]
+      descriere: ["DESCRIERE", "DETALII", "DETALII TRANZACTIE", "EXPLICATIE", "EXPLICATII", "DESCRIPTION", "OPERATIUNE", "DETALII OPERATIUNE"]
+      suma: ["SUMA", "VALOARE", "AMOUNT", "SUMA (RON)", "SUMA RON"]
+      debit: ["DEBIT", "PLATI", "DEBIT (RON)", "IESIRI"]
+      credit: ["CREDIT", "INCASARI", "CREDIT (RON)", "INTRARI"]
+    # tranzactii pozitive care sunt incasari de la clienti (nu credite, depuneri proprii sau transferuri intre conturi)
+    incasari: ["INCASARE", "TRANSFER PRIMIT", "PLATA PRIMITA", "OP PRIMIT", "CONTRAVALOARE FACTURA", "INCASARI CLIENT"]
+    salarii: ["PLATA SALARII", "SALARII", "SALARIU", "STAT DE PLATA", "DREPTURI SALARIALE", "PAYROLL"]

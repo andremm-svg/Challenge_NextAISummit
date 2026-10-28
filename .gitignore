@@ -5,3 +5,8 @@ __pycache__/
 backend/data/decizii_analist.jsonl
 backend/tests/rezultate/
 backend/data/firme/rezultate/
+backend/data/feedback.db
+backend/data/feedback_simulare.db
+backend/data/recalibrari.jsonl
+backend/data/firme/portofoliu_*.json
+backend/data/incarcate/

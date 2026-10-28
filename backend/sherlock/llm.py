@@ -105,14 +105,28 @@ class BedrockLLM:
         return {"tools": [{"toolSpec": {"name": t["function"]["name"], "description": t["function"]["description"],
                                         "inputSchema": {"json": t["function"]["parameters"]}}} for t in tools]}
 
+    _fara_temperatura = False  # modelele Claude noi nu mai accepta parametrul temperature
+
+    def _converse(self, max_tokens: int, **kwargs):
+        # modelele noi gandesc inainte sa raspunda: plafonul trebuie sa lase loc si pentru gandire, si pentru text
+        max_tokens = max(max_tokens, int(os.getenv("BEDROCK_MAX_TOKENS", "4000")))
+        cfg = {"maxTokens": max_tokens} if self._fara_temperatura else {"temperature": 0, "maxTokens": max_tokens}
+        try:
+            return self.client.converse(modelId=self.model, inferenceConfig=cfg, **kwargs)
+        except Exception as e:  # noqa: BLE001
+            if self._fara_temperatura or "temperature" not in str(e):
+                raise
+            self._fara_temperatura = True
+            return self.client.converse(modelId=self.model, inferenceConfig={"maxTokens": max_tokens}, **kwargs)
+
     def chat(self, messages: list, tools: list | None = None, max_tokens: int = 700):
         system, msgs = self._convert(messages)
-        kwargs = dict(modelId=self.model, messages=msgs, inferenceConfig={"temperature": 0, "maxTokens": max_tokens})
+        kwargs = dict(messages=msgs)
         if system:
             kwargs["system"] = system
         if tools:
             kwargs["toolConfig"] = self._tool_config(tools)
-        r = self.client.converse(**kwargs)
+        r = self._converse(max_tokens, **kwargs)
         text, calls = [], []
         for block in r["output"]["message"]["content"]:
             if "text" in block:
@@ -125,6 +139,12 @@ class BedrockLLM:
 
     def complete(self, prompt: str, max_tokens: int = 600) -> str:
         return self.chat([{"role": "user", "content": prompt}], max_tokens=max_tokens).content
+
+    def read_image(self, png: bytes, prompt: str, max_tokens: int = 1500) -> str:
+        """OCR pentru documente scanate: Claude citeste imaginea paginii (Converse, bloc image)."""
+        r = self._converse(max_tokens, messages=[{"role": "user", "content": [{"image": {"format": "png", "source": {"bytes": png}}},
+                                                                             {"text": prompt}]}])
+        return "\n".join(b["text"] for b in r["output"]["message"]["content"] if "text" in b)
 
 
 def get_llm():

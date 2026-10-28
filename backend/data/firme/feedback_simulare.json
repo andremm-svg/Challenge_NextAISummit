@@ -1,0 +1,172 @@
+{
+ "raport": {
+  "dosare_cu_feedback": 253,
+  "fraude_confirmate": 26,
+  "legitime_confirmate": 227,
+  "override": 10,
+  "pe_verificare": {
+   "statut_fiscal": {
+    "alarme": 6,
+    "confirmate": 0,
+    "infirmate": 6,
+    "precizie": 0.0
+   },
+   "flux_cont": {
+    "alarme": 33,
+    "confirmate": 10,
+    "infirmate": 23,
+    "precizie": 0.303
+   },
+   "salarii": {
+    "alarme": 11,
+    "confirmate": 4,
+    "infirmate": 7,
+    "precizie": 0.364
+   },
+   "istoric_firma": {
+    "alarme": 18,
+    "confirmate": 13,
+    "infirmate": 5,
+    "precizie": 0.722
+   },
+   "bilant_vs_anaf": {
+    "alarme": 3,
+    "confirmate": 3,
+    "infirmate": 0,
+    "precizie": 1.0
+   },
+   "retea": {
+    "alarme": 6,
+    "confirmate": 6,
+    "infirmate": 0,
+    "precizie": 1.0
+   },
+   "contracte": {
+    "alarme": 6,
+    "confirmate": 6,
+    "infirmate": 0,
+    "precizie": 1.0
+   }
+  }
+ },
+ "propuneri": [
+  {
+   "prag": "flux_cont.critic_sub",
+   "masuratoare": "acoperire_flux",
+   "actual": 0.5,
+   "exemple_frauda": 26,
+   "exemple_legitime": 227,
+   "propus": 0.384,
+   "efect_pe_feedback": {
+    "fraude_prinse": "10 -> 10 din 26",
+    "alarme_false": "3 -> 0 din 227"
+   },
+   "motiv": "separa fraudele confirmate de dosarele legitime",
+   "valori": {
+    "frauda_max": 1.1703,
+    "legitim_min": 0.4112
+   }
+  },
+  {
+   "prag": "salarii.critic_sub",
+   "masuratoare": "acoperire_salarii",
+   "actual": 0.3,
+   "exemple_frauda": 15,
+   "exemple_legitime": 183,
+   "propus": 0.157,
+   "efect_pe_feedback": {
+    "fraude_prinse": "4 -> 4 din 15",
+    "alarme_false": "7 -> 2 din 183"
+   },
+   "motiv": "cel mai mic numar de alarme false",
+   "valori": {
+    "frauda_max": 2.0529,
+    "legitim_min": 0.0871
+   }
+  },
+  {
+   "prag": "contracte.plati_critic_sub",
+   "masuratoare": "acoperire_plati_contract",
+   "actual": 0.1,
+   "exemple_frauda": 4,
+   "exemple_legitime": 25,
+   "propus": null,
+   "motiv": "pragul actual e bun pe feedback (4/4 fraude, 0 alarme false)"
+  },
+  {
+   "prag": "bilant_vs_anaf.critic",
+   "masuratoare": "diferenta_bilant",
+   "actual": 0.25,
+   "exemple_frauda": 26,
+   "exemple_legitime": 227,
+   "propus": null,
+   "motiv": "pragul actual e bun pe feedback (3/26 fraude, 0 alarme false)"
+  }
+ ],
+ "validare_test": {
+  "flux_cont.critic_sub": {
+   "propus": 0.384,
+   "inainte": {
+    "simplu": {
+     "recall": 0.923,
+     "precizie": 0.75,
+     "alarme_false": 8,
+     "legitime_la_revizuire": 0.247
+    },
+    "complet": {
+     "recall": 0.923,
+     "precizie": 1.0,
+     "alarme_false": 0,
+     "legitime_la_revizuire": 0.044
+    }
+   },
+   "dupa": {
+    "simplu": {
+     "recall": 0.923,
+     "precizie": 0.857,
+     "alarme_false": 4,
+     "legitime_la_revizuire": 0.264
+    },
+    "complet": {
+     "recall": 0.923,
+     "precizie": 1.0,
+     "alarme_false": 0,
+     "legitime_la_revizuire": 0.044
+    }
+   },
+   "recomandat": true
+  },
+  "salarii.critic_sub": {
+   "propus": 0.157,
+   "inainte": {
+    "simplu": {
+     "recall": 0.923,
+     "precizie": 0.75,
+     "alarme_false": 8,
+     "legitime_la_revizuire": 0.247
+    },
+    "complet": {
+     "recall": 0.923,
+     "precizie": 1.0,
+     "alarme_false": 0,
+     "legitime_la_revizuire": 0.044
+    }
+   },
+   "dupa": {
+    "simplu": {
+     "recall": 0.846,
+     "precizie": 0.759,
+     "alarme_false": 7,
+     "legitime_la_revizuire": 0.251
+    },
+    "complet": {
+     "recall": 0.846,
+     "precizie": 1.0,
+     "alarme_false": 0,
+     "legitime_la_revizuire": 0.044
+    }
+   },
+   "recomandat": false
+  }
+ }
+}

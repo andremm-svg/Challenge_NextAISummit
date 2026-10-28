@@ -225,7 +225,6 @@ def investigate(case_id: str, paths: list[str], mode: str = "auto", domeniu: str
         "eticheta": VERDICTE[verdict],
         "scor_risc": risk_score(findings),
         "explicatie": summary,
-        "decizie_finala": "Aparține analistului uman. Sherlock pregătește, omul decide.",
         "constatari": findings,
         "urmatorii_pasi": _next_steps(findings, verdict),
         "documente": {t: d["file"] for t, d in case.docs.items()},
@@ -236,6 +235,8 @@ def investigate(case_id: str, paths: list[str], mode: str = "auto", domeniu: str
     }
     if "retea" in case.state:
         report["retea"] = case.state["retea"]
+    if hasattr(dom, "masuratori"):
+        report["masuratori"] = dom.masuratori(case)
     return report
 
 

@@ -1,0 +1,57 @@
+﻿Banca Demo SA - Extras de cont
+IBAN;RO67BDEM6701773014229968
+Perioada;10.10.2025 - 18.09.2026
+
+Data tranzactiei;Detalii tranzactie;Debit;Credit
+10.10.2025;Încasare factură CLIENT EPSILON SA;;10.162,89
+17.10.2025;Plată furnizor servicii;9.047,66;
+20.10.2025;OP primit de la CLIENT EPSILON SA;;12.781,01
+09.11.2025;OP primit de la CLIENT BETA SA;;5.669,59
+09.11.2025;Plată furnizor servicii;9.335,04;
+11.11.2025;Încasare factură CLIENT EPSILON SA;;5.856,50
+17.11.2025;OP primit de la CLIENT GAMMA SRL;;5.238,04
+03.12.2025;OP primit de la CLIENT ALFA SRL;;4.862,58
+06.12.2025;Încasare factură CLIENT EPSILON SA;;777,40
+06.12.2025;Plată furnizor servicii;7.811,21;
+07.12.2025;Transfer primit CLIENT BETA SA contravaloare factura;;3.798,70
+16.12.2025;OP primit de la CLIENT DELTA SRL;;3.895,03
+20.12.2025;Transfer primit CLIENT BETA SA contravaloare factura;;3.153,21
+06.01.2026;Transfer primit CLIENT EPSILON SA contravaloare factura;;3.697,91
+10.01.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;4.267,80
+14.01.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;3.807,45
+18.01.2026;Încasare factură CLIENT DELTA SRL;;2.684,16
+18.01.2026;Plată furnizor servicii;9.919,60;
+21.01.2026;Încasare factură CLIENT EPSILON SA;;6.548,01
+02.02.2026;OP primit de la CLIENT BETA SA;;5.539,37
+07.02.2026;Transfer primit CLIENT EPSILON SA contravaloare factura;;1.185,43
+10.02.2026;Încasare factură CLIENT EPSILON SA;;6.880,84
+10.02.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;2.872,62
+12.02.2026;Plată furnizor servicii;9.737,36;
+20.02.2026;Încasare factură CLIENT ZETA SRL;;4.262,24
+03.03.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;1.037,28
+10.03.2026;Încasare factură CLIENT DELTA SRL;;13.928,41
+23.03.2026;Transfer primit CLIENT EPSILON SA contravaloare factura;;6.733,32
+25.03.2026;Plată furnizor servicii;12.138,15;
+04.04.2026;Transfer primit CLIENT EPSILON SA contravaloare factura;;10.428,02
+08.04.2026;Transfer primit CLIENT BETA SA contravaloare factura;;2.583,43
+08.04.2026;Transfer primit CLIENT DELTA SRL contravaloare factura;;202,62
+08.04.2026;Plată furnizor servicii;6.714,99;
+17.04.2026;OP primit de la CLIENT EPSILON SA;;8.590,29
+08.05.2026;Încasare factură CLIENT DELTA SRL;;11.921,79
+18.05.2026;OP primit de la CLIENT DELTA SRL;;8.397,78
+22.05.2026;Plată furnizor servicii;6.277,73;
+08.06.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;11.989,30
+09.06.2026;Plată furnizor servicii;6.598,87;
+23.06.2026;OP primit de la CLIENT ZETA SRL;;6.002,73
+13.07.2026;Încasare factură CLIENT ZETA SRL;;14.266,52
+16.07.2026;Plată furnizor servicii;8.448,15;
+22.07.2026;Încasare factură CLIENT ALFA SRL;;6.469,09
+24.07.2026;OP primit de la CLIENT EPSILON SA;;611,67
+06.08.2026;OP primit de la CLIENT EPSILON SA;;8.565,59
+08.08.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;3.818,41
+10.08.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;918,03
+17.08.2026;Transfer primit CLIENT EPSILON SA contravaloare factura;;8.842,59
+21.08.2026;Plată furnizor servicii;10.991,64;
+11.09.2026;OP primit de la CLIENT ALFA SRL;;24.067,35
+11.09.2026;Plată furnizor servicii;12.044,33;
+18.09.2026;OP primit de la CLIENT BETA SA;;1.079,87

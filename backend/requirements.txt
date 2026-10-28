@@ -8,3 +8,4 @@ pyyaml
 pymupdf
 pymupdf4llm
 boto3
+mcp>=2.3

@@ -1,0 +1,47 @@
+{
+ "set": "test",
+ "date": "curate",
+ "dosare": 154,
+ "randuri": [
+  {
+   "configuratie": "Verificare clasica ANAF",
+   "recall": 0.0,
+   "precizie": 0.0,
+   "alarme_false": 0,
+   "legitime_la_revizuire": null,
+   "fraude_ajunse_la_analist": 0.0,
+   "bani_opriti": 0.0,
+   "documente_cerute": 0
+  },
+  {
+   "configuratie": "Agent simplu",
+   "recall": 1.0,
+   "precizie": 0.462,
+   "alarme_false": 7,
+   "legitime_la_revizuire": 0.297,
+   "fraude_ajunse_la_analist": 1.0,
+   "bani_opriti": 17095000.0,
+   "documente_cerute": 0
+  },
+  {
+   "configuratie": "Multi-agent",
+   "recall": 1.0,
+   "precizie": 0.462,
+   "alarme_false": 7,
+   "legitime_la_revizuire": 0.101,
+   "fraude_ajunse_la_analist": 1.0,
+   "bani_opriti": 17095000.0,
+   "documente_cerute": 0
+  },
+  {
+   "configuratie": "Multi-agent + solicitare documente",
+   "recall": 1.0,
+   "precizie": 1.0,
+   "alarme_false": 0,
+   "legitime_la_revizuire": 0.054,
+   "fraude_ajunse_la_analist": 1.0,
+   "bani_opriti": 17095000.0,
+   "documente_cerute": 14
+  }
+ ]
+}
