@@ -74,10 +74,9 @@ din Wikimedia Commons, domeniu public), cu temă luminoasă și întunecată.
 la antifraudă), *De verificat* (portocaliu, îndoieli de lămurit de analist sau cu un document de la client). Filtrul
 „Documente” din antet arată doar dosarele cu un anumit status.
 
-**Analiza completă** (Expand pe dosar): 1. Rezultatul și ce trebuie făcut · 2. Cum s-a calculat riscul · 3. Concluzia
-coordonatorului · 4. Problemele găsite, cu sub-agentul și dovezile · 5. Contra-verificarea · 6. Documente de reîncărcat /
-cerute clientului · 7. Contractele · 8. Rețeaua · 9. Documentele dosarului · 10. Jurnalul de audit (secțiunile fără
-conținut nu apar). Cifrele sunt îngroșate în tot textul. Sub card, formularul **Decizia analistului**.
+**Analiza completă** (Expand pe dosar): pași următori · scor de risc · concluzie · probleme · contra-verificare ·
+documente de reîncărcat / cerute clientului · contracte · rețea · documente · jurnal de audit (secțiunile fără conținut
+nu apar). Interfața e un tool intern: fără texte explicative, doar date, statusuri și acțiuni. Sub card, decizia analistului.
 
 Link-uri directe: `/app/#N001` (dosar încărcat), `/app/#D014` (dosar de test), `/app/#portofoliu`.
 
