@@ -1,0 +1,67 @@
+{
+ "dosare": 99,
+ "dosare_cu_documente_cerute": 0,
+ "fraude": 20,
+ "legitime": 79,
+ "sherlock": {
+  "tp": 18,
+  "fp": 1,
+  "fn": 2,
+  "tn": 78,
+  "recall": 0.9,
+  "precizie": 0.947,
+  "f1": 0.923,
+  "rata_alarme_false": 0.013
+ },
+ "verificare_clasica_anaf": {
+  "tp": 6,
+  "fp": 0,
+  "fn": 14,
+  "tn": 79,
+  "recall": 0.3,
+  "precizie": 1.0,
+  "f1": 0.462,
+  "rata_alarme_false": 0.0
+ },
+ "bani": {
+  "credite_frauduloase_total": 5607000.0,
+  "oprite_de_sherlock": 5060000.0,
+  "oprite_de_verificarea_clasica": 1548000.0,
+  "pierderi_evitate_in_plus": 3512000.0
+ },
+ "pe_tipar_de_frauda": {
+  "pfa_venit_fals": {
+   "total": 3,
+   "sherlock": 3,
+   "clasic": 3
+  },
+  "retea": {
+   "total": 3,
+   "sherlock": 3,
+   "clasic": 0
+  },
+  "firma_cumparata": {
+   "total": 5,
+   "sherlock": 5,
+   "clasic": 0
+  },
+  "bilant_umflat": {
+   "total": 5,
+   "sherlock": 3,
+   "clasic": 3
+  },
+  "angajati_fantoma": {
+   "total": 4,
+   "sherlock": 4,
+   "clasic": 0
+  }
+ },
+ "fraude_ajunse_la_analist": 1.0,
+ "legitime_trimise_la_revizuire": 0.152,
+ "timp_mediu_sec": 0.02,
+ "durata_totala_sec": 1.7,
+ "ipoteza": "Un credit fraudulos e considerat pierdut integral (fara recuperari).",
+ "set": "test",
+ "mod": "offline",
+ "configuratie": "simplu"
+}

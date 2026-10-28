@@ -245,6 +245,31 @@ def write_case(case_id, e, loan, doc_cifre, rows, hidden=False):
             w.writerow([dt.isoformat(), desc, f"{s:.2f}"])
 
 
+R2 = random.Random(SEED + 1)  # RNG separat: documentele suplimentare nu schimba restul setului
+SUPLIMENTARE = OUT / "suplimentare"
+
+
+def write_supplement(case_id, e, rows):
+    """Clientii legitimi cu incasari si la alta banca pot trimite extrasul cerut de agent.
+    Fraudatorii nu au ce trimite (banii nu exista)."""
+    deja = sum(s for _, desc, s in rows if s > 0 and desc.startswith("INCASARE"))
+    rest = e["anaf"][2025]["cifra_afaceri"] * R2.uniform(0.97, 1.06) - deja
+    if rest <= 0:
+        return
+    out = []
+    for i in range(12, 0, -1):
+        m0 = months_back(REF, i)
+        out.append((m0 + timedelta(days=R2.randint(2, 26)), f"INCASARE FACTURA {R2.choice(CLIENTI)}", round(rest / 12 * R2.uniform(0.85, 1.15), 2)))
+        out.append((m0 + timedelta(days=R2.randint(2, 26)), "COMISION ADMINISTRARE CONT", -round(R2.uniform(15, 40), 2)))
+    d = SUPLIMENTARE / case_id
+    d.mkdir(parents=True, exist_ok=True)
+    with open(d / "extras_cont_banca2.csv", "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["data", "descriere", "suma"])
+        for dt, desc, sm in sorted(out):
+            w.writerow([dt.isoformat(), desc, f"{sm:.2f}"])
+
+
 def salary_for(e, ratio=1.0):
     return e["anaf"][2025]["angajati"] * R.uniform(3600, 5200) * ratio
 
@@ -410,6 +435,8 @@ def build():
                        b.get("cheltuieli"), b.get("profit_net"), b.get("angajati")))
         db.execute("INSERT INTO cereri_credit VALUES (?,?,?,?)", (case_id, e["cui"], loan["data_cerere"].isoformat(), loan["suma"]))
         write_case(case_id, e, loan, doc, rows, hidden=hidden)
+        if pattern in ("legitim_cash", "legitim_pfa_cash", "legitim_fals_pozitiv"):
+            write_supplement(case_id, e, rows)
         strat[label] += 1
         labels[case_id] = {"eticheta": label, "tipar": pattern, "tip": e["tip"], "suma": loan["suma"],
                            "set": "calibrare" if strat[label] % 2 else "test", "denumire": e["denumire"]}

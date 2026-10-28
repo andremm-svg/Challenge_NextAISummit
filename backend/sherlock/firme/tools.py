@@ -45,6 +45,11 @@ def _span_luni(rows: list) -> float:
     return max(1.0, ((ds[-1] - ds[0]).days + 1) / 30.44)
 
 
+def _statements(case: Case) -> list:
+    """Toate extrasele de cont din dosar (principal + cele cerute ulterior de la alte banci)."""
+    return [d for t, d in sorted(case.docs.items()) if t.startswith("extras_cont")]
+
+
 def _pct(x: float) -> str:
     return f"{x:+.0%}"
 
@@ -120,6 +125,8 @@ def load_case(case_id: str, paths: list[str], llm=None) -> Case:
     for p in paths:
         info = _read_csv(p) if p.lower().endswith(".csv") else read_pdf(p)
         doc_type = _classify(Path(p).name, info["text"])
+        if doc_type == "extras_cont" and doc_type in case.docs:  # extrase de la mai multe banci
+            doc_type = f"extras_cont_{sum(t.startswith('extras_cont') for t in case.docs) + 1}"
         info["file"], info["fields"] = Path(p).name, None
         if doc_type in case.docs or doc_type == "necunoscut":
             case.log("sistem", "document_ignorat", f"{info['file']} ({doc_type})")
@@ -138,7 +145,7 @@ def _fields(case: Case, doc_type: str) -> dict | None:
     if not doc:
         return None
     if doc["fields"] is None:
-        if doc_type == "extras_cont":
+        if doc_type.startswith("extras_cont"):
             doc["fields"] = {"tranzactii": len(doc["rows"])}
         else:
             fields = _regex_extract(doc_type, doc["text"])
@@ -309,10 +316,10 @@ def verifica_istoric_firma(case: Case) -> dict:
 
 
 def verifica_flux_cont(case: Case) -> dict:
-    e = case.docs.get("extras_cont")
+    stmts = _statements(case)
     reg = _registry(case)
     _, fin = _financial_doc(case)
-    if not e:
+    if not stmts:
         case.add("flux_cont", "INFO", "Fara extras de cont: banii reali nu pot fi verificati")
         return {"status": "neaplicabil"}
     anaf = (reg or {}).get("bilanturi", {}).get(2025) or {}
@@ -320,13 +327,15 @@ def verifica_flux_cont(case: Case) -> dict:
     if not declarat:
         case.add("flux_cont", "INFO", "Nu exista o cifra de afaceri declarata de comparat")
         return {"status": "fara_declarat"}
-    incasari = sum(r["suma"] for r in e["rows"] if r["suma"] > 0 and "INCASARE" in r["descriere"].upper())
-    luni = _span_luni(e["rows"])
+    rows = [r for d in stmts for r in d["rows"]]
+    incasari = sum(r["suma"] for r in rows if r["suma"] > 0 and "INCASARE" in r["descriere"].upper())
+    luni = _span_luni(rows)
     anual = incasari * 12 / luni
     ratio = anual / declarat
     cfg = CONFIG["flux_cont"]
     dovezi = [f"incasari reale ({luni:.0f} luni, anualizat): {_lei(anual)}", f"cifra de afaceri declarata: {_lei(declarat)}",
-              f"acoperire: {ratio:.0%}"]
+              f"acoperire: {ratio:.0%}"] + ([f"extrase analizate: {', '.join(d['file'] for d in stmts)}"] if len(stmts) > 1 else [])
+    case.state["acoperire_flux"] = ratio
     if ratio < cfg["critic_sub"]:
         case.add("flux_cont", "CRITIC", "Banii care intra efectiv in cont nu sustin veniturile declarate", dovezi)
     elif ratio < cfg["avertizare_sub"]:
@@ -338,18 +347,20 @@ def verifica_flux_cont(case: Case) -> dict:
 
 def verifica_salarii(case: Case) -> dict:
     reg = _registry(case)
-    e = case.docs.get("extras_cont")
+    stmts = _statements(case)
     tip = case.state.get("tip", "SRL")
     anaf = (reg or {}).get("bilanturi", {}).get(2025) or {}
     ang = anaf.get("angajati") or 0
     cfg = CONFIG["salarii"]
-    if tip == "PFA" or ang < cfg["angajati_minim_pentru_verificare"] or not e:
+    if tip == "PFA" or ang < cfg["angajati_minim_pentru_verificare"] or not stmts:
         case.add("salarii", "INFO", f"Verificarea salariilor nu se aplica ({tip}, {ang} angajati declarati)")
         return {"status": "neaplicabil"}
-    plati = [r for r in e["rows"] if r["suma"] < 0 and r["descriere"].upper().startswith("PLATA SALARII")]
-    lunar = -sum(r["suma"] for r in plati) / _span_luni(e["rows"])
+    rows = [r for d in stmts for r in d["rows"]]
+    plati = [r for r in rows if r["suma"] < 0 and r["descriere"].upper().startswith("PLATA SALARII")]
+    lunar = -sum(r["suma"] for r in plati) / _span_luni(rows)
     asteptat = ang * cfg["salariu_net_minim_estimat"]
     ratio = lunar / asteptat
+    case.state["acoperire_salarii"] = ratio
     dovezi = [f"angajati declarati la ANAF: {ang}", f"plati salariale reale: {_lei(lunar)} / luna",
               f"minim asteptat ({ang} x {_lei(cfg['salariu_net_minim_estimat'])}): {_lei(asteptat)} / luna", f"acoperire: {ratio:.0%}"]
     if ratio < cfg["critic_sub"]:

@@ -44,9 +44,11 @@ def _domain(name: str):
     return importlib.import_module(DOMAINS[name])
 
 
-def _tool_schemas(dom, doc_types: list[str]) -> list[dict]:
+def _tool_schemas(dom, doc_types: list[str], tool_names: list[str] | None = None) -> list[dict]:
     schemas = []
     for name, (_, desc) in dom.TOOLS.items():
+        if tool_names is not None and name not in tool_names:
+            continue
         params = {"type": "object", "properties": {}, "required": []}
         if name == "extrage_campuri":
             params = {"type": "object", "properties": {"doc_type": {"type": "string", "enum": doc_types}}, "required": ["doc_type"]}
@@ -63,27 +65,34 @@ def _result_for_llm(case, result: dict, before: int) -> str:
     return re.sub(r"\b(\d{3})\d{7}(\d{3})\b", r"\1*******\2", text)  # CNP-urile nu ajung intregi la LLM
 
 
-def _execute(dom, case, name: str, args: dict) -> tuple[str, str | None]:
+def _execute(dom, case, name: str, args: dict, tool_names=None, actor="agent") -> tuple[str, str | None]:
     if name == "incheie_investigatia":
         return "ok", (args or {}).get("rezumat", "")
+    if tool_names is not None and name not in tool_names:
+        return json.dumps({"eroare": f"Unealta {name} nu face parte din rolul tau. Foloseste: {tool_names}"}, ensure_ascii=False), None
     before = len(case.findings)
-    result = dom.run_tool(case, name, args, actor="agent")
+    result = dom.run_tool(case, name, args, actor=actor)
     return _result_for_llm(case, result, before), None
 
 
-def _run_llm(dom, case, llm) -> str | None:
+def _run_llm(dom, case, llm, tool_names=None, system=None, user_msg=None, actor="agent", max_steps=MAX_STEPS) -> str | None:
+    """Bucla agentului. Cu tool_names/system se ruleaza un specialist care vede doar uneltele rolului sau."""
     doc_types = list(case.docs)
     tip = case.state.get("tip")
-    user_msg = f"Investigheaza dosarul {case.case_id}" + (f" ({tip})" if tip else "") + f". Documente incarcate: {doc_types}."
-    system = dom.SYSTEM_PROMPT
+    user_msg = user_msg or (f"Investigheaza dosarul {case.case_id}" + (f" ({tip})" if tip else "") + f". Documente incarcate: {doc_types}.")
+    system = system or dom.SYSTEM_PROMPT
     messages = [{"role": "system", "content": system}, {"role": "user", "content": user_msg}]
     native = llm.native_tools
-    schemas = _tool_schemas(dom, doc_types)
+    schemas = _tool_schemas(dom, doc_types, tool_names)
+    allowed = list(tool_names) if tool_names is not None else list(dom.TOOLS)
 
     def to_json_mode():
-        messages[0]["content"] = system + JSON_MODE_SUFFIX % list(dom.TOOLS)
+        messages[0]["content"] = system + JSON_MODE_SUFFIX % allowed
 
-    for step in range(MAX_STEPS):
+    def run(name, args):
+        return _execute(dom, case, name, args, tool_names, actor)
+
+    for step in range(max_steps):
         try:
             msg = llm.chat(messages, tools=schemas) if native else llm.chat(messages)
         except Exception as e:  # noqa: BLE001
@@ -106,7 +115,7 @@ def _run_llm(dom, case, llm) -> str | None:
                     args = json.loads(tc.function.arguments or "{}")
                 except json.JSONDecodeError:
                     args = {}
-                reply, fin = _execute(dom, case, tc.function.name, args)
+                reply, fin = run(tc.function.name, args)
                 final = fin if fin is not None else final
                 messages.append({"role": "tool", "tool_call_id": tc.id, "content": reply})
             if final is not None:
@@ -130,12 +139,12 @@ def _run_llm(dom, case, llm) -> str | None:
             messages.append({"role": "user", "content": "JSON invalid. Raspunde doar cu obiectul JSON cerut."})
             continue
         messages.append({"role": "assistant", "content": m.group(0)})
-        reply, final = _execute(dom, case, name, args)
+        reply, final = run(name, args)
         if final is not None:
             return final
         messages.append({"role": "user", "content": f"REZULTAT {name}: {reply}"})
 
-    case.log("sistem", "limita_pasi", f"Agentul a atins limita de {MAX_STEPS} pasi; garda preia verificarile ramase")
+    case.log("sistem", "limita_pasi", f"{actor} a atins limita de {max_steps} pasi; garda preia verificarile ramase")
     return None
 
 

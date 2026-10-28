@@ -17,13 +17,46 @@ al unei firme (SRL) sau al unui PFA și verifică dacă **cifrele declarate se r
 | Rata alarmelor false | 0% | 1,3% |
 | Credite frauduloase oprite | 1,55 mil. lei | **5,06 mil. lei** |
 
+(agentul simplu; versiunea completă, mai jos, ajunge la 100% precizie)
+
 Fraudele neprinse ca „suspecte” (bilanțuri umflate subtil, ~20%) nu au fost aprobate: au ajuns la revizuire umană,
 deci **100% din fraude au ajuns în fața unui analist**. Date sintetice; în producție validarea se face pe dosarele băncii.
 
+### Ce aduce fiecare strat (același set de test)
+
+| Configurație | Recall | Precizie | Alarme false | Legitime trimise la analist | Credite frauduloase oprite |
+|---|---|---|---|---|---|
+| Verificare clasică ANAF | 30% | 100% | 0 | – | 1,55 mil. lei |
+| Agent simplu | 90% | 95% | 1 | 15% | 5,06 mil. lei |
+| Echipa de detectivi | 90% | 95% | 1 | 8% | 5,06 mil. lei |
+| **Echipa + cerere de documente** | **90%** | **100%** | **0** | **2,5%** | **5,06 mil. lei** |
+
 ```powershell
-python run_eval.py                  # rezultatele de mai sus (offline, câteva secunde)
+python run_eval.py                  # echipa + cerere de documente (offline, câteva secunde)
+python run_eval.py --comparatie     # tabelul de mai sus
 python run_eval.py --mode llm --limit 20 --workers 4    # agentul cu LLM pe un eșantion
 ```
+
+## Echipa de detectivi
+
+1. **Trei specialiști**, fiecare cu doar uneltele rolului său: *Ofițerul de securitate* (dosar complet, instrucțiuni
+   ascunse), *Investigatorul* (identitate, statut, istoric, rețea), *Contabilul* (bilanț vs. ANAF, bani din cont, salarii).
+2. **Garda** rulează orice verificare obligatorie omisă de un specialist.
+3. **Avocatul diavolului** caută o explicație nevinovată pentru fiecare alarmă.
+4. **Judecătorul** (reguli deterministe) acceptă un argument doar dacă e confirmat de verificări independente curate.
+   O alarmă critică nu se anulează niciodată fără documente noi.
+5. **Cererea de documente:** când îndoiala se poate lămuri cu un document (de exemplu, încasări la altă bancă),
+   Sherlock scrie cererea către client; răspunsul clientului reia investigația.
+
+Cu LLM, specialiștii sunt agenți separați, avocatul își formulează singur pledoaria, iar Sherlock scrie concluzia;
+deciziile rămân ale regulilor. Fără LLM, aceeași echipă rulează determinist.
+
+**Limita simulării:** în date, clienții legitimi cu încasări la alte bănci trimit extrasul, iar fraudatorii nu au
+ce trimite. În realitate un fraudator poate trimite un extras fals; de aceea, în producție extrasele ar trebui
+obținute direct de la cealaltă bancă (Open Banking), nu ca fișier încărcat de client.
+
+Endpoint-uri: `POST /sherlock/firme/echipa/{dosar}` · `POST /sherlock/firme/echipa/{dosar}/raspuns-client` ·
+`GET /sherlock/firme/comparatie`.
 
 ### Tipare de fraudă și cum le prinde Sherlock
 

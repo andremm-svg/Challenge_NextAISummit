@@ -138,12 +138,50 @@ def retea_dosar(dosar: str):
 
 
 @router.get("/firme/metrici")
-def metrici(set: str = "test", mod: str = "offline"):
-    """Metricile calculate de run_eval.py (pentru pagina de rezultate)."""
-    path = FIRME / f"metrici_{set}_{mod}.json"
+def metrici(set: str = "test", mod: str = "offline", config: str = "complet"):
+    """Metricile calculate de run_eval.py. config: complet (echipa + documente) | echipa | simplu"""
+    path = FIRME / (f"metrici_{set}_{mod}" + ("" if config == "complet" else f"_{config}") + ".json")
     if not path.is_file():
-        raise HTTPException(404, f"Rulati intai: python run_eval.py --set {set} --mode {mod}")
+        raise HTTPException(404, f"Rulati intai: python run_eval.py --set {set} --mode {mod} --config {config}")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+@router.get("/firme/comparatie")
+def comparatie(set: str = "test"):
+    """Verificare clasica vs agent simplu vs echipa vs echipa + documente, pe aceleasi dosare."""
+    path = FIRME / f"metrici_comparatie_{set}.json"
+    if not path.is_file():
+        raise HTTPException(404, f"Rulati intai: python run_eval.py --comparatie --set {set}")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+@router.post("/firme/echipa/{dosar}")
+def analizeaza_cu_echipa(dosar: str, mode: str = "auto"):
+    """Echipa de detectivi: 3 specialisti, garda, avocatul diavolului, judecatorul si cererea de documente."""
+    from sherlock.echipa import investigate_echipa_folder
+
+    folder = FIRME / "dosare" / dosar
+    if not folder.is_dir():
+        raise HTTPException(404, f"Dosarul {dosar} nu exista")
+    try:
+        return investigate_echipa_folder(str(folder), mode=mode)
+    except RuntimeError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@router.post("/firme/echipa/{dosar}/raspuns-client")
+def simuleaza_raspuns_client(dosar: str, mode: str = "auto"):
+    """Simuleaza raspunsul clientului la documentele cerute si reia investigatia (inainte / dupa).
+    Simulare: clientii legitimi cu incasari la alta banca trimit extrasul; fraudatorii nu au ce trimite."""
+    from sherlock.echipa import raspuns_client
+
+    folder = FIRME / "dosare" / dosar
+    if not folder.is_dir():
+        raise HTTPException(404, f"Dosarul {dosar} nu exista")
+    try:
+        return raspuns_client(str(folder), str(FIRME / "suplimentare" / dosar), mode=mode)
+    except RuntimeError as e:
+        raise HTTPException(400, str(e)) from e
 
 
 class Decizie(BaseModel):
