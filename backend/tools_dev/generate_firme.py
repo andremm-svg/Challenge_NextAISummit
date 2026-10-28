@@ -8,6 +8,7 @@ Produce:
   data/firme/etichete.json      eticheta reala a fiecarui dosar (FOLOSITA DOAR LA EVALUARE, agentul nu o vede)
   data/firme/suplimentare/      documentele trimise de client la cerere (extrase de la alte banci)
   data/firme/dosare_murdare/    aceleasi dosare in formate "murdare" (alte etichete, diacritice, tabele, alte banci, scanari)
+  demo_dosare/                  doua dosare de incarcat din aplicatie in demo (generate_demo.py)
 
 Setul are doua parti, generate in aceeasi rulare:
   D001-D198  setul initial (40 fraude, 158 legitime), neschimbat
@@ -467,3 +468,6 @@ if __name__ == "__main__":
     G = sys.modules[__name__]  # starea generatorului (RNG, valori unice deja folosite) continua in extensie
     generate_extensii.extensii(G)
     generate_extensii.murdare(G)
+    import generate_demo  # noqa: E402
+
+    generate_demo.demo()  # cele doua dosare de incarcat in demo (firmele lor intra in registre)

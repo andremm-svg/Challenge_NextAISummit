@@ -110,7 +110,7 @@ cu tabelul „Ce aduce fiecare strat”, diagrama refăcută și un pas nou în 
   judecătorul → decizia coordonatorului; cererea → solicitarea de documente.
 - Endpoint-uri `/sherlock/firme/multi-agent/{dosar}` și `/raspuns-client`.
 
-### 7. Planul de extindere, plus exemple negative și aplicația (28.10.2026, sesiune locală, necomis)
+### 7. Planul de extindere, plus exemple negative și aplicația (commit `202455d`, 28.10.2026, ramura `extindere-sherlock`)
 Cerut: „fă tot proiectul” (cu 4 puncte alese din plan: contracte, documente murdare, chat MCP, feedback + portofoliu),
 apoi „mai multe exemple negative în baza de date, ca să nu avem multe alarme false” și „fă-mi și aplicație”.
 - **Contracte** (`firme/contracte.py`, Agentul de contracte): extragere din text liber + LLM cu anti-halucinație
@@ -127,6 +127,32 @@ apoi „mai multe exemple negative în baza de date, ca să nu avem multe alarme
 - **MCP** (`mcp_server.py`, `.mcp.json`, mcp 2.x): 10 unelte pentru chat-ul analistului.
 - **Aplicația** (`backend/app/index.html`, servită la `/app/`): dosare, upload, portofoliu, rezultate, feedback.
 - 31 de teste (`pytest -q tests`).
+- Bedrock: modelul implicit devine `us.anthropic.claude-sonnet-5-5`; modelele noi refuză `temperature` (reîncercare
+  automată fără el) și gândesc înainte să răspundă (plafon minim de 4.000 de tokeni, altfel concluzia ieșea goală).
+
+### 8. Interfața pentru demo, dosarele încărcate și agentul de lizibilitate (29.10.2026, ramura `extindere-sherlock`)
+Cerut: interfață mai puțin albă, cu galben și logo Raiffeisen; fără „AI-ul investighează, omul decide” și fără
+„Aparține analistului uman”; informații în puncte numerotate, cu cifrele îngroșate; carduri compacte cu Expand, pentru
+dosar și pentru fiecare sub-agent; „Dosar eligibil / neeligibil” în meniul din antet; fără modul offline în interfață;
+o bază de date goală pentru dosarele încărcate, două dosare demo și testarea fluxului din site; explicații pentru scor,
+pagina de feedback și pagina de rezultate.
+- **Interfața** (`backend/app/index.html`): galben Raiffeisen `#FEE600` și logo (Wikimedia Commons, domeniu public);
+  cardul dosarului e compact (status verde / roșu / portocaliu, risc, sub-agenții care nu au dat OK), iar Expand deschide
+  analiza completă în secțiuni numerotate; fiecare sub-agent are cardul lui, cu indicator în colț și Expand cu fiecare
+  verificare („ce s-a verificat”, „ce nu este în regulă”, dovezi). Meniul „Documente” din antet filtrează lista pe status
+  (Dosar eligibil / Dosar neeligibil / De verificat). Selectorul „curate / murdare” nu mai e în antet: rezultatele pe
+  documentele „murdare” sunt în pagina Rezultate. În locul selectorului de mod, antetul arată dacă Claude răspunde.
+- **Dosarele încărcate** (`sherlock/incarcate.py`): bază SQLite pornită goală (`data/incarcate/`, nu e în git), cu
+  documentele și rezultatul fiecărei analize; documentele noi reiau investigația; documentele înlocuite rămân pentru audit.
+- **Agentul de lizibilitate**: documentele scanate pe care nu le poate citi nimeni (Claude răspunde „ILIZIBIL” în loc să
+  ghicească) se cer din nou clientului; sub-agentul care depinde de ele „așteaptă un document lizibil”.
+- **Rezultatul pe sub-agent** e calculat după controlul automat și contra-verificare (status, probleme), iar verificările
+  rulate de controlul automat rămân ale sub-agentului responsabil. Scorul de risc vine cu defalcarea lui.
+- **Dosarele demo** (`demo_dosare/`, `tools_dev/generate_demo.py`): eligibil, neeligibil (5 probleme critice prestabilite,
+  la 3 sub-agenți) și același dosar eligibil cu bilanțul scanat ilizibil.
+- Când Claude nu răspunde (de exemplu token AWS expirat), raportul o spune (`erori_llm`); verdictul rămâne al regulilor.
+- 36 de teste; test cap-coadă în browser (Playwright, local): încărcarea celor 3 dosare, statusurile, butoanele Expand,
+  reîncărcarea, lista, filtrul, decizia analistului și afișarea pe telefon. Cifrele din evaluare sunt neschimbate.
 
 ## Rezultatele după extindere (setul de test, 253 de dosare: 26 de fraude, 227 legitime)
 
@@ -157,4 +183,6 @@ Fraudele care nu au fost marcate drept suspecte au ajuns la revizuire umană, de
 
 ## Starea curentă
 
-- Ramura `main`, ultimul commit `2e10027`; extinderea (punctul 7) nu e încă comisă.
+- Ramura `extindere-sherlock` (punctele 7 și 8), publicată pe GitHub pentru echipă; `main` a rămas la `2e10027`.
+- Ghidul echipei din Claude Docs are încă cifrele de dinainte de extindere; textul nou e în documentul „Sherlock –
+  ghidul echipei (actualizat 29.10.2026)”.

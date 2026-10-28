@@ -11,6 +11,7 @@
      independente. O alarma CRITICA nu se anuleaza niciodata fara documente noi.
   5. Cand o indoiala se poate lamuri cu un document, coordonatorul SOLICITA documentul clientului;
      raspunsul clientului reia investigatia (raspuns_client).
+  6. AGENTUL DE LIZIBILITATE cere reincarcarea documentelor scanate care nu pot fi citite.
 
 Codul decide; LLM-ul (cand exista) conduce sub-agentii, formuleaza explicatiile alternative si redacteaza concluzia.
 """
@@ -37,6 +38,17 @@ SUB_AGENTI = [
      "rol": "citește contractele cu clienții și verifică dacă beneficiarul e real, poate plăti și chiar plătește",
      "unelte": ["extrage_campuri", "verifica_contracte"]},
 ]
+
+# fiecare verificare apartine unui sub-agent (si cand a rulat-o controlul automat)
+VERIFICARI_AGENT = {
+    "agent_documente": ["documente_lipsa", "calitate_documente", "injectie"],
+    "agent_firma": ["identitate_firma", "statut_fiscal", "istoric_firma", "retea"],
+    "agent_financiar": ["bilant_vs_anaf", "flux_cont", "salarii", "capacitate_plata"],
+    "agent_contracte": ["contracte"],
+}
+AGENT_VERIFICARE = {v: a for a, vs in VERIFICARI_AGENT.items() for v in vs}
+PROBLEME = ("CRITIC", "LIPSA", "AVERTIZARE")
+PUNCTE_RISC = {"CRITIC": 35, "LIPSA": 15, "AVERTIZARE": 12}  # aceleasi ca in agent.risk_score
 
 PROMPT_SUB_AGENT = """Esti {nume}, sub-agent al agentului antifrauda Sherlock dintr-o banca din Romania.
 Rolul tau: {rol}. Ai acces DOAR la uneltele: {unelte}.
@@ -93,9 +105,6 @@ def _run_sub_agent(case, spec, llm) -> dict:
     for f in gasite:
         f["sub_agent"] = spec["id"]
     probleme = [f for f in gasite if f["severitate"] in ("CRITIC", "LIPSA", "AVERTIZARE")]
-    if not rezumat:
-        rezumat = ("Nimic suspect în zona mea." if not probleme else
-                   " ".join(f"{f['mesaj']}." for f in sorted(probleme, key=lambda f: SEV_ORDER[f["severitate"]])[:3]))
     return {"id": spec["id"], "nume": spec["nume"], "rol": spec["rol"], "rezumat": rezumat,
             "alarme": len(probleme), "durata_sec": round(time.time() - t0, 2)}
 
@@ -202,6 +211,58 @@ def _cereri(case) -> list:
     return cereri
 
 
+# ------------------------------------------------------------------ agentul de lizibilitate
+CAMPURI_CHEIE = {"cerere_credit": ["cui", "suma"], "situatii_financiare": ["cifra_afaceri"], "declaratie_unica": ["cifra_afaceri"]}
+
+
+def _documente_ilizibile(case) -> list:
+    """Documentele scanate pe care nu le poate citi nimeni (nici OCR, nici Claude): se cere o copie lizibila.
+    Sherlock nu ghiceste cifrele dintr-un document necitit."""
+    out = []
+    for tip, d in case.docs.items():
+        if not d.get("scanat"):
+            continue
+        if not d.get("ocr"):
+            motiv = "documentul e scanat și nu a putut fi citit (imagine neclară sau prea mică)"
+        else:
+            lipsa = [c for c in CAMPURI_CHEIE.get(tip, []) if (T._fields(case, tip) or {}).get(c) is None]
+            if not lipsa:
+                continue
+            motiv = f"documentul scanat a fost citit doar parțial: lipsesc {', '.join(c.replace('_', ' ') for c in lipsa)}"
+        out.append({"fisier": d["file"], "tip": tip, "motiv": motiv,
+                    "mesaj_client": (f"Documentul „{d['file']}” ({tip.replace('_', ' ')}) nu poate fi citit. "
+                                     "Vă rugăm să ne transmiteți o copie lizibilă: PDF generat din program sau o scanare clară, la cel puțin 200 dpi.")})
+        case.log("agent_lizibilitate", "cere_reincarcare", f"{d['file']}: {motiv}")
+    return out
+
+
+# documentele de care depinde fiecare sub-agent: daca unul e ilizibil, agentul nu poate da OK
+DOCUMENTE_AGENT = {"agent_firma": ("cerere_credit",), "agent_financiar": ("situatii_financiare", "declaratie_unica"),
+                   "agent_contracte": ("contract",)}
+
+
+def _sub_agent_final(s: dict, findings: list, ilizibile: list) -> dict:
+    """Rezultatul final al unui sub-agent, dupa controlul automat si contra-verificare.
+    status: ALARMA (are probleme) | ASTEAPTA_DOCUMENT (un document de care depinde e ilizibil) | OK"""
+    ale = [f for f in findings if AGENT_VERIFICARE.get(f["verificare"]) == s["id"]]
+    probleme = [f for f in ale if f["severitate"] in PROBLEME]
+    asteapta = [d["fisier"] for d in ilizibile if d["tip"].startswith(DOCUMENTE_AGENT.get(s["id"], ("-",)))]
+    status = "ALARMA" if probleme else "ASTEAPTA_DOCUMENT" if asteapta else "OK"
+    rezumat = s["rezumat"] or (  # fara raport de la LLM: rezumatul se scrie din rezultatele finale (inclusiv controlul automat)
+        " ".join(f"{f['mesaj']}." for f in sorted(probleme, key=lambda f: SEV_ORDER[f["severitate"]])[:3]) if probleme else
+        f"Așteaptă o copie lizibilă pentru {', '.join(asteapta)}." if asteapta else "Nimic suspect în zona mea.")
+    return s | {"rezumat": rezumat, "status": status, "alarme": len(probleme), "asteapta_documente": asteapta,
+                "probleme": [{"verificare": f["verificare"], "severitate": f["severitate"], "mesaj": f["mesaj"]} for f in probleme],
+                "verificari": [f["verificare"] for f in ale]}
+
+
+def scor_detaliat(findings: list) -> dict:
+    """Cum s-a obtinut scorul de risc: puncte pe severitate, din constatarile finale."""
+    n = {k: sum(f["severitate"] == k for f in findings) for k in PUNCTE_RISC}
+    brut = sum(PUNCTE_RISC[k] * v for k, v in n.items())
+    return {"puncte": PUNCTE_RISC, "numar": n, "total_brut": brut, "scor": min(100, brut), "plafon": 100}
+
+
 # ------------------------------------------------------------------ investigatia completa
 def investigate_multi_agent(case_id: str, paths: list[str], mode: str = "auto", llm=None, istoric: list | None = None) -> dict:
     t0 = time.time()
@@ -220,11 +281,13 @@ def investigate_multi_agent(case_id: str, paths: list[str], mode: str = "auto", 
     # agentul de documente intai (izoleaza documentele suspecte inainte ca altcineva sa le citeasca), apoi ceilalti
     sub_agenti = [_run_sub_agent(case, s, llm) for s in SUB_AGENTI]
     forced = _guardrail(T, case)
-    for f in case.findings:
-        f.setdefault("sub_agent", "control_automat")
+    for f in case.findings:  # verificarile rulate de controlul automat raman ale sub-agentului responsabil
+        if "sub_agent" not in f:
+            f["sub_agent"], f["completat_automat"] = AGENT_VERIFICARE.get(f["verificare"], "control_automat"), True
 
     verdict_inainte = verdict_from(case.findings)
     contra = _contraverificare(case, llm)
+    ilizibile = _documente_ilizibile(case)
     if istoric is None:
         cereri = _cereri(case)
     else:  # a doua runda: nu mai cerem acelasi lucru, consemnam daca clientul nu a raspuns
@@ -232,6 +295,7 @@ def investigate_multi_agent(case_id: str, paths: list[str], mode: str = "auto", 
         if not any(t.startswith("extras_cont_") for t in case.docs) and any(e[1] == "cere_document" for e in istoric):
             case.add("documente_cerute", "AVERTIZARE", "Clientul nu a transmis documentele cerute", [])
     verdict = verdict_from(case.findings)
+    sub_agenti = [_sub_agent_final(s, case.findings, ilizibile) for s in sub_agenti]
 
     explicatie = None
     if llm:
@@ -240,7 +304,7 @@ def investigate_multi_agent(case_id: str, paths: list[str], mode: str = "auto", 
                 verdict=VERDICTE[verdict], rapoarte=json.dumps([{s["nume"]: s["rezumat"]} for s in sub_agenti], ensure_ascii=False),
                 contra=json.dumps(contra, ensure_ascii=False)[:2500], cereri=json.dumps(cereri, ensure_ascii=False)), max_tokens=400)
         except Exception as e:  # noqa: BLE001
-            case.log("coordonator", "eroare_llm", type(e).__name__)
+            case.log("coordonator", "eroare_llm", f"{type(e).__name__}: {str(e)[:200]}")
     if not explicatie:
         acc = sum(d["acceptat"] for d in contra)
         probleme = [f["mesaj"] for f in sorted(case.findings, key=lambda f: SEV_ORDER[f["severitate"]])
@@ -250,18 +314,21 @@ def investigate_multi_agent(case_id: str, paths: list[str], mode: str = "auto", 
                       (f"S-au cerut clientului {len(cereri)} documente." if cereri else ""))
 
     findings = sorted(case.findings, key=lambda f: SEV_ORDER.get(f["severitate"], 9))
+    cerere = T._fields(case, "cerere_credit") or {}
     return {
         "dosar": case_id, "domeniu": "firme", "tip_entitate": case.state.get("tip"), "mod": "llm" if llm else "offline",
         "multi_agent": True, "verdict": verdict, "eticheta": VERDICTE[verdict], "verdict_inainte_de_contraverificare": verdict_inainte,
-        "scor_risc": risk_score(findings), "explicatie": explicatie.strip(),
-        "decizie_finala": "Aparține analistului uman. Sherlock pregătește, omul decide.",
+        "solicitant": {"denumire": cerere.get("denumire"), "cui": cerere.get("cui"), "suma": cerere.get("suma")},
+        "scor_risc": risk_score(findings), "scor_detaliat": scor_detaliat(findings), "explicatie": explicatie.strip(),
         "sub_agenti": sub_agenti, "contraverificare": contra, "documente_cerute": cereri,
-        "astept_documente": bool(cereri),
+        "documente_ilizibile": ilizibile, "astept_documente": bool(cereri or ilizibile),
         "constatari": findings, "urmatorii_pasi": _next_steps(findings, verdict),
         "documente": {t: d["file"] for t, d in case.docs.items()}, "documente_izolate": sorted(case.quarantined),
         "verificari_completate_automat": forced, "retea": case.state.get("retea", []),
         "contracte": case.state.get("contracte", []), "masuratori": T.masuratori(case),
         "audit": case.audit, "durata_sec": round(time.time() - t0, 2),
+        # cand Claude nu raspunde (token expirat, retea), verdictul ramane al regulilor, dar interfata trebuie sa o spuna
+        "erori_llm": sorted({a["detaliu"] for a in case.audit if a["actiune"] == "eroare_llm"}),
     }
 
 

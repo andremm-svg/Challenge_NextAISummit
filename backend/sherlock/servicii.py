@@ -56,7 +56,8 @@ def rezumat(r: dict, max_constatari: int = 8) -> dict:
             "contraverificare": [{"verificare": d["verificare"], "acceptat": d["acceptat"], "decizie": d["decizia_coordonatorului"]}
                                  for d in r["contraverificare"]],
             "documente_cerute": r["documente_cerute"], "urmatorii_pasi": r["urmatorii_pasi"][:6],
-            "masuratori": r.get("masuratori", {}), "decizie_finala": r["decizie_finala"]}
+            "masuratori": r.get("masuratori", {}), "documente_ilizibile": r.get("documente_ilizibile", []),
+            "sub_agenti": [{"nume": s["nume"], "status": s.get("status"), "alarme": s["alarme"]} for s in r["sub_agenti"]]}
 
 
 def cauta_firma(text: str) -> list[dict]:

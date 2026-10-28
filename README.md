@@ -6,7 +6,7 @@ Băncile verifică deja datele firmelor la ANAF. Dar ANAF arată ce s-a **declar
 firme preluate prin administratori interpuși, bilanțuri umflate depuse oficial, angajați fictivi declarați
 doar pe hârtie, rețele de firme-paravan care cer credite în același timp, contracte cu clienți care nu există.
 Sherlock investighează dosarul de credit al unei firme (SRL) sau al unui PFA și verifică dacă **cifrele declarate
-se regăsesc în realitate**. **AI-ul investighează, omul decide.**
+se regăsesc în realitate**.
 
 ## Pornire rapidă
 
@@ -18,8 +18,13 @@ pip install -r requirements.txt
 python -m uvicorn main:app --reload      # aplicația: http://127.0.0.1:8000/app/  ·  API: /docs
 ```
 
-Merge fără nicio cheie API (modul offline, determinist). Cu Claude pe Bedrock sau Featherless în `.env`,
-sub-agenții rulează cu LLM (vezi „Alegerea LLM-ului”).
+Aplicația rulează cu **Claude pe Amazon Bedrock** (cheile AWS în `backend/.env`, vezi „Alegerea LLM-ului”).
+Antetul aplicației arată dacă Claude răspunde; dacă tokenul AWS a expirat, apare „Claude indisponibil”.
+Evaluarea (`run_eval.py`), testele și scanarea de portofoliu rulează și fără cheie (determinist).
+
+**Demo în 3 pași:** deschide `http://127.0.0.1:8000/app/`, tab-ul „Încarcă un dosar”, și încarcă pe rând fișierele din
+`demo_dosare/1_dosar_eligibil/` (verde), `demo_dosare/2_dosar_neeligibil/` (roșu) și `demo_dosare/3_document_ilizibil/`
+(se cere reîncărcarea bilanțului). Detalii în [demo_dosare/README.md](demo_dosare/README.md).
 
 ## Rezultate (setul de test: 253 de dosare nevăzute la calibrare, 26 de fraude și 227 de dosare legitime)
 
@@ -48,23 +53,55 @@ python run_eval.py --comparatie          # tabelul de mai sus
 python run_eval.py --comparatie --date murdare     # aceleași dosare, documente „murdare”
 python run_eval.py --comparatie --doar-extensie    # doar dosarele noi (D199+)
 python run_eval.py --mode llm --limit 20 --workers 4   # cu LLM, pe un eșantion
-python -m pytest -q tests                # 31 de teste
+python -m pytest -q tests                # 36 de teste
 ```
 
 ## Aplicația analistului (`http://127.0.0.1:8000/app/`)
 
-Interfață web servită direct de backend (un singur fișier, `backend/app/index.html`, fără build):
+Interfață web servită direct de backend: un singur fișier, `backend/app/index.html`, în HTML, CSS și JavaScript simplu,
+fără framework și fără build. Identitatea vizuală Raiffeisen (galben `#FEE600`, logo în `backend/app/raiffeisen-logo.svg`,
+din Wikimedia Commons, domeniu public), cu temă luminoasă și întunecată.
 
 | Tab | Ce face |
 |---|---|
-| Dosare | caută un dosar, îl investighează cu cei 4 sub-agenți; verdict, scor, dovezi, contra-verificare, documentele cerute (cu simularea răspunsului clientului), rețeaua ca graf, documentele originale, jurnalul de audit; **decizia analistului** (cu override și feedback pe fiecare alarmă) |
-| Încarcă un dosar | PDF-uri + extras CSV în orice format → investigația completă |
-| Portofoliu | scanează toți clienții: expunere pe verdict, grupuri de firme legate, priorități pentru antifraudă, schimbări față de scanarea anterioară |
-| Rezultate | tabelele de comparație (curate, murdare, extensie) |
-| Feedback și recalibrare | precizia alarmelor pe verificare și propunerile de praguri, cu validare și aprobare umană |
+| Dosare | lista „Dosare noi” (încărcate din aplicație) și „Dosare de test” (cele 506 sintetice), colorate pe status. Un dosar se deschide ca **card compact**: status, risc, ce sub-agenți nu au dat OK și cele 4 carduri de sub-agent, fiecare cu **Expand**. **Expand** pe dosar deschide analiza completă, în secțiuni numerotate |
+| Încarcă un dosar | PDF-uri + extras CSV, în orice format; dosarul și documentele se salvează în baza dosarelor noi |
+| Portofoliu | scanează toți clienții: expunere pe status, grupuri de firme legate, priorități pentru antifraudă |
+| Rezultate | cât de bine funcționează Sherlock pe toate dosarele de test (fraude prinse, alarme false), față de verificarea ANAF |
+| Feedback | deciziile analiștilor, precizia fiecărei verificări și pragurile propuse, cu aprobare umană |
 
-Selectoarele din antet aleg modul (offline / cu LLM) și varianta documentelor (curate / „murdare”).
-Link-uri directe: `/app/#D014`, `/app/#portofoliu`. Interfața Lovable poate folosi aceleași endpoint-uri (CORS e deschis).
+**Statusuri:** *Dosar eligibil* (verde, toate verificările au trecut), *Dosar neeligibil* (roșu, semne de fraudă, merge
+la antifraudă), *De verificat* (portocaliu, îndoieli de lămurit de analist sau cu un document de la client). Filtrul
+„Documente” din antet arată doar dosarele cu un anumit status.
+
+**Analiza completă** (Expand pe dosar): 1. Rezultatul și ce trebuie făcut · 2. Cum s-a calculat riscul · 3. Concluzia
+coordonatorului · 4. Problemele găsite, cu sub-agentul și dovezile · 5. Contra-verificarea · 6. Documente de reîncărcat /
+cerute clientului · 7. Contractele · 8. Rețeaua · 9. Documentele dosarului · 10. Jurnalul de audit (secțiunile fără
+conținut nu apar). Cifrele sunt îngroșate în tot textul. Sub card, formularul **Decizia analistului**.
+
+Link-uri directe: `/app/#N001` (dosar încărcat), `/app/#D014` (dosar de test), `/app/#portofoliu`.
+
+### Dosarele încărcate (`sherlock/incarcate.py`)
+
+Baza `backend/data/incarcate/incarcate.db` pornește goală (nu e în git). Fiecare încărcare creează un dosar `N001`,
+`N002`…, salvează documentele în `backend/data/incarcate/N001/` și rezultatul analizei. Documentele noi (de exemplu
+extrasul cerut clientului sau copia lizibilă a unui document) reiau investigația. Un document înlocuit se mută în
+`_inlocuite/` și rămâne în baza de date, pentru audit. Pentru o repetiție de demo de la zero: oprește serverul și șterge
+`backend/data/incarcate/`.
+
+### Agentul de lizibilitate
+
+Un document scanat pe care nu îl poate citi nici OCR-ul, nici Claude (Claude răspunde „ILIZIBIL” în loc să ghicească)
+nu se folosește la verificări. Agentul cere clientului o copie lizibilă, numește fișierul și explică de ce. Sub-agentul
+care depinde de document (de exemplu Agentul financiar, pentru bilanț) apare „așteaptă un document lizibil”, nu OK.
+După reîncărcare verificarea se reia; dacă documentul tot nu se poate citi, cererea se repetă.
+
+### Scorul de risc
+
+Calculat de cod din problemele rămase **după** contra-verificare: fiecare problemă critică = 35 de puncte, document
+lipsă = 15, avertizare = 12; verificările OK și informative nu adaugă puncte; plafon 100. LLM-ul nu influențează scorul.
+Verdictul nu vine din scor, ci din cea mai gravă problemă: o problemă critică → neeligibil; un document lipsă sau o
+avertizare → de verificat; nicio problemă → eligibil. Pragurile din spatele fiecărei probleme sunt în `config.yaml`.
 
 ## Arhitectura multi-agent
 
@@ -200,7 +237,11 @@ Verdictul rămâne calculat de reguli; Claude doar explică, cu dovezile lui She
 | GET | `/sherlock/firme/dosare` | lista dosarelor (eticheta reală ascunsă) |
 | POST | `/sherlock/firme/multi-agent/{dosar}?mode=auto&date=curate` | investigația multi-agent (`date=murdare` pentru documentele murdare) |
 | POST | `/sherlock/firme/multi-agent/{dosar}/raspuns-client` | simulează răspunsul clientului și reia investigația |
-| POST | `/sherlock/firme/multi-agent-upload` | investigația pe fișiere încărcate (orice format) |
+| GET / POST | `/sherlock/firme/incarcate` | dosarele încărcate / dosar nou (fișierele se salvează, investigația rulează) |
+| GET | `/sherlock/firme/incarcate/{dosar}` · `/document/{fisier}` | rezultatul salvat și documentele unui dosar încărcat |
+| POST | `/sherlock/firme/incarcate/{dosar}/documente` | documente noi sau înlocuirea unui document ilizibil (`inlocuieste=`); investigația se reia |
+| GET | `/sherlock/llm/status` | răspunde Claude acum? (de ex. token AWS expirat) |
+| POST | `/sherlock/firme/multi-agent-upload` | investigația pe fișiere încărcate, fără salvare |
 | POST | `/sherlock/firme/analizeaza/{dosar}` | agentul simplu |
 | GET | `/sherlock/firme/retea/{dosar}` | graful de legături |
 | GET | `/sherlock/firme/firma?q=` | caută o firmă în registru (CUI sau denumire) |
@@ -286,7 +327,10 @@ copy .env.example .env      # apoi pune cheia Featherless în .env
 | `bedrock` | Claude prin Amazon Bedrock (Converse API, tool use nativ) | `AWS_REGION`, `BEDROCK_MODEL_ID`, cheile AWS |
 | `featherless` | modele open prin Featherless (API compatibil OpenAI) | `FEATHERLESS_API_KEY`, `FEATHERLESS_MODEL` |
 
-Fără nicio cheie, agentul rulează pe planificatorul determinist (modul `offline`), deci demo-ul merge oricum.
+Modelul implicit: `BEDROCK_MODEL_ID=us.anthropic.claude-sonnet-5-5` (regiunea `us-west-2`). Cheile AWS temporare
+(`AWS_SESSION_TOKEN`) expiră: când antetul aplicației arată „Claude indisponibil”, copiați cheile noi în `backend/.env`
+și reporniți serverul. Fără Claude, verdictul rămâne același (îl dau regulile), dar concluziile sunt scrise automat,
+iar interfața afișează că Claude nu a răspuns. Evaluarea și testele pot rula fără nicio cheie (`--mode offline`).
 
 ## Testare (ce poate verifica juriul)
 

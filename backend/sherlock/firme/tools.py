@@ -226,6 +226,10 @@ def verifica_bilant_vs_anaf(case: Case) -> dict:
     if not fin or not reg:
         case.add("bilant_vs_anaf", "INFO", "Nu exista document financiar sau date ANAF de comparat")
         return {"status": "neaplicabil"}
+    if fin.get("cifra_afaceri") is None and fin.get("profit_net") is None:
+        case.add("bilant_vs_anaf", "INFO", f"Cifrele din {tip_doc.replace('_', ' ')} nu au putut fi citite; comparatia cu ANAF "
+                 "se reia dupa ce clientul trimite o copie lizibila", [case.docs[tip_doc]["file"]])
+        return {"status": "necitit"}
     an = int(fin.get("an") or 2025)
     anaf = reg["bilanturi"].get(an)
     if not anaf:

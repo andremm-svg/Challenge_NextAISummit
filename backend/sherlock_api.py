@@ -86,12 +86,15 @@ def lista_dosare_firme(set: str = "toate", arata_eticheta: bool = False):
     con = sqlite3.connect(FIRME / "sherlock.db")
     cereri = {r[0]: r[1:] for r in con.execute("SELECT dosar, data_cerere, suma FROM cereri_credit")}
     con.close()
+    scan = FIRME / "portofoliu_ultima_scanare.json"  # statusul din ultima scanare de portofoliu (aceleasi reguli)
+    status = {d["dosar"]: d for d in json.loads(scan.read_text(encoding="utf-8"))["dosare"]} if scan.is_file() else {}
     out = []
     for dosar, v in sorted(_etichete().items()):
         if set != "toate" and v["set"] != set:
             continue
+        st = status.get(dosar, {})
         item = {"dosar": dosar, "denumire": v["denumire"], "tip": v["tip"], "suma": v["suma"],
-                "data_cerere": cereri.get(dosar, (None,))[0], "set": v["set"]}
+                "data_cerere": cereri.get(dosar, (None,))[0], "set": v["set"], "verdict": st.get("verdict"), "scor_risc": st.get("scor_risc")}
         if arata_eticheta:
             item |= {"eticheta": v["eticheta"], "tipar": v["tipar"]}
         out.append(item)
@@ -240,6 +243,77 @@ def document_murdar(dosar: str, fisier: str):
     path = (root / dosar / fisier).resolve()
     if root not in path.parents or not path.is_file():
         raise HTTPException(404, "Document inexistent")
+    return FileResponse(path, media_type="text/csv" if path.suffix == ".csv" else "application/pdf")
+
+
+@router.get("/llm/status")
+def llm_status():
+    """Raspunde Claude acum? Interfata arata starea in antet (de ex. token AWS expirat)."""
+    from sherlock.llm import get_llm
+
+    llm = get_llm()
+    if llm is None:
+        return {"ok": False, "furnizor": None, "model": None, "motiv": "LLM-ul nu e configurat în .env"}
+    try:
+        llm.complete("Raspunde doar: ok", max_tokens=20)
+        return {"ok": True, "furnizor": llm.provider, "model": llm.model, "motiv": ""}
+    except Exception as e:  # noqa: BLE001
+        motiv = "tokenul AWS a expirat: actualizați cheile din .env" if "ExpiredToken" in str(e) else f"{type(e).__name__}: {str(e)[:160]}"
+        return {"ok": False, "furnizor": llm.provider, "model": llm.model, "motiv": motiv}
+
+
+# ------------------------------------------------------------------ dosarele incarcate din aplicatie (baza pornita goala)
+async def _citeste(files: list[UploadFile]) -> list[tuple[str, bytes]]:
+    if not 1 <= len(files) <= 10:
+        raise HTTPException(400, "Trimite între 1 și 10 fișiere")
+    return [(f.filename or "", await f.read()) for f in files]
+
+
+def _incarcate(fn, *args, **kwargs):
+    try:
+        return fn(*args, **kwargs)
+    except FileNotFoundError as e:
+        raise HTTPException(404, str(e)) from e
+    except (ValueError, RuntimeError) as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@router.get("/firme/incarcate")
+def lista_incarcate():
+    """Dosarele incarcate din aplicatie, cu statusul ultimei analize."""
+    from sherlock import incarcate
+
+    return incarcate.lista()
+
+
+@router.post("/firme/incarcate")
+async def incarca_dosar(files: list[UploadFile] = File(...), mode: str = Form("auto")):
+    """Dosar nou: salveaza documentele in baza de date si ruleaza investigatia multi-agent."""
+    from sherlock import incarcate
+
+    return _incarcate(incarcate.creeaza, await _citeste(files), mode=mode)
+
+
+@router.post("/firme/incarcate/{dosar}/documente")
+async def adauga_documente(dosar: str, files: list[UploadFile] = File(...), inlocuieste: list[str] = Form([]), mode: str = Form("auto")):
+    """Documente noi pentru un dosar incarcat (de ex. copia lizibila a unui document scanat). Investigatia se reia."""
+    from sherlock import incarcate
+
+    return _incarcate(incarcate.adauga_documente, dosar, await _citeste(files), inlocuieste=inlocuieste, mode=mode)
+
+
+@router.get("/firme/incarcate/{dosar}")
+def detalii_incarcat(dosar: str):
+    from sherlock import incarcate
+
+    return _incarcate(incarcate.detalii, dosar)
+
+
+@router.get("/firme/incarcate/{dosar}/document/{fisier}")
+def document_incarcat(dosar: str, fisier: str):
+    from sherlock import incarcate
+
+    path = _incarcate(incarcate.document, dosar, fisier)
     return FileResponse(path, media_type="text/csv" if path.suffix == ".csv" else "application/pdf")
 
 
