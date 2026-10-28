@@ -4,3 +4,4 @@ __pycache__/
 .env
 backend/data/decizii_analist.jsonl
 backend/tests/rezultate/
+backend/data/firme/rezultate/

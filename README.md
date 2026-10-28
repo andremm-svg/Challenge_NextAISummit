@@ -1,10 +1,65 @@
-# Sherlock – agentul care investighează dosarele de credit
+# Sherlock – agentul antifraudă pentru creditele firmelor și PFA
 
 **NEXXT AI Summit 2026 · Provocarea Raiffeisen „AI for Operational Efficiency”**
 
-Un dosar de credit poate fi complet și totuși fals. Sherlock citește documentele unui dosar
+Băncile verifică deja datele firmelor la ANAF. Dar ANAF arată ce s-a **declarat**, nu dacă e **adevărat**:
+firme preluate prin administratori interpuși, bilanțuri umflate depuse oficial, angajați fictivi declarați
+doar pe hârtie, rețele de firme-paravan care cer credite în același timp. Sherlock investighează dosarul de credit
+al unei firme (SRL) sau al unui PFA și verifică dacă **cifrele declarate se regăsesc în realitate**.
+**AI-ul investighează, omul decide.**
+
+## Rezultate (setul de test, 99 de dosare nevăzute la calibrare)
+
+| | Verificare clasică ANAF | Sherlock |
+|---|---|---|
+| Fraude prinse (recall) | 30% | **90%** |
+| Precizie | 100% | 95% |
+| Rata alarmelor false | 0% | 1,3% |
+| Credite frauduloase oprite | 1,55 mil. lei | **5,06 mil. lei** |
+
+Fraudele neprinse ca „suspecte” (bilanțuri umflate subtil, ~20%) nu au fost aprobate: au ajuns la revizuire umană,
+deci **100% din fraude au ajuns în fața unui analist**. Date sintetice; în producție validarea se face pe dosarele băncii.
+
+```powershell
+python run_eval.py                  # rezultatele de mai sus (offline, câteva secunde)
+python run_eval.py --mode llm --limit 20 --workers 4    # agentul cu LLM pe un eșantion
+```
+
+### Tipare de fraudă și cum le prinde Sherlock
+
+| Tipar | Ce vede verificarea clasică | Ce prinde Sherlock |
+|---|---|---|
+| Bilanț umflat în dosar | diferența față de ANAF | + banii din cont nu susțin cifrele |
+| Firmă preluată pentru credit | nimic: bilanțul e depus oficial | administrator schimbat recent + creștere bruscă + bani lipsă din cont |
+| Angajați fantomă | nimic: angajații sunt declarați la ANAF | salariile nu sunt plătite efectiv |
+| Rețea de firme-paravan | nimic: fiecare firmă arată normal | același administrator / telefon / adresă la mai mulți solicitanți |
+| PFA cu venit fictiv | nimic, dacă declarația e depusă | veniturile declarate nu intră în cont |
+
+### Date
+
+`backend/data/firme/`: 198 de dosare sintetice (40 fraude, 158 legitime, inclusiv cazuri legitime „zgomotoase”:
+firme noi, administrator schimbat, afaceri cu numerar, grupuri legitime), împărțite 50/50 în calibrare și test.
+Registrele (firme, administratori, bilanțuri ANAF, cereri de credit) sunt într-o bază **SQLite** (`sherlock.db`).
+Regenerare: `python tools_dev/generate_firme.py`. Pragurile: `backend/sherlock/firme/config.yaml`.
+
+### API pentru interfață
+
+| Metodă | Endpoint | Rol |
+|---|---|---|
+| GET | `/sherlock/firme/dosare` | lista dosarelor (eticheta reală ascunsă) |
+| POST | `/sherlock/firme/analizeaza/{dosar}?mode=auto` | investigația completă: verdict, scor de risc, dovezi, audit |
+| GET | `/sherlock/firme/retea/{dosar}` | graful de legături pentru vizualizare |
+| GET | `/sherlock/firme/metrici?set=test&mod=offline` | metricile pentru pagina de rezultate |
+| GET | `/sherlock/firme/dosare/{dosar}/document/{fisier}` | documentul original |
+
+---
+
+## Modulul pentru persoane fizice (primul prototip)
+
+
+Primul prototip, păstrat ca modul separat (nu e în demo). Sherlock citește documentele unui dosar
 (buletin, adeverință de venit, extras de cont, cerere de credit), le confruntă între ele și produce
-un verdict cu dovezi pentru fiecare constatare. **AI-ul investighează, omul decide.**
+un verdict cu dovezi pentru fiecare constatare. Verdictele sunt aceleași în ambele module:
 
 | Verdict | Când | Ce urmează |
 |---|---|---|

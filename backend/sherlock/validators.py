@@ -99,6 +99,8 @@ def parse_amount_ro(text: str) -> float | None:
     t = str(text).strip().replace("RON", "").replace("lei", "").replace(" ", "").lstrip("+")
     if "," in t:
         t = t.replace(".", "").replace(",", ".")
+    elif re.fullmatch(r"-?\d{1,3}(\.\d{3})+", t):  # '1.234.567' -> separatori de mii
+        t = t.replace(".", "")
     try:
         return float(t)
     except ValueError:

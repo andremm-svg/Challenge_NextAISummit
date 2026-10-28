@@ -1,0 +1,35 @@
+# Regulile Sherlock pentru firme (SRL) si PFA. Se pot schimba fara a modifica codul.
+
+documente_obligatorii:
+  SRL: [cerere_credit, situatii_financiare, extras_cont]
+  PFA: [cerere_credit, declaratie_unica, extras_cont]
+
+bilant_vs_anaf:
+  # diferenta relativa intre cifrele din dosar si cele depuse la ANAF
+  avertizare: 0.08
+  critic: 0.25
+  angajati_diferenta_critica: 3     # angajati in plus in dosar fata de ANAF
+
+istoric:
+  firma_noua_luni: 12
+  administrator_recent_luni: 6
+  crestere_suspecta: 4.0            # cifra de afaceri 2025 / 2024
+
+flux_cont:
+  # incasari reale in cont (12 luni) / cifra de afaceri declarata
+  avertizare_sub: 0.75
+  critic_sub: 0.50
+
+salarii:
+  # Valoare de referinta configurabila: verificati salariul minim net legal in vigoare.
+  salariu_net_minim_estimat: 2500
+  angajati_minim_pentru_verificare: 3
+  avertizare_sub: 0.60              # plati salariale reale / minimul asteptat
+  critic_sub: 0.30
+
+statut_fiscal:
+  datorii_avertizare: 50000
+
+retea:
+  fereastra_zile: 180               # cereri depuse in aceasta perioada
+  critic_de_la: 2                   # alte firme legate -> suspiciune de retea

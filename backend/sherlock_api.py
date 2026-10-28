@@ -51,24 +51,99 @@ def descarca_document_demo(dosar: str, fisier: str):
 
 
 @router.post("/analizeaza")
-async def analizeaza_upload(files: list[UploadFile] = File(...), mode: str = Form("auto")):
-    """Incarca 1-6 PDF-uri ale unui dosar si ruleaza investigatia."""
+async def analizeaza_upload(files: list[UploadFile] = File(...), mode: str = Form("auto"), domeniu: str = Form("auto")):
+    """Incarca 1-6 fisiere (PDF, plus extras_cont.csv pentru firme) si ruleaza investigatia.
+    domeniu: auto | persoane | firme"""
     if not 1 <= len(files) <= 6:
-        raise HTTPException(400, "Trimite intre 1 si 6 fisiere PDF")
-    tmp = Path(tempfile.mkdtemp(prefix="dosar_"))
+        raise HTTPException(400, "Trimite intre 1 si 6 fisiere")
+    tmp = Path(tempfile.mkdtemp(prefix="dosar_")) / f"upload_{uuid.uuid4().hex[:6]}"
+    tmp.mkdir()
     try:
-        paths = []
         for f in files:
-            if not (f.filename or "").lower().endswith(".pdf"):
-                raise HTTPException(400, f"{f.filename} nu este PDF")
-            dest = tmp / Path(f.filename).name
-            dest.write_bytes(await f.read())
-            paths.append(str(dest))
-        return investigate(f"upload_{uuid.uuid4().hex[:6]}", paths, mode=mode)
-    except RuntimeError as e:
+            if not (f.filename or "").lower().endswith((".pdf", ".csv")):
+                raise HTTPException(400, f"{f.filename} nu este PDF sau CSV")
+            (tmp / Path(f.filename).name).write_bytes(await f.read())
+        return investigate_folder(str(tmp), mode=mode, domeniu=None if domeniu == "auto" else domeniu)
+    except (RuntimeError, ValueError) as e:
         raise HTTPException(400, str(e)) from e
     finally:
-        shutil.rmtree(tmp, ignore_errors=True)
+        shutil.rmtree(tmp.parent, ignore_errors=True)
+
+
+# ====================================================================== FIRME SI PFA
+FIRME = ROOT / "data" / "firme"
+
+
+def _etichete() -> dict:
+    return json.loads((FIRME / "etichete.json").read_text(encoding="utf-8"))
+
+
+@router.get("/firme/dosare")
+def lista_dosare_firme(set: str = "toate", arata_eticheta: bool = False):
+    """Dosarele de credit ale firmelor/PFA. Eticheta reala e ascunsa implicit (o vede doar evaluarea)."""
+    import sqlite3
+
+    con = sqlite3.connect(FIRME / "sherlock.db")
+    cereri = {r[0]: r[1:] for r in con.execute("SELECT dosar, data_cerere, suma FROM cereri_credit")}
+    con.close()
+    out = []
+    for dosar, v in sorted(_etichete().items()):
+        if set != "toate" and v["set"] != set:
+            continue
+        item = {"dosar": dosar, "denumire": v["denumire"], "tip": v["tip"], "suma": v["suma"],
+                "data_cerere": cereri.get(dosar, (None,))[0], "set": v["set"]}
+        if arata_eticheta:
+            item |= {"eticheta": v["eticheta"], "tipar": v["tipar"]}
+        out.append(item)
+    return out
+
+
+@router.post("/firme/analizeaza/{dosar}")
+def analizeaza_dosar_firma(dosar: str, mode: str = "auto"):
+    """Ruleaza agentul pe un dosar de firma/PFA. mode: auto | llm | offline"""
+    folder = FIRME / "dosare" / dosar
+    if not folder.is_dir():
+        raise HTTPException(404, f"Dosarul {dosar} nu exista")
+    try:
+        return investigate_folder(str(folder), mode=mode, domeniu="firme")
+    except RuntimeError as e:
+        raise HTTPException(400, str(e)) from e
+
+
+@router.get("/firme/dosare/{dosar}/document/{fisier}")
+def document_firma(dosar: str, fisier: str):
+    path = (FIRME / "dosare" / dosar / fisier).resolve()
+    if (FIRME / "dosare").resolve() not in path.parents or not path.is_file():
+        raise HTTPException(404, "Document inexistent")
+    return FileResponse(path, media_type="text/csv" if path.suffix == ".csv" else "application/pdf")
+
+
+@router.get("/firme/retea/{dosar}")
+def retea_dosar(dosar: str):
+    """Graful de legaturi (noduri + muchii) pentru vizualizarea retelei in interfata."""
+    from sherlock.firme.tools import load_case, verifica_retea
+
+    folder = FIRME / "dosare" / dosar
+    if not folder.is_dir():
+        raise HTTPException(404, f"Dosarul {dosar} nu exista")
+    case = load_case(dosar, sorted(str(f) for f in folder.iterdir()))
+    verifica_retea(case)
+    et = _etichete()
+    nodes = [{"id": dosar, "denumire": et.get(dosar, {}).get("denumire"), "suma": et.get(dosar, {}).get("suma"), "central": True}]
+    edges = []
+    for l in case.state.get("retea", []):
+        nodes.append({"id": l["dosar"], "denumire": l["denumire"], "suma": l["suma"], "central": False})
+        edges.append({"de_la": dosar, "la": l["dosar"], "motive": l["motive"]})
+    return {"noduri": nodes, "legaturi": edges}
+
+
+@router.get("/firme/metrici")
+def metrici(set: str = "test", mod: str = "offline"):
+    """Metricile calculate de run_eval.py (pentru pagina de rezultate)."""
+    path = FIRME / f"metrici_{set}_{mod}.json"
+    if not path.is_file():
+        raise HTTPException(404, f"Rulati intai: python run_eval.py --set {set} --mode {mod}")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 class Decizie(BaseModel):

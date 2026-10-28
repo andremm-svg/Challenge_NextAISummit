@@ -1,0 +1,1586 @@
+{
+ "D001": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1006000.0,
+  "set": "calibrare",
+  "denumire": "PRIMA LOGISTIC SRL"
+ },
+ "D002": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "test",
+  "denumire": "NEAGU MONICA PFA"
+ },
+ "D003": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 946000.0,
+  "set": "calibrare",
+  "denumire": "DACIA DESIGN SRL"
+ },
+ "D004": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1007000.0,
+  "set": "test",
+  "denumire": "LUMEN INVEST SRL"
+ },
+ "D005": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 140000.0,
+  "set": "calibrare",
+  "denumire": "ENE BOGDAN PFA"
+ },
+ "D006": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 56000.0,
+  "set": "calibrare",
+  "denumire": "RUSU ANA PFA"
+ },
+ "D007": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "test",
+  "denumire": "GHEORGHE OVIDIU PFA"
+ },
+ "D008": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_admin_schimbat",
+  "tip": "SRL",
+  "suma": 465000.0,
+  "set": "calibrare",
+  "denumire": "NORD SOFT SRL"
+ },
+ "D009": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 182000.0,
+  "set": "test",
+  "denumire": "RADULESCU ANDREI PFA"
+ },
+ "D010": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 706000.0,
+  "set": "test",
+  "denumire": "IRIS AUTO SRL"
+ },
+ "D011": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 163000.0,
+  "set": "calibrare",
+  "denumire": "FLUX TRANS SRL"
+ },
+ "D012": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 281000.0,
+  "set": "calibrare",
+  "denumire": "NOVA SOFT SRL"
+ },
+ "D013": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 2509000.0,
+  "set": "test",
+  "denumire": "ARCA AGRO SRL"
+ },
+ "D014": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 341000.0,
+  "set": "test",
+  "denumire": "ATLAS DESIGN SRL"
+ },
+ "D015": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 66000.0,
+  "set": "calibrare",
+  "denumire": "POPESCU DAN PFA"
+ },
+ "D016": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 82000.0,
+  "set": "test",
+  "denumire": "ZENIT INVEST SRL"
+ },
+ "D017": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 945000.0,
+  "set": "calibrare",
+  "denumire": "PRIMA AGRO SRL"
+ },
+ "D018": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 582000.0,
+  "set": "calibrare",
+  "denumire": "DELTA IMPEX SRL"
+ },
+ "D019": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_varsta_luni",
+  "tip": "SRL",
+  "suma": 1435000.0,
+  "set": "test",
+  "denumire": "OMEGA ENERGY SRL"
+ },
+ "D020": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 117000.0,
+  "set": "test",
+  "denumire": "ALFA DESIGN SRL"
+ },
+ "D021": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 1392000.0,
+  "set": "calibrare",
+  "denumire": "FLUX CONSTRUCT SRL"
+ },
+ "D022": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_datorii",
+  "tip": "SRL",
+  "suma": 1159000.0,
+  "set": "test",
+  "denumire": "ATLAS AGRO SRL"
+ },
+ "D023": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 330000.0,
+  "set": "calibrare",
+  "denumire": "VITAL TEXTIL SRL"
+ },
+ "D024": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 81000.0,
+  "set": "test",
+  "denumire": "PETRESCU VLAD PFA"
+ },
+ "D025": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 365000.0,
+  "set": "calibrare",
+  "denumire": "BRIZA DESIGN SRL"
+ },
+ "D026": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1516000.0,
+  "set": "calibrare",
+  "denumire": "NOVA CONSULT SRL"
+ },
+ "D027": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 486000.0,
+  "set": "test",
+  "denumire": "DACIA MEDICAL SRL"
+ },
+ "D028": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 232000.0,
+  "set": "calibrare",
+  "denumire": "LUMEN CONSTRUCT SRL"
+ },
+ "D029": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 603000.0,
+  "set": "test",
+  "denumire": "OMEGA TRADE SRL"
+ },
+ "D030": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 978000.0,
+  "set": "calibrare",
+  "denumire": "SUDIC INVEST SRL"
+ },
+ "D031": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 1097000.0,
+  "set": "test",
+  "denumire": "BRIZA MOBILA SRL"
+ },
+ "D032": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 655000.0,
+  "set": "calibrare",
+  "denumire": "ARCA INVEST SRL"
+ },
+ "D033": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 625000.0,
+  "set": "test",
+  "denumire": "ZENIT ENERGY SRL"
+ },
+ "D034": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1313000.0,
+  "set": "calibrare",
+  "denumire": "ATLAS SOFT SRL"
+ },
+ "D035": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1684000.0,
+  "set": "test",
+  "denumire": "ALFA TEXTIL SRL"
+ },
+ "D036": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 249000.0,
+  "set": "test",
+  "denumire": "VASILESCU SORIN PFA"
+ },
+ "D037": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 584000.0,
+  "set": "calibrare",
+  "denumire": "IRIS TEXTIL SRL"
+ },
+ "D038": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 405000.0,
+  "set": "calibrare",
+  "denumire": "CARPAT CONSTRUCT SRL"
+ },
+ "D039": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 792000.0,
+  "set": "test",
+  "denumire": "NORD INVEST SRL"
+ },
+ "D040": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 329000.0,
+  "set": "test",
+  "denumire": "OMEGA CONSULT SRL"
+ },
+ "D041": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 220000.0,
+  "set": "calibrare",
+  "denumire": "SUDIC ENERGY SRL"
+ },
+ "D042": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa_cash",
+  "tip": "PFA",
+  "suma": 43000.0,
+  "set": "calibrare",
+  "denumire": "PAVEL DELIA PFA"
+ },
+ "D043": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_datorii",
+  "tip": "SRL",
+  "suma": 1870000.0,
+  "set": "test",
+  "denumire": "BRIZA PRINT SRL"
+ },
+ "D044": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "calibrare",
+  "denumire": "CONSTANTIN ROXANA PFA"
+ },
+ "D045": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 218000.0,
+  "set": "test",
+  "denumire": "DELTA AUTO SRL"
+ },
+ "D046": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 664000.0,
+  "set": "test",
+  "denumire": "BRIZA CONSULT SRL"
+ },
+ "D047": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_datorii",
+  "tip": "SRL",
+  "suma": 533000.0,
+  "set": "calibrare",
+  "denumire": "ORIZONT DESIGN SRL"
+ },
+ "D048": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 308000.0,
+  "set": "calibrare",
+  "denumire": "FLUX INVEST SRL"
+ },
+ "D049": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 304000.0,
+  "set": "test",
+  "denumire": "ALFA AUTO SRL"
+ },
+ "D050": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 419000.0,
+  "set": "calibrare",
+  "denumire": "VERDA AGRO SRL"
+ },
+ "D051": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 135000.0,
+  "set": "test",
+  "denumire": "SOLIS PRINT SRL"
+ },
+ "D052": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 712000.0,
+  "set": "test",
+  "denumire": "DELTA DESIGN SRL"
+ },
+ "D053": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 1196000.0,
+  "set": "calibrare",
+  "denumire": "FLUX PROD SRL"
+ },
+ "D054": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 486000.0,
+  "set": "test",
+  "denumire": "VERDA MOBILA SRL"
+ },
+ "D055": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_varsta_luni",
+  "tip": "SRL",
+  "suma": 185000.0,
+  "set": "calibrare",
+  "denumire": "VERDA MEDICAL SRL"
+ },
+ "D056": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 2021000.0,
+  "set": "test",
+  "denumire": "SOLIS MOBILA SRL"
+ },
+ "D057": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 211000.0,
+  "set": "calibrare",
+  "denumire": "TUDOSE SORIN PFA"
+ },
+ "D058": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 30000.0,
+  "set": "calibrare",
+  "denumire": "GEORGESCU TEODORA PFA"
+ },
+ "D059": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_admin_schimbat",
+  "tip": "SRL",
+  "suma": 770000.0,
+  "set": "test",
+  "denumire": "CARPAT IMPEX SRL"
+ },
+ "D060": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 333000.0,
+  "set": "test",
+  "denumire": "ATLAS FOOD SRL"
+ },
+ "D061": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 233000.0,
+  "set": "calibrare",
+  "denumire": "OPREA MIHAI PFA"
+ },
+ "D062": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1099000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS IMPEX SRL"
+ },
+ "D063": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 600000.0,
+  "set": "test",
+  "denumire": "ALFA FOOD SRL"
+ },
+ "D064": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 451000.0,
+  "set": "calibrare",
+  "denumire": "CARPAT PROD SRL"
+ },
+ "D065": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_varsta_luni",
+  "tip": "SRL",
+  "suma": 696000.0,
+  "set": "test",
+  "denumire": "CARPAT MOBILA SRL"
+ },
+ "D066": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 360000.0,
+  "set": "calibrare",
+  "denumire": "VITAL TECH SRL"
+ },
+ "D067": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1345000.0,
+  "set": "test",
+  "denumire": "BRIZA INVEST SRL"
+ },
+ "D068": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 295000.0,
+  "set": "test",
+  "denumire": "ARCA TRANS SRL"
+ },
+ "D069": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1189000.0,
+  "set": "calibrare",
+  "denumire": "NORD FOOD SRL"
+ },
+ "D070": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1239000.0,
+  "set": "test",
+  "denumire": "TERRA AGRO SRL"
+ },
+ "D071": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1814000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS TRADE SRL"
+ },
+ "D072": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 40000.0,
+  "set": "test",
+  "denumire": "LAZAR ADRIAN PFA"
+ },
+ "D073": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 670000.0,
+  "set": "calibrare",
+  "denumire": "LUMEN TRANS SRL"
+ },
+ "D074": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_varsta_luni",
+  "tip": "SRL",
+  "suma": 964000.0,
+  "set": "test",
+  "denumire": "BRIZA TEXTIL SRL"
+ },
+ "D075": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 285000.0,
+  "set": "calibrare",
+  "denumire": "AXIS CONSTRUCT SRL"
+ },
+ "D076": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 283000.0,
+  "set": "calibrare",
+  "denumire": "PRIMA DESIGN SRL"
+ },
+ "D077": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa_cash",
+  "tip": "PFA",
+  "suma": 130000.0,
+  "set": "test",
+  "denumire": "POPESCU BIANCA PFA"
+ },
+ "D078": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 851000.0,
+  "set": "calibrare",
+  "denumire": "ALFA TRANS SRL"
+ },
+ "D079": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 770000.0,
+  "set": "test",
+  "denumire": "IRIS CONSTRUCT SRL"
+ },
+ "D080": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 661000.0,
+  "set": "calibrare",
+  "denumire": "CARPAT AUTO SRL"
+ },
+ "D081": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 109000.0,
+  "set": "test",
+  "denumire": "MARINESCU LUCIAN PFA"
+ },
+ "D082": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_datorii",
+  "tip": "SRL",
+  "suma": 940000.0,
+  "set": "calibrare",
+  "denumire": "NORD DESIGN SRL"
+ },
+ "D083": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 963000.0,
+  "set": "test",
+  "denumire": "MERIDIAN SOFT SRL"
+ },
+ "D084": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 239000.0,
+  "set": "calibrare",
+  "denumire": "NOVA AGRO SRL"
+ },
+ "D085": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 928000.0,
+  "set": "test",
+  "denumire": "NOVA AUTO SRL"
+ },
+ "D086": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 1842000.0,
+  "set": "calibrare",
+  "denumire": "BRIZA AUTO SRL"
+ },
+ "D087": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 486000.0,
+  "set": "test",
+  "denumire": "NORD PROD SRL"
+ },
+ "D088": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 282000.0,
+  "set": "test",
+  "denumire": "LUMEN AGRO SRL"
+ },
+ "D089": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 593000.0,
+  "set": "calibrare",
+  "denumire": "PRIMA IMPEX SRL"
+ },
+ "D090": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 478000.0,
+  "set": "calibrare",
+  "denumire": "BRIZA TECH SRL"
+ },
+ "D091": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 246000.0,
+  "set": "test",
+  "denumire": "NOVA MEDICAL SRL"
+ },
+ "D092": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 2283000.0,
+  "set": "calibrare",
+  "denumire": "BRIZA ENERGY SRL"
+ },
+ "D093": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 414000.0,
+  "set": "test",
+  "denumire": "ALFA SOFT SRL"
+ },
+ "D094": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 2098000.0,
+  "set": "test",
+  "denumire": "BRIZA MEDICAL SRL"
+ },
+ "D095": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 1890000.0,
+  "set": "calibrare",
+  "denumire": "MERIDIAN AGRO SRL"
+ },
+ "D096": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 26000.0,
+  "set": "test",
+  "denumire": "CAZACU COSMIN PFA"
+ },
+ "D097": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 545000.0,
+  "set": "calibrare",
+  "denumire": "ZENIT PROD SRL"
+ },
+ "D098": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 1102000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS TECH SRL"
+ },
+ "D099": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 276000.0,
+  "set": "test",
+  "denumire": "FLUX FOOD SRL"
+ },
+ "D100": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 748000.0,
+  "set": "calibrare",
+  "denumire": "CRISTAL AGRO SRL"
+ },
+ "D101": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 71000.0,
+  "set": "test",
+  "denumire": "MERIDIAN MOBILA SRL"
+ },
+ "D102": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 762000.0,
+  "set": "test",
+  "denumire": "NOVA TECH SRL"
+ },
+ "D103": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1800000.0,
+  "set": "calibrare",
+  "denumire": "IRIS SOFT SRL"
+ },
+ "D104": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1274000.0,
+  "set": "test",
+  "denumire": "ORIZONT CONSULT SRL"
+ },
+ "D105": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 48000.0,
+  "set": "calibrare",
+  "denumire": "POPESCU ADRIAN PFA"
+ },
+ "D106": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 36000.0,
+  "set": "test",
+  "denumire": "VASILESCU LAURA PFA"
+ },
+ "D107": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 240000.0,
+  "set": "calibrare",
+  "denumire": "ATLAS AUTO SRL"
+ },
+ "D108": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1764000.0,
+  "set": "test",
+  "denumire": "ARCA SOFT SRL"
+ },
+ "D109": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_admin_schimbat",
+  "tip": "SRL",
+  "suma": 2040000.0,
+  "set": "calibrare",
+  "denumire": "NOVA FOOD SRL"
+ },
+ "D110": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 910000.0,
+  "set": "test",
+  "denumire": "ZENIT TECH SRL"
+ },
+ "D111": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 26000.0,
+  "set": "calibrare",
+  "denumire": "CONSTANTIN RADU PFA"
+ },
+ "D112": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 864000.0,
+  "set": "calibrare",
+  "denumire": "DELTA TEXTIL SRL"
+ },
+ "D113": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 2160000.0,
+  "set": "test",
+  "denumire": "SOLIS AGRO SRL"
+ },
+ "D114": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 909000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS DESIGN SRL"
+ },
+ "D115": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 72000.0,
+  "set": "test",
+  "denumire": "PAVEL VLAD PFA"
+ },
+ "D116": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "calibrare",
+  "denumire": "TUDOSE OANA PFA"
+ },
+ "D117": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 982000.0,
+  "set": "test",
+  "denumire": "CARPAT LOGISTIC SRL"
+ },
+ "D118": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_varsta_luni",
+  "tip": "SRL",
+  "suma": 903000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS ENERGY SRL"
+ },
+ "D119": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 159000.0,
+  "set": "test",
+  "denumire": "ORIZONT FOOD SRL"
+ },
+ "D120": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 164000.0,
+  "set": "calibrare",
+  "denumire": "RUSU RALUCA PFA"
+ },
+ "D121": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 354000.0,
+  "set": "test",
+  "denumire": "AXIS IMPEX SRL"
+ },
+ "D122": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "calibrare",
+  "denumire": "CONSTANTIN OANA PFA"
+ },
+ "D123": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 216000.0,
+  "set": "test",
+  "denumire": "DELTA ENERGY SRL"
+ },
+ "D124": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 850000.0,
+  "set": "calibrare",
+  "denumire": "ATLAS LOGISTIC SRL"
+ },
+ "D125": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 65000.0,
+  "set": "test",
+  "denumire": "MARINESCU CARMEN PFA"
+ },
+ "D126": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 816000.0,
+  "set": "calibrare",
+  "denumire": "VITAL MEDICAL SRL"
+ },
+ "D127": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 1960000.0,
+  "set": "test",
+  "denumire": "FLUX SERV SRL"
+ },
+ "D128": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_admin_schimbat",
+  "tip": "SRL",
+  "suma": 489000.0,
+  "set": "calibrare",
+  "denumire": "MERIDIAN TEXTIL SRL"
+ },
+ "D129": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 84000.0,
+  "set": "test",
+  "denumire": "ZENIT MEDICAL SRL"
+ },
+ "D130": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 984000.0,
+  "set": "calibrare",
+  "denumire": "LUMEN LOGISTIC SRL"
+ },
+ "D131": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1873000.0,
+  "set": "test",
+  "denumire": "TERRA MOBILA SRL"
+ },
+ "D132": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 326000.0,
+  "set": "calibrare",
+  "denumire": "TERRA TEXTIL SRL"
+ },
+ "D133": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 27000.0,
+  "set": "test",
+  "denumire": "VASILESCU PAUL PFA"
+ },
+ "D134": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 71000.0,
+  "set": "calibrare",
+  "denumire": "ZAMFIR MARIUS PFA"
+ },
+ "D135": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 559000.0,
+  "set": "test",
+  "denumire": "NOVA TRADE SRL"
+ },
+ "D136": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1402000.0,
+  "set": "calibrare",
+  "denumire": "NOVA MOBILA SRL"
+ },
+ "D137": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 73000.0,
+  "set": "test",
+  "denumire": "VASILESCU DIANA PFA"
+ },
+ "D138": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 134000.0,
+  "set": "calibrare",
+  "denumire": "ORIZONT MEDICAL SRL"
+ },
+ "D139": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "test",
+  "denumire": "ZAMFIR VLAD PFA"
+ },
+ "D140": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1497000.0,
+  "set": "calibrare",
+  "denumire": "VITAL TRADE SRL"
+ },
+ "D141": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 287000.0,
+  "set": "test",
+  "denumire": "ARCA PROD SRL"
+ },
+ "D142": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 43000.0,
+  "set": "test",
+  "denumire": "FLOREA DIANA PFA"
+ },
+ "D143": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 88000.0,
+  "set": "calibrare",
+  "denumire": "ENE TEODORA PFA"
+ },
+ "D144": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_varsta_luni",
+  "tip": "SRL",
+  "suma": 239000.0,
+  "set": "test",
+  "denumire": "MERIDIAN TRADE SRL"
+ },
+ "D145": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 162000.0,
+  "set": "calibrare",
+  "denumire": "GHEORGHE ROXANA PFA"
+ },
+ "D146": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1451000.0,
+  "set": "calibrare",
+  "denumire": "CRISTAL AUTO SRL"
+ },
+ "D147": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 98000.0,
+  "set": "test",
+  "denumire": "PETRESCU ADRIAN PFA"
+ },
+ "D148": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa_cash",
+  "tip": "PFA",
+  "suma": 39000.0,
+  "set": "calibrare",
+  "denumire": "MATEI MIHAI PFA"
+ },
+ "D149": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1056000.0,
+  "set": "test",
+  "denumire": "VERDA LOGISTIC SRL"
+ },
+ "D150": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 1055000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS PROD SRL"
+ },
+ "D151": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_admin_schimbat",
+  "tip": "SRL",
+  "suma": 1834000.0,
+  "set": "test",
+  "denumire": "TERRA LOGISTIC SRL"
+ },
+ "D152": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 37000.0,
+  "set": "calibrare",
+  "denumire": "MARINESCU RADU PFA"
+ },
+ "D153": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 365000.0,
+  "set": "test",
+  "denumire": "SOLIS MEDICAL SRL"
+ },
+ "D154": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 436000.0,
+  "set": "calibrare",
+  "denumire": "DELTA PROD SRL"
+ },
+ "D155": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 708000.0,
+  "set": "test",
+  "denumire": "DACIA AUTO SRL"
+ },
+ "D156": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 657000.0,
+  "set": "test",
+  "denumire": "BRIZA CONSTRUCT SRL"
+ },
+ "D157": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_grup",
+  "tip": "SRL",
+  "suma": 2375000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS TRANS SRL"
+ },
+ "D158": {
+  "eticheta": "FRAUDA",
+  "tipar": "angajati_fantoma",
+  "tip": "SRL",
+  "suma": 226000.0,
+  "set": "calibrare",
+  "denumire": "SUDIC CONSULT SRL"
+ },
+ "D159": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 282000.0,
+  "set": "test",
+  "denumire": "ARCA SERV SRL"
+ },
+ "D160": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 203000.0,
+  "set": "calibrare",
+  "denumire": "ORIZONT TRADE SRL"
+ },
+ "D161": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 1063000.0,
+  "set": "test",
+  "denumire": "ALFA CONSULT SRL"
+ },
+ "D162": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_fals_pozitiv",
+  "tip": "SRL",
+  "suma": 212000.0,
+  "set": "calibrare",
+  "denumire": "AXIS AUTO SRL"
+ },
+ "D163": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 31000.0,
+  "set": "test",
+  "denumire": "SANDU MARIUS PFA"
+ },
+ "D164": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 66000.0,
+  "set": "calibrare",
+  "denumire": "ARCA ENERGY SRL"
+ },
+ "D165": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 566000.0,
+  "set": "test",
+  "denumire": "TERRA CONSTRUCT SRL"
+ },
+ "D166": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 936000.0,
+  "set": "calibrare",
+  "denumire": "ZENIT AUTO SRL"
+ },
+ "D167": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 28000.0,
+  "set": "test",
+  "denumire": "MARINESCU ADRIAN PFA"
+ },
+ "D168": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 61000.0,
+  "set": "calibrare",
+  "denumire": "ILIE RALUCA PFA"
+ },
+ "D169": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1314000.0,
+  "set": "test",
+  "denumire": "LUMEN SOFT SRL"
+ },
+ "D170": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1428000.0,
+  "set": "calibrare",
+  "denumire": "SOLIS SOFT SRL"
+ },
+ "D171": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1372000.0,
+  "set": "test",
+  "denumire": "CRISTAL PROD SRL"
+ },
+ "D172": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_admin_schimbat",
+  "tip": "SRL",
+  "suma": 1823000.0,
+  "set": "calibrare",
+  "denumire": "VITAL FOOD SRL"
+ },
+ "D173": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 316000.0,
+  "set": "test",
+  "denumire": "OMEGA LOGISTIC SRL"
+ },
+ "D174": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 963000.0,
+  "set": "test",
+  "denumire": "SOLIS TEXTIL SRL"
+ },
+ "D175": {
+  "eticheta": "FRAUDA",
+  "tipar": "retea",
+  "tip": "SRL",
+  "suma": 386000.0,
+  "set": "calibrare",
+  "denumire": "VERDA TECH SRL"
+ },
+ "D176": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1519000.0,
+  "set": "calibrare",
+  "denumire": "SUDIC DESIGN SRL"
+ },
+ "D177": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 27000.0,
+  "set": "test",
+  "denumire": "TOMA MIHAI PFA"
+ },
+ "D178": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 310000.0,
+  "set": "calibrare",
+  "denumire": "OMEGA MOBILA SRL"
+ },
+ "D179": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 166000.0,
+  "set": "test",
+  "denumire": "NORD AUTO SRL"
+ },
+ "D180": {
+  "eticheta": "FRAUDA",
+  "tipar": "firma_cumparata",
+  "tip": "SRL",
+  "suma": 154000.0,
+  "set": "calibrare",
+  "denumire": "PRIMA AUTO SRL"
+ },
+ "D181": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 207000.0,
+  "set": "test",
+  "denumire": "OMEGA TECH SRL"
+ },
+ "D182": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_fals_pozitiv",
+  "tip": "SRL",
+  "suma": 573000.0,
+  "set": "test",
+  "denumire": "ARCA CONSTRUCT SRL"
+ },
+ "D183": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 165000.0,
+  "set": "calibrare",
+  "denumire": "VERDA CONSULT SRL"
+ },
+ "D184": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 1336000.0,
+  "set": "test",
+  "denumire": "LUMEN TEXTIL SRL"
+ },
+ "D185": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 54000.0,
+  "set": "calibrare",
+  "denumire": "MUNTEANU FLORIN PFA"
+ },
+ "D186": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_cash",
+  "tip": "SRL",
+  "suma": 1465000.0,
+  "set": "test",
+  "denumire": "PRIMA MOBILA SRL"
+ },
+ "D187": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 802000.0,
+  "set": "calibrare",
+  "denumire": "ORIZONT PRINT SRL"
+ },
+ "D188": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 20000,
+  "set": "test",
+  "denumire": "BADEA RALUCA PFA"
+ },
+ "D189": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_grup",
+  "tip": "SRL",
+  "suma": 819000.0,
+  "set": "calibrare",
+  "denumire": "DELTA MEDICAL SRL"
+ },
+ "D190": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_rotunjire",
+  "tip": "SRL",
+  "suma": 316000.0,
+  "set": "test",
+  "denumire": "SUDIC AGRO SRL"
+ },
+ "D191": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 44000.0,
+  "set": "calibrare",
+  "denumire": "MUNTEANU VLAD PFA"
+ },
+ "D192": {
+  "eticheta": "FRAUDA",
+  "tipar": "bilant_umflat",
+  "tip": "SRL",
+  "suma": 186000.0,
+  "set": "calibrare",
+  "denumire": "ALFA PRINT SRL"
+ },
+ "D193": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim",
+  "tip": "SRL",
+  "suma": 504000.0,
+  "set": "test",
+  "denumire": "OMEGA AUTO SRL"
+ },
+ "D194": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 31000.0,
+  "set": "calibrare",
+  "denumire": "MARINESCU OVIDIU PFA"
+ },
+ "D195": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa",
+  "tip": "PFA",
+  "suma": 45000.0,
+  "set": "test",
+  "denumire": "CAZACU OVIDIU PFA"
+ },
+ "D196": {
+  "eticheta": "FRAUDA",
+  "tipar": "pfa_venit_fals",
+  "tip": "PFA",
+  "suma": 312000.0,
+  "set": "test",
+  "denumire": "BARBU LAURA PFA"
+ },
+ "D197": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_datorii",
+  "tip": "SRL",
+  "suma": 1696000.0,
+  "set": "calibrare",
+  "denumire": "TERRA DESIGN SRL"
+ },
+ "D198": {
+  "eticheta": "LEGITIM",
+  "tipar": "legitim_pfa_cash",
+  "tip": "PFA",
+  "suma": 54000.0,
+  "set": "test",
+  "denumire": "MARINESCU IRINA PFA"
+ }
+}
