@@ -203,7 +203,8 @@ def investigate(case_id: str, pdf_paths: list[str], mode: str = "auto") -> dict:
     t0 = time.time()
     llm = get_llm() if mode in ("auto", "llm") else None
     if mode == "llm" and llm is None:
-        raise RuntimeError("Mod 'llm' cerut, dar FEATHERLESS_API_KEY lipseste din .env")
+        raise RuntimeError("Mod 'llm' cerut, dar LLM-ul nu e configurat in .env. "
+                           "Vezi mesajul [Sherlock] de mai sus: arata exact ce camp lipseste.")
     used_mode = "llm" if llm else "offline"
     case = load_case(case_id, pdf_paths, llm=llm)
     case.log("sistem", "start", f"mod={used_mode}" + (f", furnizor={getattr(llm, 'provider', '?')}, model={llm.model}" if llm else ""))
