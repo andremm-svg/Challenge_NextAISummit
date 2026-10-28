@@ -1,19 +1,25 @@
+from pathlib import Path
+
 import pymupdf
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from sherlock_api import router as sherlock_router
 
-app = FastAPI(title="BankFlow AI")
+app = FastAPI(title="Sherlock - antifrauda pentru creditele firmelor")
 
 # Permite interfetei (Lovable) sa apeleze API-ul
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(sherlock_router)
+# Aplicatia web a analistului: http://127.0.0.1:8000/app/
+app.mount("/app", StaticFiles(directory=Path(__file__).resolve().parent / "app", html=True), name="app")
 
 
 @app.get("/")
 def home():
-    return {"message": "Backend-ul functioneaza!"}
+    return RedirectResponse("/app/")
 
 
 @app.post("/upload")

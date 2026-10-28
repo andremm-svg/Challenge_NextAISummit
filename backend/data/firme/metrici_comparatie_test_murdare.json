@@ -1,0 +1,47 @@
+{
+ "set": "test",
+ "date": "murdare",
+ "dosare": 253,
+ "randuri": [
+  {
+   "configuratie": "Verificare clasica ANAF",
+   "recall": 0.231,
+   "precizie": 1.0,
+   "alarme_false": 0,
+   "legitime_la_revizuire": null,
+   "fraude_ajunse_la_analist": 0.231,
+   "bani_opriti": 1548000.0,
+   "documente_cerute": 0
+  },
+  {
+   "configuratie": "Agent simplu",
+   "recall": 0.923,
+   "precizie": 0.75,
+   "alarme_false": 8,
+   "legitime_la_revizuire": 0.3,
+   "fraude_ajunse_la_analist": 1.0,
+   "bani_opriti": 22155000.0,
+   "documente_cerute": 0
+  },
+  {
+   "configuratie": "Multi-agent",
+   "recall": 0.923,
+   "precizie": 0.75,
+   "alarme_false": 8,
+   "legitime_la_revizuire": 0.15,
+   "fraude_ajunse_la_analist": 1.0,
+   "bani_opriti": 22155000.0,
+   "documente_cerute": 0
+  },
+  {
+   "configuratie": "Multi-agent + solicitare documente",
+   "recall": 0.923,
+   "precizie": 1.0,
+   "alarme_false": 0,
+   "legitime_la_revizuire": 0.106,
+   "fraude_ajunse_la_analist": 1.0,
+   "bani_opriti": 22155000.0,
+   "documente_cerute": 35
+  }
+ ]
+}

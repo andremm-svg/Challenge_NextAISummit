@@ -1,9 +1,10 @@
 """Sherlock multi-agent (firme si PFA): un agent coordonator si sub-agenti specializati.
 
-  1. Trei SUB-AGENTI investigheaza fiecare zona lui, cu doar uneltele rolului:
-       Agentul de documente -> dosar complet, documente manipulate (instructiuni ascunse)
+  1. Patru SUB-AGENTI investigheaza fiecare zona lui, cu doar uneltele rolului:
+       Agentul de documente -> dosar complet, documente manipulate (instructiuni ascunse), documente scanate
        Agentul de firma     -> cine e firma: identitate, statut, istoric, retea
        Agentul financiar    -> cifrele sunt adevarate: bilant vs ANAF, bani din cont, salarii
+       Agentul de contracte -> clientul din contract e real, poate plati si chiar plateste
   2. CONTROLUL AUTOMAT ruleaza orice verificare obligatorie omisa de un sub-agent.
   3. AGENTUL DE CONTRA-VERIFICARE cauta o explicatie legitima pentru fiecare alarma.
   4. COORDONATORUL (Sherlock, reguli deterministe) accepta o explicatie DOAR daca e confirmata de verificari
@@ -32,6 +33,9 @@ SUB_AGENTI = [
     {"id": "agent_financiar", "nume": "Agentul financiar",
      "rol": "verifică dacă cifrele sunt adevărate: bilanț față de ANAF, banii din cont, salariile, capacitatea de plată",
      "unelte": ["extrage_campuri", "verifica_bilant_vs_anaf", "verifica_flux_cont", "verifica_salarii", "verifica_capacitate_plata"]},
+    {"id": "agent_contracte", "nume": "Agentul de contracte",
+     "rol": "citește contractele cu clienții și verifică dacă beneficiarul e real, poate plăti și chiar plătește",
+     "unelte": ["extrage_campuri", "verifica_contracte"]},
 ]
 
 PROMPT_SUB_AGENT = """Esti {nume}, sub-agent al agentului antifrauda Sherlock dintr-o banca din Romania.
@@ -108,6 +112,7 @@ def _explicatie_alternativa(case, f) -> tuple[str, bool, str]:
                "retea": "Firmele pot aparține legitim aceluiași grup de afaceri.",
                "istoric_firma": "Noul administrator poate fi un investitor care a relansat firma.",
                "bilant_vs_anaf": "Diferența poate veni dintr-un bilanț rectificativ depus ulterior.",
+               "contracte": "Contractul poate fi semnat recent, iar plățile pot veni mai târziu.",
                "injectie": "Textul ascuns poate fi o eroare a programului care a generat PDF-ul."}.get(c, "Constatarea poate avea o explicație legitimă.")
         return arg, False, "Respins: o alarmă critică nu se anulează fără documente noi; rămâne la analist."
     if c == "istoric_firma" and "Firma noua" in msg:
@@ -134,6 +139,12 @@ def _explicatie_alternativa(case, f) -> tuple[str, bool, str]:
     if c == "flux_cont":
         return ("Afacerea poate încasa o parte din bani cash sau la altă bancă.", False,
                 "Nedecis: argumentul se poate verifica, așa că cerem clientului extrasele de la celelalte bănci.")
+    if c == "contracte":
+        plati = case.state.get("acoperire_plati_contract")
+        ok = plati is not None and plati >= 0.8 and _ok(case, "flux_cont", "bilant_vs_anaf", "retea")
+        return ("Beneficiarul poate fi un client fidel din același grup, cu plăți reale.", ok,
+                "Acceptat: plățile beneficiarului apar în cont, iar firma trece celelalte verificări." if ok else
+                "Respins: plățile beneficiarului nu confirmă contractul; analistul cere confirmarea beneficiarului.")
     if c == "statut_fiscal":
         return ("Datoriile pot fi eșalonate legal la ANAF.", False, "Respins: eșalonarea trebuie dovedită cu un document.")
     return ("", False, "")
@@ -181,6 +192,11 @@ def _cereri(case) -> list:
         cereri.append({"document": "extrase_alte_banci", "motiv": f"încasările din extras acoperă doar {flux:.0%} din veniturile declarate",
                        "mesaj_client": ("Încasările din extrasul transmis acoperă doar o parte din cifra de afaceri declarată. "
                                         "Dacă aveți conturi și la alte bănci, vă rugăm să ne transmiteți extrasele pe ultimele 12 luni.")})
+    sal = case.state.get("acoperire_salarii")
+    if sal is not None and sal < T.CONFIG["salarii"]["avertizare_sub"] and len(T._statements(case)) == 1:
+        cereri.append({"document": "extras_cont_salarii", "motiv": f"plățile salariale din extras acoperă doar {sal:.0%} din minimul așteptat",
+                       "mesaj_client": ("În extrasul transmis nu apar plățile salariale pentru angajații declarați. "
+                                        "Dacă salariile se plătesc din alt cont, vă rugăm să ne transmiteți extrasul acelui cont pe ultimele 12 luni.")})
     for c in cereri:
         case.log("coordonator", "cere_document", f"{c['document']}: {c['motiv']}")
     return cereri
@@ -244,6 +260,7 @@ def investigate_multi_agent(case_id: str, paths: list[str], mode: str = "auto", 
         "constatari": findings, "urmatorii_pasi": _next_steps(findings, verdict),
         "documente": {t: d["file"] for t, d in case.docs.items()}, "documente_izolate": sorted(case.quarantined),
         "verificari_completate_automat": forced, "retea": case.state.get("retea", []),
+        "contracte": case.state.get("contracte", []), "masuratori": T.masuratori(case),
         "audit": case.audit, "durata_sec": round(time.time() - t0, 2),
     }
 

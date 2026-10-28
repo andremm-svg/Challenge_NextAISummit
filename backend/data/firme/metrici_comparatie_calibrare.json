@@ -1,35 +1,36 @@
 {
  "set": "calibrare",
- "dosare": 99,
+ "date": "curate",
+ "dosare": 253,
  "randuri": [
   {
    "configuratie": "Verificare clasica ANAF",
-   "recall": 0.15,
+   "recall": 0.115,
    "precizie": 1.0,
    "alarme_false": 0,
    "legitime_la_revizuire": null,
-   "fraude_ajunse_la_analist": 0.15,
+   "fraude_ajunse_la_analist": 0.115,
    "bani_opriti": 832000.0,
    "documente_cerute": 0
   },
   {
    "configuratie": "Agent simplu",
    "recall": 1.0,
-   "precizie": 0.952,
-   "alarme_false": 1,
-   "legitime_la_revizuire": 0.203,
+   "precizie": 0.722,
+   "alarme_false": 10,
+   "legitime_la_revizuire": 0.238,
    "fraude_ajunse_la_analist": 1.0,
-   "bani_opriti": 6604000.0,
+   "bani_opriti": 24567000.0,
    "documente_cerute": 0
   },
   {
    "configuratie": "Multi-agent",
    "recall": 1.0,
-   "precizie": 0.952,
-   "alarme_false": 1,
-   "legitime_la_revizuire": 0.101,
+   "precizie": 0.722,
+   "alarme_false": 10,
+   "legitime_la_revizuire": 0.137,
    "fraude_ajunse_la_analist": 1.0,
-   "bani_opriti": 6604000.0,
+   "bani_opriti": 24567000.0,
    "documente_cerute": 0
   },
   {
@@ -37,10 +38,10 @@
    "recall": 1.0,
    "precizie": 1.0,
    "alarme_false": 0,
-   "legitime_la_revizuire": 0.038,
+   "legitime_la_revizuire": 0.048,
    "fraude_ajunse_la_analist": 1.0,
-   "bani_opriti": 6604000.0,
-   "documente_cerute": 16
+   "bani_opriti": 24567000.0,
+   "documente_cerute": 44
   }
  ]
 }

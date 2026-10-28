@@ -1,0 +1,76 @@
+﻿Banca Demo SA - Extras de cont
+IBAN;RO81BDEM6049596156279438
+Perioada;10.10.2025 - 25.09.2026
+
+Data tranzactiei;Detalii tranzactie;Debit;Credit
+10.10.2025;Drepturi salariale 10/2026;55.391,99;
+15.10.2025;Plată furnizor servicii;24.620,47;
+16.10.2025;Transfer primit CLIENT EPSILON SA contravaloare factura;;25.377,37
+24.10.2025;OP primit de la CLIENT GAMMA SRL;;35.019,79
+25.10.2025;Plată ANAF contribuții sociale;38.255,44;
+10.11.2025;Plată salarii luna 11;54.673,26;
+11.11.2025;Plată furnizor servicii;32.518,69;
+12.11.2025;Transfer primit CLIENT ZETA SRL contravaloare factura;;12.324,98
+15.11.2025;Încasare factură CLIENT ALFA SRL;;11.150,54
+22.11.2025;Transfer primit CLIENT BETA SA contravaloare factura;;28.481,30
+23.11.2025;Încasare factură CLIENT ZETA SRL;;8.228,41
+25.11.2025;Plată ANAF contribuții sociale;38.255,44;
+10.12.2025;Plată salarii luna 12;56.116,69;
+12.12.2025;Încasare factură CLIENT EPSILON SA;;38.789,35
+18.12.2025;Plată furnizor servicii;18.539,14;
+25.12.2025;Plată ANAF contribuții sociale;38.255,44;
+27.12.2025;OP primit de la CLIENT ALFA SRL;;15.100,34
+09.01.2026;Plată furnizor servicii;20.393,38;
+10.01.2026;Stat de plată luna 01;56.149,51;
+21.01.2026;Încasare factură CLIENT EPSILON SA;;11.992,63
+25.01.2026;Plată ANAF contribuții sociale;38.255,44;
+26.01.2026;OP primit de la CLIENT DELTA SRL;;30.830,76
+10.02.2026;Plată salarii luna 02;53.115,51;
+11.02.2026;Plată furnizor servicii;24.026,45;
+19.02.2026;Încasare factură CLIENT GAMMA SRL;;5.448,27
+19.02.2026;Încasare factură CLIENT ZETA SRL;;25.904,49
+20.02.2026;Transfer primit CLIENT DELTA SRL contravaloare factura;;11.105,27
+23.02.2026;OP primit de la CLIENT BETA SA;;2.839,62
+25.02.2026;Plată ANAF contribuții sociale;38.255,44;
+26.02.2026;Transfer primit CLIENT DELTA SRL contravaloare factura;;5.681,53
+10.03.2026;Drepturi salariale 03/2026;54.617,09;
+13.03.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;26.141,98
+16.03.2026;Încasare factură CLIENT ZETA SRL;;36.603,72
+16.03.2026;Plată furnizor servicii;29.422,49;
+25.03.2026;Plată ANAF contribuții sociale;38.255,44;
+03.04.2026;OP primit de la CLIENT ZETA SRL;;9.784,91
+10.04.2026;Stat de plată luna 04;56.213,87;
+14.04.2026;Plată furnizor servicii;14.709,32;
+16.04.2026;Transfer primit CLIENT ALFA SRL contravaloare factura;;6.210,10
+19.04.2026;Încasare factură CLIENT ALFA SRL;;14.373,81
+20.04.2026;OP primit de la CLIENT DELTA SRL;;6.118,72
+25.04.2026;Plată ANAF contribuții sociale;38.255,44;
+27.04.2026;Transfer primit CLIENT GAMMA SRL contravaloare factura;;8.954,99
+03.05.2026;Transfer primit CLIENT ALFA SRL contravaloare factura;;5.249,79
+10.05.2026;Stat de plată luna 05;55.283,54;
+16.05.2026;Plată furnizor servicii;29.386,97;
+19.05.2026;Încasare factură CLIENT ALFA SRL;;37.644,55
+24.05.2026;Încasare factură CLIENT ZETA SRL;;14.657,64
+25.05.2026;Plată ANAF contribuții sociale;38.255,44;
+10.06.2026;Încasare factură CLIENT ZETA SRL;;22.002,55
+10.06.2026;Drepturi salariale 06/2026;55.454,74;
+16.06.2026;Plată furnizor servicii;23.662,08;
+22.06.2026;Încasare factură CLIENT ALFA SRL;;26.470,07
+25.06.2026;Plată ANAF contribuții sociale;38.255,44;
+02.07.2026;OP primit de la CLIENT ZETA SRL;;38.705,98
+03.07.2026;OP primit de la CLIENT DELTA SRL;;23.164,82
+10.07.2026;Drepturi salariale 07/2026;53.586,16;
+12.07.2026;Plată furnizor servicii;18.710,24;
+25.07.2026;Plată ANAF contribuții sociale;38.255,44;
+04.08.2026;Încasare factură CLIENT ALFA SRL;;6.950,15
+10.08.2026;Stat de plată luna 08;53.212,52;
+19.08.2026;Plată furnizor servicii;18.555,42;
+25.08.2026;Încasare factură CLIENT DELTA SRL;;47.641,89
+25.08.2026;Plată ANAF contribuții sociale;38.255,44;
+10.09.2026;Stat de plată luna 09;55.968,81;
+11.09.2026;OP primit de la CLIENT DELTA SRL;;23.755,13
+11.09.2026;OP primit de la CLIENT EPSILON SA;;11.500,35
+14.09.2026;Încasare factură CLIENT DELTA SRL;;10.798,21
+17.09.2026;Plată furnizor servicii;31.068,47;
+19.09.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;17.294,45
+25.09.2026;Plată ANAF contribuții sociale;38.255,44;

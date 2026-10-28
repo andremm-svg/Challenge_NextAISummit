@@ -1,13 +1,13 @@
 {
- "dosare": 99,
- "dosare_cu_documente_cerute": 16,
- "fraude": 20,
- "legitime": 79,
+ "dosare": 253,
+ "dosare_cu_documente_cerute": 44,
+ "fraude": 26,
+ "legitime": 227,
  "sherlock": {
-  "tp": 20,
+  "tp": 26,
   "fp": 0,
   "fn": 0,
-  "tn": 79,
+  "tn": 227,
   "recall": 1.0,
   "precizie": 1.0,
   "f1": 1.0,
@@ -16,18 +16,18 @@
  "verificare_clasica_anaf": {
   "tp": 3,
   "fp": 0,
-  "fn": 17,
-  "tn": 79,
-  "recall": 0.15,
+  "fn": 23,
+  "tn": 227,
+  "recall": 0.115,
   "precizie": 1.0,
-  "f1": 0.261,
+  "f1": 0.207,
   "rata_alarme_false": 0.0
  },
  "bani": {
-  "credite_frauduloase_total": 6604000.0,
-  "oprite_de_sherlock": 6604000.0,
+  "credite_frauduloase_total": 24567000.0,
+  "oprite_de_sherlock": 24567000.0,
   "oprite_de_verificarea_clasica": 832000.0,
-  "pierderi_evitate_in_plus": 5772000.0
+  "pierderi_evitate_in_plus": 23735000.0
  },
  "pe_tipar_de_frauda": {
   "pfa_venit_fals": {
@@ -54,14 +54,20 @@
    "total": 2,
    "sherlock": 2,
    "clasic": 0
+  },
+  "contract_fictiv": {
+   "total": 6,
+   "sherlock": 6,
+   "clasic": 0
   }
  },
  "fraude_ajunse_la_analist": 1.0,
- "legitime_trimise_la_revizuire": 0.038,
- "timp_mediu_sec": 0.02,
- "durata_totala_sec": 1.7,
+ "legitime_trimise_la_revizuire": 0.048,
+ "timp_mediu_sec": 0.04,
+ "durata_totala_sec": 10.7,
  "ipoteza": "Un credit fraudulos e considerat pierdut integral (fara recuperari).",
  "set": "calibrare",
  "mod": "offline",
- "configuratie": "complet"
+ "configuratie": "complet",
+ "date": "curate"
 }

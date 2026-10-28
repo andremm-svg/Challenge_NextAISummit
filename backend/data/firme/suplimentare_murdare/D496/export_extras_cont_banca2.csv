@@ -1,0 +1,29 @@
+﻿Banca Demo SA - Extras de cont
+IBAN;RO10BDEM1594280479223219
+Perioada;24.10.2025 - 16.09.2026
+
+Data tranzactiei;Detalii tranzactie;Debit;Credit
+24.10.2025;Comision administrare cont;21,25;
+25.10.2025;OP primit de la CLIENT DELTA SRL;;110.338,89
+22.11.2025;Comision administrare cont;30,30;
+27.11.2025;Încasare factură CLIENT ALFA SRL;;118.831,25
+16.12.2025;Încasare factură CLIENT GAMMA SRL;;129.712,64
+24.12.2025;Comision administrare cont;19,36;
+10.01.2026;Încasare factură CLIENT EPSILON SA;;135.669,32
+24.01.2026;Comision administrare cont;31,20;
+17.02.2026;Transfer primit CLIENT ZETA SRL contravaloare factura;;111.760,74
+20.02.2026;Comision administrare cont;28,03;
+19.03.2026;Comision administrare cont;29,97;
+22.03.2026;Încasare factură CLIENT DELTA SRL;;136.231,93
+07.04.2026;Comision administrare cont;24,02;
+08.04.2026;OP primit de la CLIENT ALFA SRL;;114.869,69
+12.05.2026;OP primit de la CLIENT BETA SA;;142.507,90
+23.05.2026;Comision administrare cont;22,57;
+10.06.2026;Comision administrare cont;39,21;
+11.06.2026;OP primit de la CLIENT GAMMA SRL;;120.824,58
+04.07.2026;OP primit de la CLIENT EPSILON SA;;129.244,13
+09.07.2026;Comision administrare cont;38,74;
+14.08.2026;Comision administrare cont;20,87;
+23.08.2026;OP primit de la CLIENT EPSILON SA;;127.416,26
+12.09.2026;Comision administrare cont;15,73;
+16.09.2026;OP primit de la CLIENT ZETA SRL;;131.074,09

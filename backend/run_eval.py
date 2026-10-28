@@ -6,6 +6,8 @@
     python run_eval.py --mode llm --workers 4   # in paralel
     python run_eval.py --config simplu          # un singur agent (fara sub-agenti si fara solicitare de documente)
     python run_eval.py --comparatie             # verificare clasica vs agent simplu vs multi-agent vs multi-agent + documente
+    python run_eval.py --date murdare           # aceleasi dosare in formate "murdare" (alte banci, tabele, scanari)
+    python run_eval.py --doar-extensie          # doar dosarele noi (D199+): contracte si exemple negative grele
 
 Reguli de onestitate: pragurile se ajusteaza DOAR pe setul de calibrare; rezultatele raportate sunt pe TEST.
 "Verificarea clasica" = ce face azi o banca: identitate + statut fiscal + bilant comparat cu ANAF.
@@ -48,14 +50,18 @@ CONFIGS = {
 }
 
 
-def run_case(case_id, config, llm):
-    folder = str(DATA / "dosare" / case_id)
+DATE = {"curate": ("dosare", "suplimentare"), "murdare": ("dosare_murdare", "suplimentare_murdare")}
+
+
+def run_case(case_id, config, llm, date="curate"):
+    dosare, suplimentare = DATE[date]
+    folder = str(DATA / dosare / case_id)
     mode = "llm" if llm else "offline"
     if config == "simplu":
         return investigate_folder(folder, mode=mode, domeniu="firme", llm=llm)
     if config == "multi_agent":
         return investigate_multi_agent_folder(folder, mode=mode, llm=llm)
-    x = raspuns_client(folder, str(DATA / "suplimentare" / case_id), mode=mode, llm=llm)
+    x = raspuns_client(folder, str(DATA / suplimentare / case_id), mode=mode, llm=llm)
     r = dict(x["dupa"])
     r["documente_cerute_initial"] = x["inainte"]["documente_cerute"]
     r["client_a_raspuns"] = x["client_a_raspuns"]
@@ -73,12 +79,14 @@ def main():
     ap.add_argument("--verbose", action="store_true")
     ap.add_argument("--config", default="complet", choices=list(CONFIGS))
     ap.add_argument("--comparatie", action="store_true")
+    ap.add_argument("--date", default="curate", choices=list(DATE))
+    ap.add_argument("--doar-extensie", action="store_true")
     args = ap.parse_args()
     if args.comparatie:
         return comparatie(args)
 
     labels = json.loads((DATA / "etichete.json").read_text(encoding="utf-8"))
-    ids = [k for k, v in sorted(labels.items()) if args.set == "toate" or v["set"] == args.set]
+    ids = select(labels, args)
     if args.limit:  # esantion care pastreaza si fraude si dosare legitime
         fr = [i for i in ids if labels[i]["eticheta"] == "FRAUDA"]
         lg = [i for i in ids if labels[i]["eticheta"] != "FRAUDA"]
@@ -92,20 +100,29 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     def run(case_id):
-        r = run_case(case_id, args.config, llm)
+        r = run_case(case_id, args.config, llm, args.date)
         (out_dir / f"{case_id}.json").write_text(json.dumps(r, indent=1, ensure_ascii=False), encoding="utf-8")
         return case_id, r
 
     t0 = time.time()
-    print(f"Evaluez {len(ids)} dosare (set={args.set}, mod={'llm' if llm else 'offline'}, configuratie={CONFIGS[args.config]})...")
+    print(f"Evaluez {len(ids)} dosare (set={args.set}, date={args.date}, mod={'llm' if llm else 'offline'}, configuratie={CONFIGS[args.config]})...")
     with ThreadPoolExecutor(max_workers=max(1, args.workers)) as ex:
         results = dict(ex.map(run, ids))
     metrici, ratate, alarme_false = evaluate(ids, labels, results, t0)
-    metrici.update(set=args.set, mod="llm" if llm else "offline", configuratie=args.config)
-    name = f"metrici_{args.set}_{metrici['mod']}" + ("" if args.config == "complet" else f"_{args.config}") + ".json"
+    metrici.update(set=args.set, mod="llm" if llm else "offline", configuratie=args.config, date=args.date)
+    name = f"metrici_{args.set}_{metrici['mod']}" + ("" if args.config == "complet" else f"_{args.config}") + suffix(args) + ".json"
     (DATA / name).write_text(json.dumps(metrici, indent=1, ensure_ascii=False), encoding="utf-8")
     report(metrici, ratate, alarme_false, args.verbose)
     print(f"\nMetrici salvate in data/firme/{name}")
+
+
+def select(labels, args):
+    return [k for k, v in sorted(labels.items()) if (args.set == "toate" or v["set"] == args.set)
+            and (not getattr(args, "doar_extensie", False) or v.get("extensie"))]
+
+
+def suffix(args) -> str:
+    return ("" if args.date == "curate" else f"_{args.date}") + ("_extensie" if getattr(args, "doar_extensie", False) else "")
 
 
 def evaluate(ids, labels, results, t0):
@@ -186,11 +203,11 @@ def report(metrici, ratate, alarme_false, verbose=False):
 def comparatie(args):
     """Aceleasi dosare, patru moduri de lucru: arata ce aduce fiecare strat al lui Sherlock."""
     labels = json.loads((DATA / "etichete.json").read_text(encoding="utf-8"))
-    ids = [k for k, v in sorted(labels.items()) if args.set == "toate" or v["set"] == args.set]
+    ids = select(labels, args)
     rows, clasic = [], None
     for cfg, nume in CONFIGS.items():
         t0 = time.time()
-        results = {i: run_case(i, cfg, None) for i in ids}
+        results = {i: run_case(i, cfg, None, args.date) for i in ids}
         m, _, _ = evaluate(ids, labels, results, t0)
         clasic = clasic or m["verificare_clasica_anaf"] | {"bani": m["bani"]["oprite_de_verificarea_clasica"], "revizuire": None}
         rows.append({"configuratie": nume, "recall": m["sherlock"]["recall"], "precizie": m["sherlock"]["precizie"],
@@ -200,15 +217,15 @@ def comparatie(args):
     rows.insert(0, {"configuratie": "Verificare clasica ANAF", "recall": clasic["recall"], "precizie": clasic["precizie"],
                     "alarme_false": clasic["fp"], "legitime_la_revizuire": None, "fraude_ajunse_la_analist": clasic["recall"],
                     "bani_opriti": clasic["bani"], "documente_cerute": 0})
-    (DATA / f"metrici_comparatie_{args.set}.json").write_text(json.dumps({"set": args.set, "dosare": len(ids), "randuri": rows},
+    (DATA / f"metrici_comparatie_{args.set}{suffix(args)}.json").write_text(json.dumps({"set": args.set, "date": args.date, "dosare": len(ids), "randuri": rows},
                                                                           indent=1, ensure_ascii=False), encoding="utf-8")
-    print(f"\nComparatie pe setul {args.set} ({len(ids)} dosare, offline)\n")
+    print(f"\nComparatie pe setul {args.set} ({len(ids)} dosare, date {args.date}, offline)\n")
     print(f"{'Configuratie':38}{'Recall':>8}{'Precizie':>10}{'Alarme false':>14}{'Legit. la revizuire':>21}{'Bani opriti':>16}")
     print("-" * 107)
     for r in rows:
         rev = "-" if r["legitime_la_revizuire"] is None else f"{r['legitime_la_revizuire']:.0%}"
         print(f"{r['configuratie']:38}{r['recall']:>8.0%}{r['precizie']:>10.0%}{r['alarme_false']:>14}{rev:>21}{lei(r['bani_opriti']):>16}")
-    print(f"\nSalvat in data/firme/metrici_comparatie_{args.set}.json")
+    print(f"\nSalvat in data/firme/metrici_comparatie_{args.set}{suffix(args)}.json")
 
 
 if __name__ == "__main__":

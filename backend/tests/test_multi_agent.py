@@ -53,7 +53,8 @@ class FakeTeam:
 
     PLAN = {"Agentul de documente": ["verifica_documente_obligatorii", "scaneaza_instructiuni_ascunse"],
             "Agentul de firm": ["verifica_identitate_firma", "verifica_retea"],  # omite statutul si istoricul -> controlul automat
-            "Agentul financiar": ["verifica_bilant_vs_anaf", "verifica_flux_cont", "verifica_salarii"]}
+            "Agentul financiar": ["verifica_bilant_vs_anaf", "verifica_flux_cont", "verifica_salarii"],
+            "Agentul de contracte": ["verifica_contracte"]}
 
     def __init__(self):
         self.calls = []

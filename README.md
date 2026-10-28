@@ -4,62 +4,88 @@
 
 Băncile verifică deja datele firmelor la ANAF. Dar ANAF arată ce s-a **declarat**, nu dacă e **adevărat**:
 firme preluate prin administratori interpuși, bilanțuri umflate depuse oficial, angajați fictivi declarați
-doar pe hârtie, rețele de firme-paravan care cer credite în același timp. Sherlock investighează dosarul de credit
-al unei firme (SRL) sau al unui PFA și verifică dacă **cifrele declarate se regăsesc în realitate**.
-**AI-ul investighează, omul decide.**
+doar pe hârtie, rețele de firme-paravan care cer credite în același timp, contracte cu clienți care nu există.
+Sherlock investighează dosarul de credit al unei firme (SRL) sau al unui PFA și verifică dacă **cifrele declarate
+se regăsesc în realitate**. **AI-ul investighează, omul decide.**
 
-## Rezultate (setul de test, 99 de dosare nevăzute la calibrare)
-
-| | Verificare clasică ANAF | Sherlock |
-|---|---|---|
-| Fraude prinse (recall) | 30% | **90%** |
-| Precizie | 100% | 95% |
-| Rata alarmelor false | 0% | 1,3% |
-| Credite frauduloase oprite | 1,55 mil. lei | **5,06 mil. lei** |
-
-(agentul simplu; versiunea completă, mai jos, ajunge la 100% precizie)
-
-Fraudele neprinse ca „suspecte” (bilanțuri umflate subtil, ~20%) nu au fost aprobate: au ajuns la revizuire umană,
-deci **100% din fraude au ajuns în fața unui analist**. Date sintetice; în producție validarea se face pe dosarele băncii.
-
-### Ce aduce fiecare strat (același set de test)
-
-| Configurație | Recall | Precizie | Alarme false | Legitime trimise la analist | Credite frauduloase oprite |
-|---|---|---|---|---|---|
-| Verificare clasică ANAF | 30% | 100% | 0 | – | 1,55 mil. lei |
-| Agent simplu | 90% | 95% | 1 | 15% | 5,06 mil. lei |
-| Multi-agent | 90% | 95% | 1 | 8% | 5,06 mil. lei |
-| **Multi-agent + solicitare documente** | **90%** | **100%** | **0** | **2,5%** | **5,06 mil. lei** |
+## Pornire rapidă
 
 ```powershell
-python run_eval.py                  # multi-agent + solicitare documente (offline, câteva secunde)
-python run_eval.py --comparatie     # tabelul de mai sus
-python run_eval.py --mode llm --limit 20 --workers 4    # agentul cu LLM pe un eșantion
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m uvicorn main:app --reload      # aplicația: http://127.0.0.1:8000/app/  ·  API: /docs
 ```
+
+Merge fără nicio cheie API (modul offline, determinist). Cu Claude pe Bedrock sau Featherless în `.env`,
+sub-agenții rulează cu LLM (vezi „Alegerea LLM-ului”).
+
+## Rezultate (setul de test: 253 de dosare nevăzute la calibrare, 26 de fraude și 227 de dosare legitime)
+
+| Configurație | Fraude prinse | Precizie | Alarme false | Legitime trimise la analist | Credite frauduloase oprite |
+|---|---|---|---|---|---|
+| Verificare clasică ANAF | 23% | 100% | 0 | – | 1,55 mil. lei |
+| Agent simplu | 92% | 75% | 8 | 25% | 22,16 mil. lei |
+| Multi-agent | 92% | 75% | 8 | 9% | 22,16 mil. lei |
+| **Multi-agent + solicitare documente** | **92%** | **100%** | **0** | **4%** | **22,16 mil. lei** |
+
+- **Zero alarme false pe 227 de dosare legitime**, deși multe dintre ele sunt „grele”: seamănă cu frauda
+  (afaceri cu numerar, salarii plătite din alt cont, firme noi, administrator schimbat, creștere reală mare,
+  grupuri de firme legitime, contracte cu clienți din același grup).
+- Cele 2 fraude nemarcate drept suspecte (bilanțuri umflate subtil, ~20%) au ajuns la revizuire umană:
+  **100% din fraude au ajuns în fața unui analist**.
+- Pe **documente „murdare”** (aceleași dosare, alte formate: alte bănci, tabele, diacritice, scanări) rezultatele
+  sunt identice: 92% fraude prinse, 100% precizie, 0 alarme false. Singura diferență: documentele scanate care nu se
+  pot citi fără OCR merg la analist (11% legitime la analist în loc de 4%).
+- Pe dosarele noi (contracte și exemple negative grele): 100% fraude prinse, 0 alarme false, 5% la analist.
+
+Date sintetice; în producție validarea se face pe dosarele băncii.
+
+```powershell
+python run_eval.py                       # configurația completă, setul de test (offline, câteva secunde)
+python run_eval.py --comparatie          # tabelul de mai sus
+python run_eval.py --comparatie --date murdare     # aceleași dosare, documente „murdare”
+python run_eval.py --comparatie --doar-extensie    # doar dosarele noi (D199+)
+python run_eval.py --mode llm --limit 20 --workers 4   # cu LLM, pe un eșantion
+python -m pytest -q tests                # 31 de teste
+```
+
+## Aplicația analistului (`http://127.0.0.1:8000/app/`)
+
+Interfață web servită direct de backend (un singur fișier, `backend/app/index.html`, fără build):
+
+| Tab | Ce face |
+|---|---|
+| Dosare | caută un dosar, îl investighează cu cei 4 sub-agenți; verdict, scor, dovezi, contra-verificare, documentele cerute (cu simularea răspunsului clientului), rețeaua ca graf, documentele originale, jurnalul de audit; **decizia analistului** (cu override și feedback pe fiecare alarmă) |
+| Încarcă un dosar | PDF-uri + extras CSV în orice format → investigația completă |
+| Portofoliu | scanează toți clienții: expunere pe verdict, grupuri de firme legate, priorități pentru antifraudă, schimbări față de scanarea anterioară |
+| Rezultate | tabelele de comparație (curate, murdare, extensie) |
+| Feedback și recalibrare | precizia alarmelor pe verificare și propunerile de praguri, cu validare și aprobare umană |
+
+Selectoarele din antet aleg modul (offline / cu LLM) și varianta documentelor (curate / „murdare”).
+Link-uri directe: `/app/#D014`, `/app/#portofoliu`. Interfața Lovable poate folosi aceleași endpoint-uri (CORS e deschis).
 
 ## Arhitectura multi-agent
 
 Sherlock este un **agent coordonator** care împarte investigația între sub-agenți specializați:
 
 1. **Sub-agenți**, fiecare cu doar uneltele zonei sale: *Agentul de documente* (dosar complet, documente
-   manipulate), *Agentul de firmă* (identitate, statut, istoric, rețea), *Agentul financiar* (bilanț vs. ANAF,
-   bani din cont, salarii).
+   manipulate, calitatea documentelor), *Agentul de firmă* (identitate, statut, istoric, rețea), *Agentul financiar*
+   (bilanț vs. ANAF, bani din cont, salarii), *Agentul de contracte* (beneficiarul e real, poate plăti, chiar plătește).
 2. **Controlul automat** rulează orice verificare obligatorie omisă de un sub-agent.
 3. **Agentul de contra-verificare** caută o explicație legitimă pentru fiecare alarmă.
 4. **Coordonatorul** (reguli deterministe) acceptă o explicație doar dacă e confirmată de verificări independente.
    O alarmă critică nu se anulează niciodată fără documente noi.
-5. **Solicitarea de documente:** când o îndoială se poate lămuri cu un document (de exemplu, încasări la altă bancă),
-   coordonatorul redactează cererea către client; răspunsul clientului reia investigația.
+5. **Solicitarea de documente:** când o îndoială se poate lămuri cu un document (încasări la altă bancă, salarii
+   plătite din alt cont), coordonatorul redactează cererea către client; răspunsul clientului reia investigația.
 
 Cu LLM, sub-agenții rulează ca agenți separați, contra-verificarea își formulează singură explicațiile, iar
 coordonatorul redactează concluzia; deciziile rămân ale regulilor. Fără LLM, aceeași arhitectură rulează determinist.
 
-**Limita simulării:** în date, clienții legitimi cu încasări la alte bănci trimit extrasul, iar fraudatorii nu au
-ce trimite. În realitate un fraudator poate trimite un extras fals; de aceea, în producție extrasele ar trebui
-obținute direct de la cealaltă bancă (Open Banking), nu ca fișier încărcat de client.
-
-Endpoint-uri: `POST /sherlock/firme/multi-agent/{dosar}` · `POST /sherlock/firme/multi-agent/{dosar}/raspuns-client` ·
-`GET /sherlock/firme/comparatie`.
+**Limita simulării:** în date, clienții legitimi trimit extrasul cerut, iar fraudatorii nu au ce trimite. În realitate
+un fraudator poate trimite un extras fals; de aceea, în producție extrasele ar trebui obținute direct de la cealaltă
+bancă (Open Banking), nu ca fișier încărcat de client.
 
 ### Tipare de fraudă și cum le prinde Sherlock
 
@@ -70,23 +96,121 @@ Endpoint-uri: `POST /sherlock/firme/multi-agent/{dosar}` · `POST /sherlock/firm
 | Angajați fantomă | nimic: angajații sunt declarați la ANAF | salariile nu sunt plătite efectiv |
 | Rețea de firme-paravan | nimic: fiecare firmă arată normal | același administrator / telefon / adresă la mai mulți solicitanți |
 | PFA cu venit fictiv | nimic, dacă declarația e depusă | veniturile declarate nu intră în cont |
+| **Contract fictiv** | nimic: cifrele firmei sunt corecte | beneficiarul nu există, e o firmă-paravan nou înființată și legată de solicitant, nu are cifra de afaceri din care să plătească sau nu a plătit nimic deși contractul e în derulare |
 
-### Date
+## Analiza contractelor (`sherlock/firme/contracte.py`)
 
-`backend/data/firme/`: 198 de dosare sintetice (40 fraude, 158 legitime, inclusiv cazuri legitime „zgomotoase”:
-firme noi, administrator schimbat, afaceri cu numerar, grupuri legitime), împărțite 50/50 în calibrare și test.
-Registrele (firme, administratori, bilanțuri ANAF, cereri de credit) sunt într-o bază **SQLite** (`sherlock.db`).
-Regenerare: `python tools_dev/generate_firme.py`. Pragurile: `backend/sherlock/firme/config.yaml`.
+Contractul cu un client mare e dovada preferată a fraudatorilor („am un contract de 3 milioane, finanțați-mi execuția”).
+Contractele nu au format fix, deci:
 
-### API pentru interfață
+- extragerea deterministă găsește părțile (denumire, CUI, rol: prestator / beneficiar), valoarea, durata, începutul și
+  modul de plată, în trei șabloane diferite de contract;
+- **LLM-ul** completează câmpurile lipsă și semnalează clauze neobișnuite (plată integrală la final, avans mare etc.).
+  Orice valoare sau citat dat de LLM trebuie să apară **literal** în contract, altfel e respins și consemnat în audit;
+- verificarea e deterministă: beneficiarul există și e activ în registru? valoarea anuală depășește cifra lui de afaceri?
+  e înființat cu puțin înainte de contract? are același administrator / telefon / adresă cu solicitantul? dacă
+  contractul e în derulare, plățile beneficiarului apar efectiv în extras?
+- contractele de achiziție (solicitantul e clientul) nu susțin venituri și sunt doar consemnate.
+
+## Documente „murdare” (`sherlock/firme/citire.py`)
+
+Dosarele reale nu vin pe un șablon. Sherlock:
+
+- normalizează textul (fără diacritice, fără codurile de rând din formulare, „rd. 01”) și caută fiecare câmp după o
+  listă de **etichete alternative** din `config.yaml` (secțiunea `citire`), inclusiv când valoarea e în coloana
+  alăturată a unui tabel;
+- citește sume în orice format (`1.234.567,89`, `1 234 567`, `1,234,567.00`, `(12.345)`), date (`12.09.2026`,
+  `12/09/2026`, `2026-09-12`, `12 septembrie 2026`), durate („36 luni”, „3 ani”);
+- citește **extrase CSV de la orice bancă**: găsește capul de tabel după rândurile cu date despre cont, separatorul
+  (`;` `,` tab), coloanele (o coloană „sumă” sau „debit” / „credit”), codificarea; încasările și salariile se recunosc
+  după cuvinte cheie configurabile;
+- recunoaște tipul documentului după conținut sau după numele fișierului;
+- **documente scanate**: OCR cu Tesseract (dacă e instalat) sau citirea imaginii cu Claude pe Bedrock; dacă nu se poate
+  citi, documentul e marcat și dosarul ajunge la analist. Sherlock nu ghicește cifre.
+
+Varianta murdară a fiecărui dosar e în `backend/data/firme/dosare_murdare/` (3 formate de bancă, 2 șabloane de cerere,
+tabele cu coduri de rând, 25 de documente financiare scanate).
+
+## Date: mai multe exemple negative
+
+`backend/data/firme/`: **506 dosare sintetice, 52 de fraude și 454 de dosare legitime**, împărțite 50/50 în calibrare și test.
+
+- `D001–D198`: setul inițial (40 de fraude, 158 legitime), neschimbat;
+- `D199–D506`: extensia, 12 fraude cu contract fictiv și **296 de dosare legitime în plus**, ca rata alarmelor false
+  să fie măsurată pe mai multe exemple negative. Multe sunt „grele”, adică arată ca o fraudă la prima vedere:
+
+| Exemple negative grele (extensia) | Câte | Ce semnal fals ar da |
+|---|---|---|
+| afaceri cu încasări cash / la alte bănci | 29 | banii din cont nu acoperă cifra de afaceri |
+| salarii plătite din contul de la altă bancă | 10 | angajați fără salarii (ca angajații fantomă) |
+| firme noi / administrator schimbat recent | 24 | istoric scurt, posibilă preluare |
+| creștere reală mare (x5–x6) | 8 | creștere bruscă |
+| grupuri legitime (același antreprenor) | 12 | legătură cu alt solicitant |
+| contracte cu clienți reali, din grup, abia semnate, de achiziție, cu plata la final | 60 | contract nesusținut de plăți |
+| datorii la ANAF, rotunjiri în bilanț, dosare obișnuite SRL și PFA | 153 | – |
+
+Registrele (firme, administratori, bilanțuri ANAF, cereri de credit, clienții din contracte) sunt într-o bază **SQLite**
+(`sherlock.db`). Etichetele reale (`etichete.json`) sunt folosite doar la evaluare. Regenerare:
+`pip install -r requirements-dev.txt` și `python tools_dev/generate_firme.py`. Pragurile: `backend/sherlock/firme/config.yaml`.
+
+## Bucla de feedback (`sherlock/feedback.py`, `run_feedback.py`)
+
+1. Analistul salvează decizia în aplicație: decizia, rezultatul confirmat (fraudă / legitim) și dacă fiecare alarmă a fost
+   corectă. Se salvează și măsurătorile din spatele alarmelor (acoperirea fluxului, a salariilor, a plăților din contract,
+   diferența față de ANAF). Totul intră în `data/feedback.db` și în jurnalul deciziilor (cu override).
+2. Sherlock calculează **precizia fiecărei verificări** și propune praguri care separă fraudele confirmate de dosarele
+   legitime, **fără să piardă vreo fraudă prinsă azi**.
+3. O propunere trebuie să treacă **validarea pe dosare nevăzute** și să fie **aprobată de un analist**; abia atunci se
+   scrie în `config.yaml` (comentariile rămân), cu jurnal în `data/recalibrari.jsonl`. Pragurile nu se schimbă singure.
+
+`python run_feedback.py` simulează bucla: „analiștii” confirmă setul de calibrare, iar efectul se măsoară pe setul de test.
+Rezultatul arată de ce aprobarea umană contează:
+
+| Propunere | Agent simplu pe test | Configurația completă | Decizie |
+|---|---|---|---|
+| `flux_cont.critic_sub` 0,50 → 0,384 | alarme false 8 → 4, fraude prinse 92% → 92% | neschimbat (0 alarme false) | recomandat |
+| `salarii.critic_sub` 0,30 → 0,157 | fraude prinse 92% → 85% | fraude prinse 92% → 85% | **respins**: pe date noi pierde fraude |
+
+## Scanarea portofoliului (`sherlock/portofoliu.py`, `run_portofoliu.py`)
+
+Sherlock re-verifică toți clienții, nu doar dosarul de azi, și caută rețele în **toate** cererile, fără fereastră de timp.
+Pe cele 506 dosare (≈25 s, offline): 50 de credite suspecte (46,7 mil. lei), 23 de revizuit, 10 grupuri de firme legate,
+dintre care cele 3 rețele frauduloase (toate firmele suspecte) și 7 grupuri legitime (nicio firmă suspectă).
+Rezultatul e o listă de priorități pentru antifraudă, plus schimbările față de scanarea anterioară.
+
+## Chat cu Sherlock prin MCP (`backend/mcp_server.py`)
+
+Analistul întreabă în Claude („de ce e suspect D223?”, „ce firme sunt legate de D014?”, „care sunt prioritățile din
+portofoliu?”), iar Claude apelează uneltele lui Sherlock: `lista_dosare`, `analizeaza_dosar`, `detalii_verificare`,
+`jurnal_audit`, `raspuns_client`, `retea_dosar`, `cauta_firma`, `portofoliu`, `inregistreaza_decizie`, `raport_feedback`.
+Verdictul rămâne calculat de reguli; Claude doar explică, cu dovezile lui Sherlock.
+
+- **Claude Code**: `.mcp.json` din rădăcina proiectului e deja configurat (pornește `backend/mcp_server.py`).
+- **Claude Desktop**: în `claude_desktop_config.json`:
+
+```json
+{"mcpServers": {"sherlock": {"command": "C:\\dev\\Challenge_NextAISummit\\backend\\.venv\\Scripts\\python.exe",
+                             "args": ["C:\\dev\\Challenge_NextAISummit\\backend\\mcp_server.py"]}}}
+```
+
+## API
 
 | Metodă | Endpoint | Rol |
 |---|---|---|
 | GET | `/sherlock/firme/dosare` | lista dosarelor (eticheta reală ascunsă) |
-| POST | `/sherlock/firme/analizeaza/{dosar}?mode=auto` | investigația completă: verdict, scor de risc, dovezi, audit |
-| GET | `/sherlock/firme/retea/{dosar}` | graful de legături pentru vizualizare |
-| GET | `/sherlock/firme/metrici?set=test&mod=offline` | metricile pentru pagina de rezultate |
-| GET | `/sherlock/firme/dosare/{dosar}/document/{fisier}` | documentul original |
+| POST | `/sherlock/firme/multi-agent/{dosar}?mode=auto&date=curate` | investigația multi-agent (`date=murdare` pentru documentele murdare) |
+| POST | `/sherlock/firme/multi-agent/{dosar}/raspuns-client` | simulează răspunsul clientului și reia investigația |
+| POST | `/sherlock/firme/multi-agent-upload` | investigația pe fișiere încărcate (orice format) |
+| POST | `/sherlock/firme/analizeaza/{dosar}` | agentul simplu |
+| GET | `/sherlock/firme/retea/{dosar}` | graful de legături |
+| GET | `/sherlock/firme/firma?q=` | caută o firmă în registru (CUI sau denumire) |
+| GET | `/sherlock/firme/dosare/{dosar}/documente` · `/document/{fisier}` | documentele dosarului |
+| GET | `/sherlock/firme/comparatie?set=test&varianta=` | tabelele de comparație (`murdare`, `extensie`) |
+| GET | `/sherlock/firme/metrici?set=test&mod=offline` | metricile detaliate |
+| GET / POST | `/sherlock/firme/portofoliu` · `/portofoliu/scaneaza` | ultima scanare / scanare nouă |
+| POST | `/sherlock/feedback` | decizia analistului + feedback pe alarme |
+| GET | `/sherlock/feedback/raport` · `/feedback/simulare` | precizia pe verificare și propunerile de praguri |
+| POST | `/sherlock/feedback/aplica` | aprobarea umană a unei recalibrări |
 
 ---
 
@@ -104,7 +228,7 @@ un verdict cu dovezi pentru fiecare constatare. Verdictele sunt aceleași în am
 | `REVIZUIRE_UMANA` | neconcordanțe minore (ex. greșeală de scriere în nume) | analistul confirmă |
 | `SUSPECT_FRAUDA` | neconcordanțe grave sau instrucțiuni ascunse | echipa antifraudă |
 
-## Arhitectură
+## Arhitectura modulului pentru persoane fizice
 
 ```
 PDF-uri ──► pdf_reader (text, metadate, text ascuns)
@@ -143,7 +267,7 @@ Principii:
 | `verifica_iban` | validare IBAN RO (mod 97) și același cont în cerere și extras |
 | `verifica_grad_indatorare` | rată / venit verificat vs. limita configurată |
 
-## Instalare (Windows, PowerShell)
+## Instalare detaliată (Windows, PowerShell)
 
 ```powershell
 cd backend
@@ -187,7 +311,7 @@ scriu în `backend/tests/rezultate/`.
 
 Toate persoanele, firmele, conturile și documentele sunt **inventate**. Regenerare: `pip install -r requirements-dev.txt` și `python tools_dev/generate_dosare.py`.
 
-## API
+## API (persoane fizice)
 
 ```powershell
 python -m uvicorn main:app --reload     # apoi http://127.0.0.1:8000/docs
@@ -204,7 +328,8 @@ python -m uvicorn main:app --reload     # apoi http://127.0.0.1:8000/docs
 
 ## Limitări și pași spre producție
 
-- Extragerea deterministă e scrisă pentru formatele sintetice; pentru formate reale intră în joc extragerea LLM (cu validare anti-halucinație) și OCR pentru documente scanate.
+- Pentru firme, citirea acceptă etichete și formate alternative, extrase de la orice bancă și scanări (OCR / Claude); formatele reale ale băncii trebuie totuși adăugate în `config.yaml` (secțiunea `citire`) și validate pe dosare reale.
+- Registrele sunt sintetice (SQLite); în producție: ONRC, ANAF, Open Banking pentru extrase.
 - Registrul de firme e un fișier local; în producție: integrare ONRC / ANAF.
 - Modelul ar rula în infrastructura băncii (GDPR); CNP-urile sunt deja mascate în ce vede LLM-ul.
 - Creditarea persoanelor fizice e caz de risc ridicat în AI Act: Sherlock nu ia decizii, păstrează jurnal de audit și permite override uman.

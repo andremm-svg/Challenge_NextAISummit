@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sherlock</title>
+<style>
+:root {
+  --bg: #f5f6f8; --panel: #ffffff; --ink: #1c2230; --muted: #5f6878; --line: #dfe3ea; --accent: #1f4fd1;
+  --accent-ink: #ffffff; --soft: #eef2fb;
+  --crit: #b42318; --crit-bg: #fde8e7; --warn: #a15c00; --warn-bg: #fff1dc; --ok: #137a3d; --ok-bg: #e3f5ea;
+  --info: #475467; --info-bg: #eef0f3; --miss: #6b3fa0; --miss-bg: #f1e9fb;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151c; --panel: #1a1f29; --ink: #e7eaf0; --muted: #9aa3b2; --line: #2c3340; --accent: #6d93ff;
+    --accent-ink: #0d1117; --soft: #1f2838;
+    --crit: #ff8a80; --crit-bg: #3a1d1c; --warn: #ffc266; --warn-bg: #3a2c14; --ok: #6fdc9a; --ok-bg: #17321f;
+    --info: #b8c0cc; --info-bg: #252b36; --miss: #c9a6ff; --miss-bg: #2c2240;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151c; --panel: #1a1f29; --ink: #e7eaf0; --muted: #9aa3b2; --line: #2c3340; --accent: #6d93ff;
+  --accent-ink: #0d1117; --soft: #1f2838;
+  --crit: #ff8a80; --crit-bg: #3a1d1c; --warn: #ffc266; --warn-bg: #3a2c14; --ok: #6fdc9a; --ok-bg: #17321f;
+  --info: #b8c0cc; --info-bg: #252b36; --miss: #c9a6ff; --miss-bg: #2c2240;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header { background: var(--panel); border-bottom: 1px solid var(--line); padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+header h1 { margin: 0; font-size: 18px; letter-spacing: .2px; }
+header .tag { color: var(--muted); font-size: 13px; }
+header .controls { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+nav { display: flex; gap: 2px; padding: 0 16px; background: var(--panel); border-bottom: 1px solid var(--line); overflow-x: auto; }
+nav button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 12px; color: var(--muted); font: inherit; cursor: pointer; white-space: nowrap; }
+nav button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+select, input, textarea, button.btn { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; }
+button.btn { cursor: pointer; }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.btn:disabled { opacity: .55; cursor: default; }
+.layout { display: grid; grid-template-columns: 330px 1fr; gap: 16px; align-items: start; }
+@media (max-width: 860px) { .layout { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.panel h2 { font-size: 15px; margin: 0 0 10px; }
+.panel h3 { font-size: 13px; margin: 14px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.list { max-height: calc(100vh - 230px); overflow: auto; margin: 8px -14px -14px; border-top: 1px solid var(--line); }
+.list .row { padding: 8px 14px; border-bottom: 1px solid var(--line); cursor: pointer; display: grid; grid-template-columns: 52px 1fr auto; gap: 8px; align-items: center; }
+.list .row:hover, .list .row.on { background: var(--soft); }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.CRITIC, .SUSPECT_FRAUDA { background: var(--crit-bg); color: var(--crit); }
+.AVERTIZARE, .REVIZUIRE_UMANA { background: var(--warn-bg); color: var(--warn); }
+.OK, .CURAT { background: var(--ok-bg); color: var(--ok); }
+.INFO { background: var(--info-bg); color: var(--info); }
+.LIPSA, .INCOMPLET { background: var(--miss-bg); color: var(--miss); }
+.verdict { border-radius: 10px; padding: 14px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.verdict .big { font-size: 18px; font-weight: 700; }
+.score { margin-left: auto; text-align: right; }
+.score b { font-size: 26px; }
+.grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--panel); }
+.card .t { font-weight: 600; display: flex; justify-content: space-between; gap: 6px; }
+.finding { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; margin-bottom: 8px; }
+.finding .h { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.finding ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 600; }
+td.r, th.r { text-align: right; }
+.tablewrap { overflow-x: auto; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.kpi .v { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.kpi .l { color: var(--muted); font-size: 12.5px; }
+.bar { display: flex; height: 14px; border-radius: 7px; overflow: hidden; background: var(--info-bg); margin: 8px 0; }
+.bar > div { height: 100%; }
+.msg { background: var(--soft); border-radius: 8px; padding: 10px 12px; margin: 6px 0; }
+details summary { cursor: pointer; color: var(--muted); margin: 10px 0 6px; }
+.audit { font: 12px/1.5 ui-monospace, Consolas, monospace; max-height: 320px; overflow: auto; background: var(--bg); border-radius: 6px; padding: 8px; }
+.form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.form label { display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); }
+.toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; display: none; z-index: 10; max-width: calc(100% - 32px); }
+.empty { color: var(--muted); padding: 40px 10px; text-align: center; }
+.spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: s .8s linear infinite; vertical-align: -2px; }
+@keyframes s { to { transform: rotate(360deg); } }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .two { grid-template-columns: 1fr; } }
+svg text { fill: var(--ink); font-size: 11px; }
+a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sherlock</h1>
+  <span class="tag">Antifraudă pentru creditele firmelor și PFA · AI-ul investighează, omul decide</span>
+  <div class="controls">
+    <label class="small muted">Mod <select id="mode"><option value="llm">Claude pe Bedrock</option><option value="offline">offline (rapid, fără LLM)</option></select></label>
+    <label class="small muted">Documente <select id="date"><option value="curate">curate</option><option value="murdare">„murdare”</option></select></label>
+  </div>
+</header>
+<nav id="tabs">
+  <button data-tab="dosare" class="on">Dosare</button>
+  <button data-tab="upload">Încarcă un dosar</button>
+  <button data-tab="portofoliu">Portofoliu</button>
+  <button data-tab="rezultate">Rezultate</button>
+  <button data-tab="feedback">Feedback și recalibrare</button>
+</nav>
+<main>
+  <section id="tab-dosare">
+    <div class="layout">
+      <div class="panel">
+        <h2>Dosare de credit</h2>
+        <div style="display:flex; gap:6px; flex-wrap:wrap">
+          <input id="q" placeholder="Caută denumire sau dosar" style="flex:1; min-width:140px">
+          <select id="fset"><option value="toate">toate</option><option value="test">test</option><option value="calibrare">calibrare</option></select>
+        </div>
+        <div class="small muted" id="count" style="margin-top:6px"></div>
+        <div class="list" id="list"></div>
+      </div>
+      <div id="detail"><div class="panel empty">Alege un dosar din listă. Sherlock îl investighează cu patru sub-agenți și îți arată dovezile.</div></div>
+    </div>
+  </section>
+
+  <section id="tab-upload" hidden>
+    <div class="panel">
+      <h2>Încarcă un dosar</h2>
+      <p class="muted">Cererea de finanțare, bilanțul sau declarația unică, extrasul de cont (CSV, de la orice bancă) și, opțional, contractele cu clienții. Formatele pot fi diferite: Sherlock recunoaște etichete alternative, diacritice, tabele și documente scanate.</p>
+      <input type="file" id="files" multiple accept=".pdf,.csv,.txt">
+      <button class="btn primary" id="btnUpload">Investighează</button>
+    </div>
+    <div id="uploadResult" style="margin-top:16px"></div>
+  </section>
+
+  <section id="tab-portofoliu" hidden>
+    <div class="panel" style="margin-bottom:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+      <div><h2 style="margin:0">Scanarea portofoliului</h2><div class="small muted" id="portInfo">Re-verifică toți clienții și caută rețele în toate cererile, fără fereastră de timp.</div></div>
+      <button class="btn primary" id="btnScan" style="margin-left:auto">Scanează acum</button>
+    </div>
+    <div id="port"></div>
+  </section>
+
+  <section id="tab-rezultate" hidden><div id="rez"></div></section>
+  <section id="tab-feedback" hidden><div id="fb"></div></section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const API = location.protocol === "file:" ? "http://127.0.0.1:8000" : "";  // deschis direct din fisier -> serverul local
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const lei = x => x == null ? "–" : new Intl.NumberFormat("ro-RO", {maximumFractionDigits: 0}).format(x) + " lei";
+const pct = x => x == null ? "–" : Math.round(x * 100) + "%";
+const VERD = {SUSPECT_FRAUDA: "Suspiciune de fraudă", REVIZUIRE_UMANA: "Revizuire umană", INCOMPLET: "Incomplet", CURAT: "Curat"};
+const VERIF = {documente_lipsa: "Documente obligatorii", calitate_documente: "Calitatea documentelor", injectie: "Instrucțiuni ascunse",
+  identitate_firma: "Identitatea firmei", statut_fiscal: "Statut fiscal", bilant_vs_anaf: "Bilanț față de ANAF", istoric_firma: "Istoricul firmei",
+  flux_cont: "Banii din cont", salarii: "Salariile", retea: "Rețeaua", contracte: "Contractele", capacitate_plata: "Capacitate de plată",
+  documente_cerute: "Documente cerute"};
+const SEV = ["CRITIC", "LIPSA", "AVERTIZARE", "INFO", "OK"];
+const store = {get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }};
+
+function toast(t) { const el = $("#toast"); el.textContent = t; el.style.display = "block"; clearTimeout(toast.h); toast.h = setTimeout(() => el.style.display = "none", 3500); }
+async function api(path, opt = {}) {
+  const r = await fetch(API + path, opt);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.detail || `Eroare ${r.status}`);
+  return body;
+}
+const mode = () => $("#mode").value, dateSet = () => $("#date").value;
+
+// ------------------------------------------------------------ tab-uri
+const loaders = {};
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  document.querySelectorAll("#tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll("main > section").forEach(s => s.hidden = s.id !== "tab-" + b.dataset.tab);
+  store.set("tab", b.dataset.tab);
+  loaders[b.dataset.tab]?.();
+});
+
+// ------------------------------------------------------------ dosare
+let DOSARE = [], CURENT = null;
+async function loadDosare() {
+  try { DOSARE = await api("/sherlock/firme/dosare"); } catch (e) { $("#list").innerHTML = `<div class="empty">${esc(e.message)}</div>`; return; }
+  renderList();
+}
+function renderList() {
+  const q = $("#q").value.trim().toLowerCase(), s = $("#fset").value;
+  const rows = DOSARE.filter(d => (s === "toate" || d.set === s) && (!q || `${d.dosar} ${d.denumire}`.toLowerCase().includes(q)));
+  $("#count").textContent = `${rows.length} dosare`;
+  $("#list").innerHTML = rows.map(d => `<div class="row ${CURENT === d.dosar ? "on" : ""}" data-d="${esc(d.dosar)}">
+      <b class="num">${esc(d.dosar)}</b><div><div>${esc(d.denumire)}</div><div class="small muted">${esc(d.tip)} · ${esc(d.data_cerere || "")}</div></div>
+      <div class="small num">${lei(d.suma)}</div></div>`).join("");
+}
+$("#q").addEventListener("input", renderList);
+$("#fset").addEventListener("change", renderList);
+$("#list").addEventListener("click", e => { const r = e.target.closest(".row"); if (r) openDosar(r.dataset.d); });
+
+async function openDosar(d) {
+  CURENT = d; renderList();
+  const el = $("#detail");
+  el.innerHTML = `<div class="panel"><span class="spin"></span> Sherlock investighează dosarul ${esc(d)}…${mode() === "llm" ? " Cu Claude, cei 4 sub-agenți lucrează pe rând: durează 30–90 de secunde." : ""}</div>`;
+  try {
+    const [r, docs] = await Promise.all([
+      api(`/sherlock/firme/multi-agent/${d}?mode=${mode()}&date=${dateSet()}`, {method: "POST"}),
+      api(`/sherlock/firme/dosare/${d}/documente?date=${dateSet()}`)]);
+    el.innerHTML = renderReport(r, {dosar: d, docs});
+    bindReport(el, r, d);
+    if ((r.retea || []).length) drawNetwork(d);
+  } catch (e) { el.innerHTML = `<div class="panel">${esc(e.message)}</div>`; }
+}
+
+function renderReport(r, {dosar = null, docs = []} = {}) {
+  const info = DOSARE.find(x => x.dosar === dosar) || {};
+  const findings = [...r.constatari].sort((a, b) => SEV.indexOf(a.severitate) - SEV.indexOf(b.severitate));
+  const alarme = findings.filter(f => ["CRITIC", "AVERTIZARE", "LIPSA"].includes(f.severitate));
+  const ok = findings.filter(f => !["CRITIC", "AVERTIZARE", "LIPSA"].includes(f.severitate));
+  const docBase = dateSet() === "murdare" ? `/sherlock/firme/murdare/${dosar}/document/` : `/sherlock/firme/dosare/${dosar}/document/`;
+  return `
+  <div class="panel">
+    <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px">
+      <div><h2 style="margin:0">${esc(info.denumire || r.dosar)}</h2>
+      <div class="small muted">${esc(r.dosar)} · ${esc(r.tip_entitate)} · ${info.suma ? "credit solicitat " + lei(info.suma) : ""} · mod ${esc(r.mod)} · ${r.durata_sec}s</div></div>
+    </div>
+    <div class="verdict ${esc(r.verdict)}">
+      <div><div class="big">${esc(VERD[r.verdict])}</div><div>${esc(r.eticheta)}</div></div>
+      <div class="score"><div class="small">scor de risc</div><b class="num">${r.scor_risc}</b><span class="small">/100</span></div>
+    </div>
+    <p>${esc(r.explicatie)}</p>
+    <p class="small muted">${esc(r.decizie_finala)}</p>
+
+    <h3>Sub-agenții</h3>
+    <div class="grid">${r.sub_agenti.map(s => `<div class="card"><div class="t"><span>${esc(s.nume)}</span>
+      <span class="chip ${s.alarme ? "AVERTIZARE" : "OK"}">${s.alarme ? s.alarme + " alarme" : "fără alarme"}</span></div>
+      <div class="small muted">${esc(s.rol)}</div><div style="margin-top:6px">${esc(s.rezumat)}</div></div>`).join("")}</div>
+    ${r.verificari_completate_automat?.length ? `<p class="small muted">Controlul automat a rulat verificările omise: ${r.verificari_completate_automat.map(esc).join(", ")}</p>` : ""}
+
+    <h3>Ce a găsit (${alarme.length} alarme)</h3>
+    ${alarme.length ? alarme.map(fHtml).join("") : `<div class="msg">Nicio alarmă. Toate verificările au trecut.</div>`}
+    <details><summary>Verificări fără probleme (${ok.length})</summary>${ok.map(fHtml).join("")}</details>
+
+    ${r.contraverificare?.length ? `<h3>Contra-verificarea</h3><div class="tablewrap"><table><tr><th>Alarma</th><th>Explicația legitimă căutată</th><th>Decizia coordonatorului</th></tr>
+      ${r.contraverificare.map(c => `<tr><td><span class="chip ${esc(c.severitate_initiala)}">${esc(c.severitate_initiala)}</span> ${esc(VERIF[c.verificare] || c.verificare)}</td>
+      <td>${esc(c.explicatie_alternativa)}</td><td>${c.acceptat ? "✔ " : ""}${esc(c.decizia_coordonatorului)}</td></tr>`).join("")}</table></div>` : ""}
+
+    ${r.documente_cerute?.length ? `<h3>Documente cerute clientului</h3>${r.documente_cerute.map(c => `<div class="msg"><b>${esc(c.document.replaceAll("_", " "))}</b> – ${esc(c.motiv)}<div class="small" style="margin-top:4px">„${esc(c.mesaj_client)}”</div></div>`).join("")}
+      ${dosar ? `<button class="btn primary" data-act="raspuns">Simulează răspunsul clientului</button><div id="raspuns"></div>` : ""}` : ""}
+
+    ${(r.contracte || []).length ? `<h3>Contracte</h3>${r.contracte.map(c => `<div class="msg"><span class="chip ${esc(c.severitate)}">${esc(c.severitate)}</span>
+      ${esc(c.contract)}: beneficiar ${esc(c.beneficiar.denumire || "?")} (CUI ${esc(c.beneficiar.cui)}), valoare ${lei(c.valoare)}</div>`).join("")}` : ""}
+
+    ${(r.retea || []).length ? `<h3>Rețeaua de solicitanți legați</h3><div id="net"></div>` : ""}
+
+    ${docs.length ? `<h3>Documentele dosarului</h3>${docs.map(f => `<a href="${API + docBase + encodeURIComponent(f.fisier)}" target="_blank" rel="noopener">${esc(f.fisier)}</a>`).join(" · ")}` : ""}
+    ${r.documente_izolate?.length ? `<p class="small"><span class="chip CRITIC">izolat</span> Documente care nu mai ajung la LLM: ${r.documente_izolate.map(esc).join(", ")}</p>` : ""}
+
+    <details><summary>Jurnalul de audit (${r.audit.length} pași)</summary><div class="audit">${r.audit.map(a => `${esc(a.t)} <b>${esc(a.actor)}</b> ${esc(a.actiune)} ${esc(a.detaliu)}`).join("<br>")}</div></details>
+  </div>
+  ${dosar ? decisionForm(r, alarme) : ""}`;
+}
+function fHtml(f) {
+  return `<div class="finding"><div class="h"><span class="chip ${esc(f.severitate)}">${esc(f.severitate)}</span>
+    <b>${esc(VERIF[f.verificare] || f.verificare)}</b>${f.sub_agent ? `<span class="small muted">${esc(f.sub_agent.replace("agent_", "agent "))}</span>` : ""}</div>
+    <div>${esc(f.mesaj)}</div>${f.dovezi?.length ? `<ul>${f.dovezi.map(d => `<li>${esc(d)}</li>`).join("")}</ul>` : ""}</div>`;
+}
+function decisionForm(r, alarme) {
+  const def = {SUSPECT_FRAUDA: "trimis_antifrauda", INCOMPLET: "cere_documente", CURAT: "aprobat_pentru_evaluare", REVIZUIRE_UMANA: "cere_documente"}[r.verdict];
+  return `<div class="panel" style="margin-top:14px"><h2>Decizia analistului</h2>
+    <p class="small muted">Sherlock nu aprobă și nu respinge. Decizia ta intră în jurnalul de audit; dacă nu ești de acord cu Sherlock, e marcată ca override. Feedback-ul pe alarme alimentează recalibrarea pragurilor.</p>
+    <div class="form">
+      <label>Analist<input id="fAnalist" value="${esc(store.get("analist") || "")}" placeholder="Nume Prenume"></label>
+      <label>Decizie<select id="fDecizie">${["aprobat_pentru_evaluare", "cere_documente", "trimis_antifrauda", "respins"].map(x => `<option ${x === def ? "selected" : ""} value="${x}">${x.replaceAll("_", " ")}</option>`).join("")}</select></label>
+      <label>Rezultatul confirmat<select id="fEticheta"><option value="">încă nu se știe</option><option value="FRAUDA">fraudă confirmată</option><option value="LEGITIM">dosar legitim</option></select></label>
+    </div>
+    ${alarme.length ? `<h3>Alarmele au fost corecte?</h3>${alarme.map((f, i) => `<label style="display:flex; gap:8px; align-items:center; margin:4px 0">
+      <input type="checkbox" data-i="${i}" checked> <span class="chip ${esc(f.severitate)}">${esc(f.severitate)}</span> ${esc(VERIF[f.verificare] || f.verificare)}: ${esc(f.mesaj.slice(0, 110))}</label>`).join("")}` : ""}
+    <label class="small muted" style="display:grid; gap:4px; margin-top:10px">Comentariu<textarea id="fCom" rows="2"></textarea></label>
+    <button class="btn primary" data-act="decizie" style="margin-top:10px">Salvează decizia</button></div>`;
+}
+function bindReport(el, r, dosar) {
+  el.querySelector('[data-act="raspuns"]')?.addEventListener("click", async ev => {
+    ev.target.disabled = true; const box = $("#raspuns");
+    box.innerHTML = `<p><span class="spin"></span> Clientul răspunde, Sherlock reia investigația…</p>`;
+    try {
+      const x = await api(`/sherlock/firme/multi-agent/${dosar}/raspuns-client?mode=${mode()}&date=${dateSet()}`, {method: "POST"});
+      box.innerHTML = `<div class="two" style="margin-top:10px">
+        <div class="card"><div class="small muted">Înainte</div><span class="chip ${esc(x.inainte.verdict)}">${esc(VERD[x.inainte.verdict])}</span> scor ${x.inainte.scor_risc}</div>
+        <div class="card"><div class="small muted">După răspunsul clientului</div><span class="chip ${esc(x.dupa.verdict)}">${esc(VERD[x.dupa.verdict])}</span> scor ${x.dupa.scor_risc}</div></div>
+        <p>${x.client_a_raspuns ? `Clientul a trimis: ${x.documente_noi.map(esc).join(", ")}.` : "Clientul nu a trimis documentele cerute (în simulare, fraudatorii nu au ce trimite)."} ${esc(x.dupa.explicatie)}</p>`;
+    } catch (e) { box.textContent = e.message; }
+  });
+  el.querySelector('[data-act="decizie"]')?.addEventListener("click", async () => {
+    const analist = $("#fAnalist").value.trim();
+    if (!analist) return toast("Completează numele analistului");
+    store.set("analist", analist);
+    const alarme = r.constatari.filter(f => ["CRITIC", "AVERTIZARE", "LIPSA"].includes(f.severitate)).sort((a, b) => SEV.indexOf(a.severitate) - SEV.indexOf(b.severitate));
+    const constatari = alarme.map((f, i) => ({verificare: f.verificare, severitate: f.severitate, corecta: !!el.querySelector(`input[data-i="${i}"]`)?.checked}));
+    try {
+      const x = await api("/sherlock/feedback", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+        dosar, analist, decizie: $("#fDecizie").value, verdict_sherlock: r.verdict, eticheta: $("#fEticheta").value || null,
+        constatari, masuratori: r.masuratori || {}, comentariu: $("#fCom").value})});
+      toast(x.override ? "Decizie salvată (override: nu ești de acord cu Sherlock)" : "Decizie salvată în jurnalul de audit");
+    } catch (e) { toast(e.message); }
+  });
+}
+async function drawNetwork(d) {
+  const g = await api(`/sherlock/firme/retea/${d}`).catch(() => null), el = $("#net");
+  if (!g || !el) return;
+  const W = 640, H = 260, cx = W / 2, cy = H / 2, R = 95, others = g.noduri.filter(n => !n.central);
+  const pos = others.map((n, i) => ({...n, x: cx + R * 2.1 * Math.cos(Math.PI + 2 * Math.PI * i / others.length), y: cy + R * 0.95 * Math.sin(Math.PI + 2 * Math.PI * i / others.length)}));
+  const motive = Object.fromEntries(g.legaturi.map(l => [l.la, l.motive.join(", ")]));
+  const node = (n, x, y, c) => `<g><circle cx="${x}" cy="${y}" r="${c ? 26 : 20}" fill="${c ? "var(--crit-bg)" : "var(--warn-bg)"}" stroke="${c ? "var(--crit)" : "var(--warn)"}"/>
+    <text x="${x}" y="${y + 4}" text-anchor="middle" font-weight="600">${esc(n.id)}</text>
+    <text x="${x}" y="${y + (c ? 42 : 36)}" text-anchor="middle">${esc((n.denumire || "").slice(0, 26))}</text>
+    <text x="${x}" y="${y + (c ? 55 : 49)}" text-anchor="middle" class="muted">${lei(n.suma)}</text></g>`;
+  el.innerHTML = `<div class="tablewrap"><svg viewBox="0 0 ${W} ${H + 30}" width="100%" style="max-width:${W}px" role="img" aria-label="Rețeaua de solicitanți legați">
+    ${pos.map(p => `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="var(--muted)" stroke-dasharray="4 3"/>
+      <text x="${(cx + p.x) / 2}" y="${(cy + p.y) / 2 - 14}" text-anchor="middle" class="small">${esc(motive[p.id] || "")}</text>`).join("")}
+    ${pos.map(p => node(p, p.x, p.y, false)).join("")}${node(g.noduri[0], cx, cy, true)}</svg></div>`;
+}
+
+// ------------------------------------------------------------ upload
+$("#btnUpload").addEventListener("click", async () => {
+  const files = $("#files").files; if (!files.length) return toast("Alege fișierele dosarului");
+  const fd = new FormData(); [...files].forEach(f => fd.append("files", f)); fd.append("mode", mode());
+  const out = $("#uploadResult"); out.innerHTML = `<div class="panel"><span class="spin"></span> Sherlock investighează…</div>`;
+  try { const r = await api("/sherlock/firme/multi-agent-upload", {method: "POST", body: fd}); out.innerHTML = renderReport(r); }
+  catch (e) { out.innerHTML = `<div class="panel">${esc(e.message)}</div>`; }
+});
+
+// ------------------------------------------------------------ portofoliu
+function renderPort(p) {
+  const V = ["SUSPECT_FRAUDA", "REVIZUIRE_UMANA", "INCOMPLET", "CURAT"], col = {SUSPECT_FRAUDA: "var(--crit)", REVIZUIRE_UMANA: "var(--warn)", INCOMPLET: "var(--miss)", CURAT: "var(--ok)"};
+  $("#portInfo").textContent = `Ultima scanare: ${p.data_scanarii.replace("T", " ")} · ${p.dosare_scanate} dosare · ${p.durata_sec}s` + (p.scanare_anterioara ? ` · anterioara: ${p.scanare_anterioara.replace("T", " ")}` : "");
+  $("#port").innerHTML = `
+  <div class="kpis">
+    <div class="kpi"><div class="v">${p.dosare_scanate}</div><div class="l">credite în portofoliu</div></div>
+    <div class="kpi"><div class="v">${lei(p.expunere_totala)}</div><div class="l">expunere totală</div></div>
+    <div class="kpi"><div class="v" style="color:var(--crit)">${lei(p.pe_verdict.SUSPECT_FRAUDA.expunere)}</div><div class="l">${p.pe_verdict.SUSPECT_FRAUDA.dosare} credite suspecte de fraudă</div></div>
+    <div class="kpi"><div class="v" style="color:var(--warn)">${lei(p.pe_verdict.REVIZUIRE_UMANA.expunere)}</div><div class="l">${p.pe_verdict.REVIZUIRE_UMANA.dosare} credite de revizuit</div></div>
+    <div class="kpi"><div class="v">${p.grupuri.length}</div><div class="l">grupuri de firme legate (${p.grupuri_cu_dosare_suspecte} cu suspecte)</div></div>
+  </div>
+  <div class="panel" style="margin-bottom:14px"><h2>Expunerea pe verdict</h2>
+    <div class="bar">${V.map(v => `<div title="${VERD[v]}: ${lei(p.pe_verdict[v].expunere)}" style="width:${100 * p.pe_verdict[v].expunere / p.expunere_totala}%; background:${col[v]}"></div>`).join("")}</div>
+    <div class="small">${V.map(v => `<span style="margin-right:14px"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${col[v]}"></span> ${VERD[v]}: ${p.pe_verdict[v].dosare} dosare, ${lei(p.pe_verdict[v].expunere)}</span>`).join("")}</div></div>
+  <div class="two">
+    <div class="panel"><h2>Grupuri de firme legate</h2><div class="tablewrap"><table><tr><th>Firme</th><th>Legătura</th><th class="r">Expunere</th><th class="r">Suspecte</th></tr>
+      ${p.grupuri.map(g => `<tr><td>${g.dosare.map(d => `<a href="#" data-open="${esc(d)}">${esc(d)}</a>`).join(", ")}<div class="small muted">${g.firme.map(esc).join(", ")}</div></td>
+      <td class="small">${g.motive.map(esc).join(", ")}</td><td class="r num">${lei(g.expunere)}</td><td class="r"><span class="chip ${g.suspecte ? "CRITIC" : "OK"}">${g.suspecte}/${g.dosare.length}</span></td></tr>`).join("")}</table></div></div>
+    <div class="panel"><h2>Priorități pentru echipa antifraudă</h2><div class="tablewrap"><table><tr><th>Dosar</th><th>Verdict</th><th class="r">Risc</th><th class="r">Credit</th></tr>
+      ${p.prioritati.map(x => `<tr><td><a href="#" data-open="${esc(x.dosar)}">${esc(x.dosar)}</a> ${esc(x.denumire)}<div class="small muted">${esc((x.problema_principala || "").slice(0, 110))}</div></td>
+      <td><span class="chip ${esc(x.verdict)}">${esc(VERD[x.verdict])}</span></td><td class="r num">${x.scor_risc}</td><td class="r num">${lei(x.suma)}</td></tr>`).join("")}</table></div></div>
+  </div>
+  ${p.schimbari_fata_de_scanarea_anterioara ? `<div class="panel" style="margin-top:14px"><h2>Schimbări față de scanarea anterioară (${p.schimbari_fata_de_scanarea_anterioara.length})</h2>
+    ${p.schimbari_fata_de_scanarea_anterioara.length ? p.schimbari_fata_de_scanarea_anterioara.slice(0, 30).map(s => `<div>${esc(s.dosar)} ${esc(s.denumire)}: ${esc(s.inainte ? VERD[s.inainte] : "nou")} → <span class="chip ${esc(s.acum)}">${esc(VERD[s.acum])}</span></div>`).join("") : `<p class="muted">Niciun verdict schimbat.</p>`}</div>` : ""}`;
+}
+loaders.portofoliu = async () => { try { renderPort(await api("/sherlock/firme/portofoliu")); } catch { $("#port").innerHTML = `<div class="panel empty">Nicio scanare încă. Apasă „Scanează acum”.</div>`; } };
+$("#btnScan").addEventListener("click", async ev => {
+  ev.target.disabled = true; $("#portInfo").innerHTML = `<span class="spin"></span> Se scanează portofoliul (câteva zeci de secunde)…`;
+  try { renderPort(await api(`/sherlock/firme/portofoliu/scaneaza?date=${dateSet()}`, {method: "POST"})); } catch (e) { toast(e.message); }
+  ev.target.disabled = false;
+});
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-open]"); if (!a) return; e.preventDefault();
+  $('#tabs [data-tab="dosare"]').click(); openDosar(a.dataset.open);
+});
+
+// ------------------------------------------------------------ rezultate
+loaders.rezultate = async () => {
+  const el = $("#rez"); el.innerHTML = `<div class="panel"><span class="spin"></span></div>`;
+  const variante = [["", "Toate dosarele de test, documente curate"], ["murdare", "Aceleași dosare, documente „murdare” (alte bănci, tabele, scanări)"],
+    ["extensie", "Doar dosarele noi (contracte și exemple negative grele)"]];
+  const parts = await Promise.all(variante.map(([v]) => api(`/sherlock/firme/comparatie?set=test&varianta=${v}`).catch(e => ({eroare: e.message}))));
+  el.innerHTML = `<div class="panel" style="margin-bottom:14px"><h2>Ce aduce fiecare strat</h2><p class="muted">Setul de test (dosare nevăzute la calibrarea pragurilor), offline. Alarmă falsă = dosar legitim marcat „suspiciune de fraudă”. Date sintetice.</p></div>` +
+    parts.map((p, i) => `<div class="panel" style="margin-bottom:14px"><h2>${esc(variante[i][1])}${p.dosare ? ` · ${p.dosare} dosare` : ""}</h2>
+    ${p.eroare ? `<p class="muted">${esc(p.eroare)}</p>` : `<div class="tablewrap"><table><tr><th>Configurație</th><th class="r">Fraude prinse</th><th class="r">Precizie</th><th class="r">Alarme false</th><th class="r">Legitime la analist</th><th class="r">Credite frauduloase oprite</th></tr>
+    ${p.randuri.map(r => `<tr><td>${esc(r.configuratie)}</td><td class="r num">${pct(r.recall)}</td><td class="r num">${pct(r.precizie)}</td><td class="r num">${r.alarme_false}</td>
+    <td class="r num">${r.legitime_la_revizuire == null ? "–" : pct(r.legitime_la_revizuire)}</td><td class="r num">${lei(r.bani_opriti)}</td></tr>`).join("")}</table></div>`}</div>`).join("");
+};
+
+// ------------------------------------------------------------ feedback
+loaders.feedback = async () => {
+  const el = $("#fb"); el.innerHTML = `<div class="panel"><span class="spin"></span></div>`;
+  const [real, sim] = await Promise.all([api("/sherlock/feedback/raport").catch(() => null), api("/sherlock/feedback/simulare").catch(() => null)]);
+  const rap = r => !r ? "" : `<p>${r.dosare_cu_feedback} dosare cu feedback · ${r.fraude_confirmate} fraude și ${r.legitime_confirmate} legitime confirmate · ${r.override} override-uri</p>
+    ${Object.keys(r.pe_verificare).length ? `<div class="tablewrap"><table><tr><th>Verificare</th><th class="r">Alarme</th><th class="r">Confirmate</th><th class="r">Precizie</th></tr>
+    ${Object.entries(r.pe_verificare).map(([k, v]) => `<tr><td>${esc(VERIF[k] || k)}</td><td class="r num">${v.alarme}</td><td class="r num">${v.confirmate}</td><td class="r num">${pct(v.precizie)}</td></tr>`).join("")}</table></div>` : ""}`;
+  const prop = (ps, validare, approvable) => `<div class="tablewrap"><table><tr><th>Prag</th><th class="r">Actual</th><th class="r">Propus</th><th>De ce</th>${validare ? "<th>Validare pe date noi</th>" : ""}${approvable ? "<th></th>" : ""}</tr>
+    ${ps.map(p => { const v = validare?.[p.prag]; return `<tr><td>${esc(p.prag)}</td><td class="r num">${p.actual}</td><td class="r num">${p.propus ?? "–"}</td>
+      <td class="small">${esc(p.motiv)}${p.efect_pe_feedback ? `<br>fraude ${esc(p.efect_pe_feedback.fraude_prinse)}, alarme false ${esc(p.efect_pe_feedback.alarme_false)}` : ""}</td>
+      ${validare ? `<td class="small">${v ? `<span class="chip ${v.recomandat ? "OK" : "CRITIC"}">${v.recomandat ? "recomandat" : "respins"}</span><br>agent simplu: fraude ${pct(v.inainte.simplu.recall)} → ${pct(v.dupa.simplu.recall)}, alarme false ${v.inainte.simplu.alarme_false} → ${v.dupa.simplu.alarme_false}<br>complet: fraude ${pct(v.inainte.complet.recall)} → ${pct(v.dupa.complet.recall)}, alarme false ${v.inainte.complet.alarme_false} → ${v.dupa.complet.alarme_false}` : ""}</td>` : ""}
+      ${approvable ? `<td>${p.propus != null && (!validare || validare[p.prag]?.recomandat) ? `<button class="btn" data-aplica="${esc(p.prag)}" data-val="${p.propus}">Aprobă</button>` : ""}</td>` : ""}</tr>`; }).join("")}</table></div>`;
+  el.innerHTML = `
+    <div class="panel" style="margin-bottom:14px"><h2>Bucla de feedback</h2>
+      <p class="muted">Analiștii confirmă sau infirmă alarmele. Sherlock calculează precizia fiecărei verificări și propune praguri noi. Pragurile nu se schimbă singure: o propunere trebuie să treacă validarea pe dosare nevăzute și să fie aprobată de un om (AI Act). Fiecare aprobare intră în jurnal.</p>
+      <label class="small muted">Analist care aprobă <input id="apAnalist" value="${esc(store.get("analist") || "")}" placeholder="Nume Prenume"></label></div>
+    <div class="panel" style="margin-bottom:14px"><h2>Feedback-ul real din aplicație</h2>${rap(real?.raport)}${real ? prop(real.propuneri, null, true) : `<p class="muted">Indisponibil.</p>`}</div>
+    <div class="panel"><h2>Simulare: analiștii confirmă setul de calibrare</h2>
+      ${sim ? rap(sim.raport) + prop(sim.propuneri, sim.validare_test, true) : `<p class="muted">Rulați <code>python run_feedback.py</code> în backend.</p>`}</div>`;
+  el.querySelectorAll("[data-aplica]").forEach(b => b.addEventListener("click", async () => {
+    const analist = $("#apAnalist").value.trim(); if (!analist) return toast("Completează numele analistului care aprobă");
+    if (!confirm(`Aplici ${b.dataset.aplica} = ${b.dataset.val} în config.yaml?`)) return;
+    try { const x = await api("/sherlock/feedback/aplica", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({praguri: {[b.dataset.aplica]: Number(b.dataset.val)}, analist, motiv: "aprobat din aplicație"})});
+      toast(`Aplicat de ${x.analist}: ${JSON.stringify(x.vechi)} → ${JSON.stringify(x.nou)}`); loaders.feedback(); }
+    catch (e) { toast(e.message); }
+  }));
+};
+
+// ------------------------------------------------------------ start
+$("#date").addEventListener("change", () => CURENT && openDosar(CURENT));
+loadDosare();
+// link direct: #D014 deschide dosarul, #portofoliu / #rezultate / #feedback / #upload deschide tab-ul
+const h = location.hash.slice(1), t = store.get("tab");
+if (/^D\d{3}$/.test(h)) openDosar(h);
+else if ($(`#tabs [data-tab="${h}"]`)) $(`#tabs [data-tab="${h}"]`).click();
+else if (t && t !== "dosare") $(`#tabs [data-tab="${t}"]`)?.click();
+</script>
+</body>
+</html>

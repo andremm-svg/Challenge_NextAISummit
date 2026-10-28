@@ -236,6 +236,8 @@ def investigate(case_id: str, paths: list[str], mode: str = "auto", domeniu: str
     }
     if "retea" in case.state:
         report["retea"] = case.state["retea"]
+    if hasattr(dom, "masuratori"):
+        report["masuratori"] = dom.masuratori(case)
     return report
 
 
