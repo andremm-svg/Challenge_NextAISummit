@@ -63,8 +63,8 @@ class FakeLLM:
         return SimpleNamespace(content="", tool_calls=[tc])
 
 
-def test_garda_completeaza_ce_omite_agentul(monkeypatch=None):
-    # Agentul "lenes" ruleaza doar 2 unelte si se opreste. Garda trebuie sa ruleze restul.
+def test_controlul_automat_completeaza_ce_omite_agentul(monkeypatch=None):
+    # Agentul "lenes" ruleaza doar 2 unelte si se opreste. Controlul automat trebuie sa ruleze restul.
     plan = [("lista_documente", {}), ("verifica_identitate", {}),
             ("incheie_investigatia", {"rezumat": "Am verificat doar identitatea."})]
     fake = FakeLLM(plan)
@@ -75,7 +75,7 @@ def test_garda_completeaza_ce_omite_agentul(monkeypatch=None):
     finally:
         agent.get_llm = original
     assert r["verdict"] == "SUSPECT_FRAUDA"
-    assert "verifica_venit" in r["verificari_fortate_de_garda"]
+    assert "verifica_venit" in r["verificari_completate_automat"]
     assert r["explicatie"] == "Am verificat doar identitatea."
 
 

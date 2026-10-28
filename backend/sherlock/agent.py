@@ -3,7 +3,7 @@
 Arhitectura (aceeasi pentru ambele domenii):
   - LLM-ul (Claude prin Bedrock sau Featherless) ORCHESTREAZA: alege uneltele si ordinea, apoi explica.
   - Uneltele DECID: reguli deterministe, cu dovezi.
-  - Garda ruleaza orice verificare obligatorie pe care agentul a sarit-o.
+  - Controlul automat ruleaza orice verificare obligatorie pe care agentul a sarit-o.
   - Verdictul e calculat de cod din constatari. LLM-ul nu poate aproba nimic.
   - Omul ia decizia finala.
 
@@ -76,7 +76,7 @@ def _execute(dom, case, name: str, args: dict, tool_names=None, actor="agent") -
 
 
 def _run_llm(dom, case, llm, tool_names=None, system=None, user_msg=None, actor="agent", max_steps=MAX_STEPS) -> str | None:
-    """Bucla agentului. Cu tool_names/system se ruleaza un specialist care vede doar uneltele rolului sau."""
+    """Bucla agentului. Cu tool_names/system se ruleaza un sub-agent care vede doar uneltele rolului sau."""
     doc_types = list(case.docs)
     tip = case.state.get("tip")
     user_msg = user_msg or (f"Investigheaza dosarul {case.case_id}" + (f" ({tip})" if tip else "") + f". Documente incarcate: {doc_types}.")
@@ -144,16 +144,16 @@ def _run_llm(dom, case, llm, tool_names=None, system=None, user_msg=None, actor=
             return final
         messages.append({"role": "user", "content": f"REZULTAT {name}: {reply}"})
 
-    case.log("sistem", "limita_pasi", f"{actor} a atins limita de {max_steps} pasi; garda preia verificarile ramase")
+    case.log("sistem", "limita_pasi", f"{actor} a atins limita de {max_steps} pasi; controlul automat preia verificarile ramase")
     return None
 
 
 def _guardrail(dom, case) -> list[str]:
     forced = [n for n in dom.MANDATORY if n not in case.executed]
     for n in forced:
-        dom.run_tool(case, n, actor="garda")
+        dom.run_tool(case, n, actor="control_automat")
     if forced:
-        case.log("garda", "verificari_fortate", f"Agentul a omis: {forced}. Au fost rulate automat.")
+        case.log("control_automat", "verificari_completate", f"Verificari omise de agent, rulate automat: {forced}")
     return forced
 
 
@@ -230,7 +230,7 @@ def investigate(case_id: str, paths: list[str], mode: str = "auto", domeniu: str
         "urmatorii_pasi": _next_steps(findings, verdict),
         "documente": {t: d["file"] for t, d in case.docs.items()},
         "documente_izolate": sorted(case.quarantined),
-        "verificari_fortate_de_garda": forced,
+        "verificari_completate_automat": forced,
         "audit": case.audit,
         "durata_sec": round(time.time() - t0, 2),
     }

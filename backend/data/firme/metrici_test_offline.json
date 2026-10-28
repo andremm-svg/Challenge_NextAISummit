@@ -59,7 +59,7 @@
  "fraude_ajunse_la_analist": 1.0,
  "legitime_trimise_la_revizuire": 0.025,
  "timp_mediu_sec": 0.02,
- "durata_totala_sec": 1.6,
+ "durata_totala_sec": 1.9,
  "ipoteza": "Un credit fraudulos e considerat pierdut integral (fara recuperari).",
  "set": "test",
  "mod": "offline",

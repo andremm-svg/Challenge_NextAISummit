@@ -28,34 +28,37 @@ deci **100% din fraude au ajuns în fața unui analist**. Date sintetice; în pr
 |---|---|---|---|---|---|
 | Verificare clasică ANAF | 30% | 100% | 0 | – | 1,55 mil. lei |
 | Agent simplu | 90% | 95% | 1 | 15% | 5,06 mil. lei |
-| Echipa de detectivi | 90% | 95% | 1 | 8% | 5,06 mil. lei |
-| **Echipa + cerere de documente** | **90%** | **100%** | **0** | **2,5%** | **5,06 mil. lei** |
+| Multi-agent | 90% | 95% | 1 | 8% | 5,06 mil. lei |
+| **Multi-agent + solicitare documente** | **90%** | **100%** | **0** | **2,5%** | **5,06 mil. lei** |
 
 ```powershell
-python run_eval.py                  # echipa + cerere de documente (offline, câteva secunde)
+python run_eval.py                  # multi-agent + solicitare documente (offline, câteva secunde)
 python run_eval.py --comparatie     # tabelul de mai sus
 python run_eval.py --mode llm --limit 20 --workers 4    # agentul cu LLM pe un eșantion
 ```
 
-## Echipa de detectivi
+## Arhitectura multi-agent
 
-1. **Trei specialiști**, fiecare cu doar uneltele rolului său: *Ofițerul de securitate* (dosar complet, instrucțiuni
-   ascunse), *Investigatorul* (identitate, statut, istoric, rețea), *Contabilul* (bilanț vs. ANAF, bani din cont, salarii).
-2. **Garda** rulează orice verificare obligatorie omisă de un specialist.
-3. **Avocatul diavolului** caută o explicație nevinovată pentru fiecare alarmă.
-4. **Judecătorul** (reguli deterministe) acceptă un argument doar dacă e confirmat de verificări independente curate.
+Sherlock este un **agent coordonator** care împarte investigația între sub-agenți specializați:
+
+1. **Sub-agenți**, fiecare cu doar uneltele zonei sale: *Agentul de documente* (dosar complet, documente
+   manipulate), *Agentul de firmă* (identitate, statut, istoric, rețea), *Agentul financiar* (bilanț vs. ANAF,
+   bani din cont, salarii).
+2. **Controlul automat** rulează orice verificare obligatorie omisă de un sub-agent.
+3. **Agentul de contra-verificare** caută o explicație legitimă pentru fiecare alarmă.
+4. **Coordonatorul** (reguli deterministe) acceptă o explicație doar dacă e confirmată de verificări independente.
    O alarmă critică nu se anulează niciodată fără documente noi.
-5. **Cererea de documente:** când îndoiala se poate lămuri cu un document (de exemplu, încasări la altă bancă),
-   Sherlock scrie cererea către client; răspunsul clientului reia investigația.
+5. **Solicitarea de documente:** când o îndoială se poate lămuri cu un document (de exemplu, încasări la altă bancă),
+   coordonatorul redactează cererea către client; răspunsul clientului reia investigația.
 
-Cu LLM, specialiștii sunt agenți separați, avocatul își formulează singur pledoaria, iar Sherlock scrie concluzia;
-deciziile rămân ale regulilor. Fără LLM, aceeași echipă rulează determinist.
+Cu LLM, sub-agenții rulează ca agenți separați, contra-verificarea își formulează singură explicațiile, iar
+coordonatorul redactează concluzia; deciziile rămân ale regulilor. Fără LLM, aceeași arhitectură rulează determinist.
 
 **Limita simulării:** în date, clienții legitimi cu încasări la alte bănci trimit extrasul, iar fraudatorii nu au
 ce trimite. În realitate un fraudator poate trimite un extras fals; de aceea, în producție extrasele ar trebui
 obținute direct de la cealaltă bancă (Open Banking), nu ca fișier încărcat de client.
 
-Endpoint-uri: `POST /sherlock/firme/echipa/{dosar}` · `POST /sherlock/firme/echipa/{dosar}/raspuns-client` ·
+Endpoint-uri: `POST /sherlock/firme/multi-agent/{dosar}` · `POST /sherlock/firme/multi-agent/{dosar}/raspuns-client` ·
 `GET /sherlock/firme/comparatie`.
 
 ### Tipare de fraudă și cum le prinde Sherlock
@@ -113,7 +116,7 @@ PDF-uri ──► pdf_reader (text, metadate, text ascuns)
           UNELTE deterministe (tools.py) ── decid, cu dovezi
                │
                ▼
-          GARDA ── rulează orice verificare obligatorie omisă de agent
+          CONTROL AUTOMAT ── rulează orice verificare obligatorie omisă de agent
                │
                ▼
           VERDICT calculat de cod ──► ANALIST UMAN (decizie + jurnal de audit)
@@ -123,7 +126,7 @@ Principii:
 - **LLM-ul orchestrează, codul decide.** Nicio cifră nu e calculată de model.
 - **Anti-halucinație:** orice valoare extrasă de LLM trebuie să apară literal în document, altfel e respinsă.
 - **Anti-prompt-injection:** documentele cu text ascuns sau instrucțiuni pentru AI sunt izolate și nu mai ajung la LLM.
-- **Garda:** dacă agentul sare peste o verificare, ea e rulată automat și marcată în raport.
+- **Control automat:** dacă agentul sare peste o verificare, ea e rulată automat și marcată în raport.
 - **Reziliență:** dacă modelul nu suportă tool calling, agentul trece pe un protocol JSON; fără cheie API rulează un planificator determinist.
 - **Reguli configurabile** în `backend/sherlock/config.yaml` (praguri, limite, tipare), fără modificări de cod.
 
@@ -167,7 +170,7 @@ Fără nicio cheie, agentul rulează pe planificatorul determinist (modul `offli
 python run_tests.py                 # 5 dosare, offline, determinist, fără cheie API
 python run_tests.py --mode llm      # aceleași dosare, cu agentul Featherless
 python run_tests.py --verbose       # afișează și constatările
-python tests/test_unelte.py         # teste unitare + test că garda prinde ce omite agentul
+python tests/test_unelte.py         # teste unitare + controlul automat completează ce omite agentul
 python tests/test_bedrock.py        # bucla agentului pe Claude/Bedrock, cu un client AWS simulat
 ```
 

@@ -23,7 +23,7 @@
    "documente_cerute": 0
   },
   {
-   "configuratie": "Echipa de detectivi",
+   "configuratie": "Multi-agent",
    "recall": 1.0,
    "precizie": 0.952,
    "alarme_false": 1,
@@ -33,7 +33,7 @@
    "documente_cerute": 0
   },
   {
-   "configuratie": "Echipa + cerere de documente",
+   "configuratie": "Multi-agent + solicitare documente",
    "recall": 1.0,
    "precizie": 1.0,
    "alarme_false": 0,

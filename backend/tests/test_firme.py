@@ -48,7 +48,7 @@ def test_injectie_in_bilant_e_izolata():
 
 
 class FakeConverse:
-    """Simuleaza Claude pe Bedrock: ruleaza 3 unelte si incheie. Garda trebuie sa completeze restul."""
+    """Simuleaza Claude pe Bedrock: ruleaza 3 unelte si incheie. Controlul automat trebuie sa completeze restul."""
 
     def __init__(self):
         self.n = 0
@@ -61,10 +61,10 @@ class FakeConverse:
         return {"output": {"message": {"role": "assistant", "content": [{"toolUse": {"toolUseId": f"t{self.n}", "name": name, "input": args}}]}}}
 
 
-def test_agent_llm_pe_firme_cu_garda():
+def test_agent_llm_pe_firme_cu_control_automat():
     r = _run(_first("retea"), mode="llm", llm=BedrockLLM(model="test", client=FakeConverse()))
     assert r["mod"] == "llm" and r["verdict"] == "SUSPECT_FRAUDA"
-    assert "verifica_flux_cont" in r["verificari_fortate_de_garda"]
+    assert "verifica_flux_cont" in r["verificari_completate_automat"]
     assert r["explicatie"].startswith("Firma face parte")
 
 

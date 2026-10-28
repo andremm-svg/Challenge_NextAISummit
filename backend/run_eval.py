@@ -4,8 +4,8 @@
     python run_eval.py --set calibrare          # setul pe care ajustam pragurile
     python run_eval.py --mode llm --limit 20    # agentul cu LLM, pe 20 de dosare din test
     python run_eval.py --mode llm --workers 4   # in paralel
-    python run_eval.py --config simplu          # un singur agent (fara echipa si fara cerere de documente)
-    python run_eval.py --comparatie             # verificare clasica vs agent simplu vs echipa vs echipa + documente
+    python run_eval.py --config simplu          # un singur agent (fara sub-agenti si fara solicitare de documente)
+    python run_eval.py --comparatie             # verificare clasica vs agent simplu vs multi-agent vs multi-agent + documente
 
 Reguli de onestitate: pragurile se ajusteaza DOAR pe setul de calibrare; rezultatele raportate sunt pe TEST.
 "Verificarea clasica" = ce face azi o banca: identitate + statut fiscal + bilant comparat cu ANAF.
@@ -21,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 from sherlock.agent import investigate_folder, verdict_from  # noqa: E402
-from sherlock.echipa import investigate_echipa_folder, raspuns_client  # noqa: E402
+from sherlock.multi_agent import investigate_multi_agent_folder, raspuns_client  # noqa: E402
 from sherlock.firme.tools import CHECKS_VERIFICARE_CLASICA, DATA  # noqa: E402
 from sherlock.llm import get_llm  # noqa: E402
 
@@ -43,8 +43,8 @@ def rate(tp, fp, fn, tn):
 
 CONFIGS = {
     "simplu": "Agent simplu",
-    "echipa": "Echipa de detectivi",
-    "complet": "Echipa + cerere de documente",
+    "multi_agent": "Multi-agent",
+    "complet": "Multi-agent + solicitare documente",
 }
 
 
@@ -53,8 +53,8 @@ def run_case(case_id, config, llm):
     mode = "llm" if llm else "offline"
     if config == "simplu":
         return investigate_folder(folder, mode=mode, domeniu="firme", llm=llm)
-    if config == "echipa":
-        return investigate_echipa_folder(folder, mode=mode, llm=llm)
+    if config == "multi_agent":
+        return investigate_multi_agent_folder(folder, mode=mode, llm=llm)
     x = raspuns_client(folder, str(DATA / "suplimentare" / case_id), mode=mode, llm=llm)
     r = dict(x["dupa"])
     r["documente_cerute_initial"] = x["inainte"]["documente_cerute"]
@@ -203,11 +203,11 @@ def comparatie(args):
     (DATA / f"metrici_comparatie_{args.set}.json").write_text(json.dumps({"set": args.set, "dosare": len(ids), "randuri": rows},
                                                                           indent=1, ensure_ascii=False), encoding="utf-8")
     print(f"\nComparatie pe setul {args.set} ({len(ids)} dosare, offline)\n")
-    print(f"{'Configuratie':32}{'Recall':>8}{'Precizie':>10}{'Alarme false':>14}{'Legit. la revizuire':>21}{'Bani opriti':>16}")
-    print("-" * 101)
+    print(f"{'Configuratie':38}{'Recall':>8}{'Precizie':>10}{'Alarme false':>14}{'Legit. la revizuire':>21}{'Bani opriti':>16}")
+    print("-" * 107)
     for r in rows:
         rev = "-" if r["legitime_la_revizuire"] is None else f"{r['legitime_la_revizuire']:.0%}"
-        print(f"{r['configuratie']:32}{r['recall']:>8.0%}{r['precizie']:>10.0%}{r['alarme_false']:>14}{rev:>21}{lei(r['bani_opriti']):>16}")
+        print(f"{r['configuratie']:38}{r['recall']:>8.0%}{r['precizie']:>10.0%}{r['alarme_false']:>14}{rev:>21}{lei(r['bani_opriti']):>16}")
     print(f"\nSalvat in data/firme/metrici_comparatie_{args.set}.json")
 
 

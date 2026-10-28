@@ -40,8 +40,8 @@ def main():
             for f in report["constatari"]:
                 if f["severitate"] != "OK":
                     print(f"    [{f['severitate']}] {f['verificare']}: {f['mesaj']}")
-            if report["verificari_fortate_de_garda"]:
-                print(f"    garda a fortat: {report['verificari_fortate_de_garda']}")
+            if report["verificari_completate_automat"]:
+                print(f"    completate automat: {report['verificari_completate_automat']}")
     print("-" * 78)
     print(f"{passed}/{len(expected)} dosare corecte. Rapoartele complete sunt in tests/rezultate/\n")
     sys.exit(0 if passed == len(expected) else 1)
