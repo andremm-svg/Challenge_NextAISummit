@@ -183,6 +183,7 @@ Fraudele care nu au fost marcate drept suspecte au ajuns la revizuire umană, de
 
 ## Starea curentă
 
-- Ramura `extindere-sherlock` (punctele 7 și 8), publicată pe GitHub pentru echipă; `main` a rămas la `2e10027`.
+- Ramura `main` conține tot (punctele 7 și 8), prin pull request-ul #1 (`bf32780`, 29.10.2026). Colegii lucrează pe
+  ramuri proprii, pornite din `main`, și deschid pull request-uri.
 - Ghidul echipei din Claude Docs are încă cifrele de dinainte de extindere; textul nou e în documentul „Sherlock –
   ghidul echipei (actualizat 29.10.2026)”.
