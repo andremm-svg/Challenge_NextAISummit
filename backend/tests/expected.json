@@ -1,0 +1,32 @@
+{
+  "dosar_01_curat": {
+    "verdict": "CURAT",
+    "trebuie_sa_contina": []
+  },
+  "dosar_02_incomplet": {
+    "verdict": "INCOMPLET",
+    "trebuie_sa_contina": [
+      "documente_lipsa"
+    ]
+  },
+  "dosar_03_falsificat": {
+    "verdict": "SUSPECT_FRAUDA",
+    "trebuie_sa_contina": [
+      "angajator",
+      "venit",
+      "metadate_pdf"
+    ]
+  },
+  "dosar_04_injectie": {
+    "verdict": "SUSPECT_FRAUDA",
+    "trebuie_sa_contina": [
+      "injectie"
+    ]
+  },
+  "dosar_05_typo": {
+    "verdict": "REVIZUIRE_UMANA",
+    "trebuie_sa_contina": [
+      "identitate"
+    ]
+  }
+}

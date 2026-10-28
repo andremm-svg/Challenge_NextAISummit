@@ -1,0 +1,46 @@
+# Regulile lui Sherlock. Banca le poate schimba fara sa modifice codul.
+
+documente_obligatorii:
+  - carte_identitate
+  - adeverinta_venit
+  - extras_cont
+  - cerere_credit
+
+identitate:
+  varsta_minima: 18
+  nume_ok_peste: 0.97        # similaritate >= 0.97 -> acelasi nume
+  nume_typo_peste: 0.85      # 0.85 - 0.97 -> probabil greseala de scriere, verificare umana
+
+venit:
+  # diferenta dintre salariul declarat in adeverinta si media incasarilor din extras
+  toleranta_avertizare: 0.10   # peste 10% -> revizuire umana
+  toleranta_critica: 0.25      # peste 25% -> suspiciune de falsificare
+  luni_minime_extras: 3
+
+indatorare:
+  # Grad maxim de indatorare (rata / venit net). Valoare configurabila:
+  # verificati limita BNR in vigoare inainte de demo.
+  grad_maxim: 0.40
+
+metadate_pdf:
+  ore_maxime_intre_creare_si_modificare: 1
+  producatori_suspecti:
+    - editor
+    - ilovepdf
+    - smallpdf
+    - sejda
+    - photoshop
+    - foxit phantom
+    - acrobat pro
+
+injectie:
+  # fraze care nu au ce cauta intr-un document bancar si par instructiuni pentru AI
+  tipare:
+    - "ignor[aă] (toate )?(verific[aă]rile|instruc[tț]iunile|regulile)"
+    - "ignore (all |previous )?(instructions|rules|checks)"
+    - "marcheaz[aă] (dosarul|cererea) ca aprobat"
+    - "(aprob[aă]|approve) (automat|this|aceast[aă])"
+    - "sistemul? (ai|de inteligen[tț][aă] artificial[aă])"
+    - "system prompt"
+    - "you are (an?|the) (ai|assistant|model)"
+  font_minim_vizibil: 3.0    # text mai mic de 3pt e considerat ascuns

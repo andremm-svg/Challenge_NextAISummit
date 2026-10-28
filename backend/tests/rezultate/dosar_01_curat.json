@@ -1,0 +1,188 @@
+{
+  "dosar": "dosar_01_curat",
+  "mod": "offline",
+  "verdict": "CURAT",
+  "eticheta": "Dosar curat – gata pentru decizia analistului",
+  "explicatie": "Toate verificările au trecut. Documentele sunt consecvente între ele, venitul declarat se regăsește în extras.",
+  "decizie_finala": "Aparține analistului uman. Sherlock pregătește, omul decide.",
+  "constatari": [
+    {
+      "verificare": "documente_lipsa",
+      "severitate": "OK",
+      "mesaj": "Toate documentele obligatorii sunt prezente",
+      "dovezi": []
+    },
+    {
+      "verificare": "injectie",
+      "severitate": "OK",
+      "mesaj": "Nu exista text ascuns sau instructiuni suspecte in documente",
+      "dovezi": []
+    },
+    {
+      "verificare": "identitate",
+      "severitate": "OK",
+      "mesaj": "Identitate consecventa in toate documentele (POPESCU ANDREI)",
+      "dovezi": []
+    },
+    {
+      "verificare": "angajator",
+      "severitate": "OK",
+      "mesaj": "Angajator verificat in registru: TECHNOVA SOLUTIONS SRL, stare ACTIVA",
+      "dovezi": []
+    },
+    {
+      "verificare": "venit",
+      "severitate": "OK",
+      "mesaj": "Venitul declarat corespunde incasarilor din extras",
+      "dovezi": [
+        "declarat in adeverinta: 6,850.00 RON",
+        "media incasarilor reale: 6,850.00 RON (3 luni)",
+        "diferenta: +0%"
+      ]
+    },
+    {
+      "verificare": "metadate_pdf",
+      "severitate": "OK",
+      "mesaj": "Metadatele PDF nu arata modificari ulterioare emiterii",
+      "dovezi": []
+    },
+    {
+      "verificare": "iban",
+      "severitate": "OK",
+      "mesaj": "IBAN valid si identic intre cerere si extras",
+      "dovezi": []
+    },
+    {
+      "verificare": "indatorare",
+      "severitate": "OK",
+      "mesaj": "Grad de indatorare in limita",
+      "dovezi": [
+        "rata: 1,890.00 RON",
+        "venit verificat din extras: 6,850.00 RON",
+        "grad: 27.6% (limita 40%)"
+      ]
+    }
+  ],
+  "urmatorii_pasi": [
+    "Analistul poate trece la evaluarea de risc și decizia de creditare."
+  ],
+  "documente": {
+    "adeverinta_venit": "adeverinta_venit.pdf",
+    "carte_identitate": "carte_identitate.pdf",
+    "cerere_credit": "cerere_credit.pdf",
+    "extras_cont": "extras_cont.pdf"
+  },
+  "documente_izolate": [],
+  "verificari_fortate_de_garda": [],
+  "audit": [
+    {
+      "t": "11:57:55",
+      "actor": "sistem",
+      "actiune": "document_incarcat",
+      "detaliu": "adeverinta_venit.pdf -> adeverinta_venit (1 pag., pymupdf)"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "sistem",
+      "actiune": "document_incarcat",
+      "detaliu": "carte_identitate.pdf -> carte_identitate (1 pag., pymupdf)"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "sistem",
+      "actiune": "document_incarcat",
+      "detaliu": "cerere_credit.pdf -> cerere_credit (1 pag., pymupdf)"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "sistem",
+      "actiune": "document_incarcat",
+      "detaliu": "extras_cont.pdf -> extras_cont (1 pag., pymupdf)"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "sistem",
+      "actiune": "start",
+      "detaliu": "mod=offline"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "lista_documente",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_documente_obligatorii",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "scaneaza_instructiuni_ascunse",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_identitate",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "unealta",
+      "actiune": "extrage_campuri",
+      "detaliu": "carte_identitate: ['nume', 'prenume', 'cnp', 'valabil_pana']"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "unealta",
+      "actiune": "extrage_campuri",
+      "detaliu": "adeverinta_venit: ['angajator', 'cui', 'nume_complet', 'cnp', 'salariu_net']"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "unealta",
+      "actiune": "extrage_campuri",
+      "detaliu": "extras_cont: ['titular', 'iban', 'incasari_salariu']"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "unealta",
+      "actiune": "extrage_campuri",
+      "detaliu": "cerere_credit: ['nume_complet', 'cnp', 'suma', 'luni', 'rata_lunara', 'iban']"
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_angajator",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_venit",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_metadate_pdf",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_iban",
+      "detaliu": ""
+    },
+    {
+      "t": "11:57:55",
+      "actor": "planificator",
+      "actiune": "verifica_grad_indatorare",
+      "detaliu": ""
+    }
+  ],
+  "durata_sec": 1.77
+}

@@ -1,0 +1,4 @@
+# doar pentru regenerarea PDF-urilor de test (tools_dev/generate_dosare.py) si pentru teste
+reportlab
+pypdf
+pytest
