@@ -7,3 +7,4 @@ pydantic
 pyyaml
 pymupdf
 pymupdf4llm
+boto3

@@ -1,7 +1,14 @@
 import pymupdf
 from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+
+from sherlock_api import router as sherlock_router
 
 app = FastAPI(title="BankFlow AI")
+
+# Permite interfetei (Lovable) sa apeleze API-ul
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.include_router(sherlock_router)
 
 
 @app.get("/")

@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 .env
 backend/data/decizii_analist.jsonl
+backend/tests/rezultate/

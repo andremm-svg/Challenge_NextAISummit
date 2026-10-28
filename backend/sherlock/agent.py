@@ -206,7 +206,7 @@ def investigate(case_id: str, pdf_paths: list[str], mode: str = "auto") -> dict:
         raise RuntimeError("Mod 'llm' cerut, dar FEATHERLESS_API_KEY lipseste din .env")
     used_mode = "llm" if llm else "offline"
     case = load_case(case_id, pdf_paths, llm=llm)
-    case.log("sistem", "start", f"mod={used_mode}" + (f", model={llm.model}" if llm else ""))
+    case.log("sistem", "start", f"mod={used_mode}" + (f", furnizor={getattr(llm, 'provider', '?')}, model={llm.model}" if llm else ""))
 
     summary = _run_llm(case, llm) if llm else _run_offline(case)
     forced = _guardrail(case)

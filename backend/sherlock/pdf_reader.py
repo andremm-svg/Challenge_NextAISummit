@@ -29,7 +29,10 @@ def _is_white(rgb) -> bool:
 
 
 def _read_pymupdf(path: str, min_font: float) -> dict:
-    import fitz  # PyMuPDF
+    try:
+        import pymupdf as fitz  # versiunile noi
+    except ImportError:
+        import fitz  # versiunile vechi
 
     doc = fitz.open(path)
     text_parts, hidden = [], []
@@ -101,7 +104,6 @@ def _read_pypdf(path: str, min_font: float) -> dict:
 
 def read_pdf(path: str, min_font: float = 3.0) -> dict:
     try:
-        import fitz  # noqa: F401
         return _read_pymupdf(path, min_font)
     except ImportError:
         return _read_pypdf(path, min_font)

@@ -62,6 +62,17 @@ pip install -r requirements.txt
 copy .env.example .env      # apoi pune cheia Featherless în .env
 ```
 
+## Alegerea LLM-ului
+
+În `backend/.env` (copiat din `.env.example`):
+
+| `LLM_PROVIDER` | Ce folosește | Ce completezi |
+|---|---|---|
+| `bedrock` | Claude prin Amazon Bedrock (Converse API, tool use nativ) | `AWS_REGION`, `BEDROCK_MODEL_ID`, cheile AWS |
+| `featherless` | modele open prin Featherless (API compatibil OpenAI) | `FEATHERLESS_API_KEY`, `FEATHERLESS_MODEL` |
+
+Fără nicio cheie, agentul rulează pe planificatorul determinist (modul `offline`), deci demo-ul merge oricum.
+
 ## Testare (ce poate verifica juriul)
 
 ```powershell
@@ -69,6 +80,7 @@ python run_tests.py                 # 5 dosare, offline, determinist, fără che
 python run_tests.py --mode llm      # aceleași dosare, cu agentul Featherless
 python run_tests.py --verbose       # afișează și constatările
 python tests/test_unelte.py         # teste unitare + test că garda prinde ce omite agentul
+python tests/test_bedrock.py        # bucla agentului pe Claude/Bedrock, cu un client AWS simulat
 ```
 
 Rezultat așteptat: `5/5 dosare corecte`. Rapoartele complete (constatări, dovezi, jurnal de audit) se
