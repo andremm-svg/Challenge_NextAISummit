@@ -42,6 +42,18 @@ def test_dosar_neeligibil_problemele_prestabilite():
     assert r["scor_detaliat"]["numar"]["CRITIC"] == 5 and r["scor_detaliat"]["total_brut"] == 175
 
 
+def test_dosare_noi_alt_format():
+    a = _run("test_nou/A_eligibil")
+    assert a["verdict"] == "CURAT" and set(_status(a).values()) == {"OK"}
+    assert [c["verificare"] for c in a["contraverificare"] if c["acceptat"]] == ["istoric_firma"]  # avertizarea e lamurita
+    b = _run("test_nou/B_neeligibil")
+    assert b["verdict"] == "SUSPECT_FRAUDA"
+    assert _status(b) == {"agent_documente": "ALARMA", "agent_firma": "OK", "agent_financiar": "ALARMA", "agent_contracte": "ALARMA"}
+    assert {p["verificare"] for s in b["sub_agenti"] for p in s["probleme"]} == {"injectie", "flux_cont", "salarii", "contracte"}
+    assert not any(f["verificare"] == "bilant_vs_anaf" and f["severitate"] != "OK" for f in b["constatari"])  # bilantul = ANAF
+    assert b["documente_izolate"] == ["contract"]
+
+
 def test_document_ilizibil_cere_reincarcare():
     r = _run("3_document_ilizibil")
     assert [d["fisier"] for d in r["documente_ilizibile"]] == ["situatii_financiare_scanat.pdf"]

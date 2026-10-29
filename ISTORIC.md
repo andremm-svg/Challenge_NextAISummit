@@ -154,6 +154,19 @@ pagina de feedback și pagina de rezultate.
 - 36 de teste; test cap-coadă în browser (Playwright, local): încărcarea celor 3 dosare, statusurile, butoanele Expand,
   reîncărcarea, lista, filtrul, decizia analistului și afișarea pe telefon. Cifrele din evaluare sunt neschimbate.
 
+### 9. Tool intern, dosare noi pentru demo și testele manuale (29.10.2026, `main`)
+- Interfața devine un tool intern: fără texte explicative; butonul „Expand” devine „Detalii”; în Portofoliu, „Grupuri de
+  firme legate” și „Priorități pentru echipa antifraudă” încep la același nivel. Concluziile lui Claude se afișează cu
+  îngroșat și pe rânduri.
+- Cheia Bedrock: `AWS_BEARER_TOKEN_BEDROCK` (cheile temporare expiraseră). Testat cap-coadă cu Claude real, inclusiv
+  „ILIZIBIL” pe bilanțul scanat.
+- Două dosare noi pentru demo, în alt format (`demo_dosare/test_nou/`, `tools_dev/generate_test_nou.py`): ARCADIA
+  (eligibil, avertizare lămurită de contra-verificare) și NORDIC STEEL (neeligibil: text ascuns în contract, angajați
+  fantomă, bani lipsă, beneficiar paravan; bilanțul e identic cu ANAF).
+- Teste manuale pentru ziua demo-ului: `docs/QA_MANUAL.md` (22 de cazuri). 37 de teste automate.
+- Documentul de arhitectură (agenți, flux de date, situații neprevăzute, criteriile juriului, demo, teste):
+  „Sherlock: arhitectura soluției”.
+
 ## Rezultatele după extindere (setul de test, 253 de dosare: 26 de fraude, 227 legitime)
 
 | Configurație | Recall | Precizie | Alarme false | Legitime la analist | Credite frauduloase oprite |

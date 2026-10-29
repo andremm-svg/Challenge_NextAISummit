@@ -64,7 +64,7 @@ din Wikimedia Commons, domeniu public), cu temă luminoasă și întunecată.
 
 | Tab | Ce face |
 |---|---|
-| Dosare | lista „Dosare noi” (încărcate din aplicație) și „Dosare de test” (cele 506 sintetice), colorate pe status. Un dosar se deschide ca **card compact**: status, risc, ce sub-agenți nu au dat OK și cele 4 carduri de sub-agent, fiecare cu **Expand**. **Expand** pe dosar deschide analiza completă, în secțiuni numerotate |
+| Dosare | lista „Dosare noi” (încărcate din aplicație) și „Dosare de test” (cele 506 sintetice), colorate pe status. Un dosar se deschide ca **card compact**: status, risc, ce sub-agenți nu au dat OK și cele 4 carduri de sub-agent, fiecare cu butonul **Detalii**. **Detalii** pe dosar deschide analiza completă, în secțiuni numerotate |
 | Încarcă un dosar | PDF-uri + extras CSV, în orice format; dosarul și documentele se salvează în baza dosarelor noi |
 | Portofoliu | scanează toți clienții: expunere pe status, grupuri de firme legate, priorități pentru antifraudă |
 | Rezultate | cât de bine funcționează Sherlock pe toate dosarele de test (fraude prinse, alarme false), față de verificarea ANAF |
@@ -74,7 +74,7 @@ din Wikimedia Commons, domeniu public), cu temă luminoasă și întunecată.
 la antifraudă), *De verificat* (portocaliu, îndoieli de lămurit de analist sau cu un document de la client). Filtrul
 „Documente” din antet arată doar dosarele cu un anumit status.
 
-**Analiza completă** (Expand pe dosar): pași următori · scor de risc · concluzie · probleme · contra-verificare ·
+**Analiza completă** (butonul Detalii al dosarului): pași următori · scor de risc · concluzie · probleme · contra-verificare ·
 documente de reîncărcat / cerute clientului · contracte · rețea · documente · jurnal de audit (secțiunile fără conținut
 nu apar). Interfața e un tool intern: fără texte explicative, doar date, statusuri și acțiuni. Sub card, decizia analistului.
 

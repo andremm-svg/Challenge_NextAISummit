@@ -48,3 +48,17 @@ declarați. Sherlock arată că banii nu există, salariile nu se plătesc și c
 
 Dosarele încărcate apar în tab-ul „Dosare”, la „Dosare noi” (`N001`, `N002`…). Pentru o repetiție de la zero:
 oprește serverul și șterge `backend/data/incarcate/`.
+
+## Test cu dosare noi: `test_nou/`
+
+Două dosare pe care Sherlock nu le-a mai analizat, cu alte firme, alte tipare și **alt format** decât dosarele 1–3:
+tabele cu diacritice, alte etichete („Valoarea creditului solicitat”, „Rezultatul net al exercițiului”), nume de
+fișiere diferite și extras de la altă bancă (CSV cu `;`, debit/credit separate, date `zz.ll.aaaa`).
+Regenerare: `python backend/tools_dev/generate_test_nou.py`.
+
+| Dosar | Firmă | Rezultat | De ce |
+|---|---|---|---|
+| `test_nou/A_eligibil` | ARCADIA CATERING EVENIMENTE SRL | verde | administrator schimbat acum 4 luni → avertizare la Agentul de firmă, lămurită de contra-verificare (cifre stabile, banii din cont confirmă) |
+| `test_nou/B_neeligibil` | NORDIC STEEL MONTAJ SRL | roșu | bilanțul e identic cu ANAF (verificarea clasică ar aproba), dar: text ascuns în contract (Agentul de documente, documentul e izolat de LLM); 22 de angajați la ANAF, salarii pentru 3, doar 42% din bani în cont (Agentul financiar); beneficiarul contractului e înființat cu o lună înainte, are același telefon cu solicitantul și nu are cifră de afaceri (Agentul de contracte). Agentul de firmă dă OK |
+
+Testele manuale pentru demo: [docs/QA_MANUAL.md](../docs/QA_MANUAL.md).

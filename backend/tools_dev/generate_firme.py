@@ -471,3 +471,6 @@ if __name__ == "__main__":
     import generate_demo  # noqa: E402
 
     generate_demo.demo()  # cele doua dosare de incarcat in demo (firmele lor intra in registre)
+    import generate_test_nou  # noqa: E402
+
+    generate_test_nou.test_nou()  # doua dosare noi, alt format, pentru testul din demo

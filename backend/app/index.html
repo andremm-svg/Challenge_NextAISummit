@@ -52,6 +52,7 @@ button.btn:disabled { opacity: .55; cursor: default; }
 @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 .panel { background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--yellow); border-radius: 10px; padding: 14px 16px; }
 .panel + .panel { margin-top: 14px; }
+.two > .panel + .panel { margin-top: 0; }  /* panourile alaturate incep la acelasi nivel */
 .panel h2 { font-size: 16px; margin: 0 0 10px; }
 .muted { color: var(--muted); } .small { font-size: 12.5px; }
 .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -69,7 +70,7 @@ button.btn:disabled { opacity: .55; cursor: default; }
 .chip.warn, .chip.AVERTIZARE, .chip.LIPSA { background: var(--warn-bg); color: var(--warn); }
 .empty { color: var(--muted); padding: 34px 12px; text-align: center; }
 
-/* cardul dosarului: compact, cu Expand */
+/* cardul dosarului: compact, cu Detalii */
 .dosar { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel); }
 .dosar .head { padding: 16px 18px; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; align-items: center; }
 .dosar.ok .head { background: var(--ok-bg); border-bottom: 1px solid var(--ok-line); }
@@ -294,7 +295,7 @@ function show(el, r, ctx) {
   if (!el._bound) { el._bound = true; el.addEventListener("click", ev => onReportClick(ev, el)); }
 }
 
-// ------------------------------------------------------------ raportul: card compact + Expand
+// ------------------------------------------------------------ raportul: card compact + Detalii
 function renderReport(r, ctx) {
   const s = st(r.verdict), sol = r.solicitant || {};
   const info = SINT.find(x => x.dosar === r.dosar) || NOI.find(x => x.dosar === r.dosar) || {};
@@ -313,7 +314,7 @@ function renderReport(r, ctx) {
     <div class="body">
       ${r.erori_llm?.length ? `<div class="callout warn small"><b>Claude indisponibil</b>: ${/ExpiredToken/.test(r.erori_llm[0]) ? "token AWS expirat" : esc(r.erori_llm[0])}</div>` : ""}
       <div class="agents">${r.sub_agenti.map(a => agentCard(a, r)).join("")}</div>
-      <div style="margin-top:12px"><button class="xbtn" data-act="full">Expand</button></div>
+      <div style="margin-top:12px"><button class="xbtn" data-act="full">Detalii</button></div>
       <div class="full">${fullReport(r, ctx)}</div>
     </div>
   </div>
@@ -329,7 +330,7 @@ function agentCard(a, r) {
   return `<div class="agent ${esc(a.status)}">
     <div class="n">${esc(a.nume)}</div>
     <div class="res">${res}</div>
-    <button class="xbtn" data-act="agent">Expand</button>
+    <button class="xbtn" data-act="agent">Detalii</button>
     <div class="more">
       <ol class="items">${toate.map(f => findingItem(f)).join("")}</ol>
       ${a.rezumat ? `<div class="callout small" style="white-space:pre-line">${hi(a.rezumat.trim())}</div>` : ""}
@@ -422,8 +423,8 @@ function decisionForm(r) {
 function onReportClick(ev, el) {
     const b = ev.target.closest("[data-act]"); if (!b) return;
     const act = b.dataset.act, r = el._r, ctx = el._ctx;
-    if (act === "agent") { const c = b.closest(".agent"); c.classList.toggle("open"); b.textContent = c.classList.contains("open") ? "Restrânge" : "Expand"; }
-    if (act === "full") { const f = $(".full", el); f.classList.toggle("on"); b.classList.toggle("on"); b.textContent = f.classList.contains("on") ? "Restrânge" : "Expand"; }
+    if (act === "agent") { const c = b.closest(".agent"); c.classList.toggle("open"); b.textContent = c.classList.contains("open") ? "Restrânge" : "Detalii"; }
+    if (act === "full") { const f = $(".full", el); f.classList.toggle("on"); b.classList.toggle("on"); b.textContent = f.classList.contains("on") ? "Restrânge" : "Detalii"; }
     if (act === "raspuns") raspunsClient(b, r, ctx);
     if (act === "reup") {
       const d = r.documente_ilizibile[+b.dataset.i], inp = $(`[data-reup="${b.dataset.i}"]`, el);
