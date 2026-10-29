@@ -8,6 +8,9 @@ doar pe hârtie, rețele de firme-paravan care cer credite în același timp, co
 Sherlock investighează dosarul de credit al unei firme (SRL) sau al unui PFA și verifică dacă **cifrele declarate
 se regăsesc în realitate**.
 
+**Arhitectura, fluxul unui dosar, agenții, situațiile neprevăzute și cum acoperim criteriile juriului:
+[docs/ARHITECTURA.md](docs/ARHITECTURA.md).**
+
 ## Pornire rapidă
 
 Necesar: Git și Python 3.11+ (`winget install --id Git.Git -e`, `winget install --id Python.Python.3.12 -e`;
