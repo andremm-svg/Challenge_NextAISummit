@@ -167,6 +167,13 @@ pagina de feedback și pagina de rezultate.
 - Documentul de arhitectură (agenți, flux de date, situații neprevăzute, criteriile juriului, demo, teste):
   „Sherlock: arhitectura soluției”.
 
+### 10. Două dosare noi, eligibil și „De verificat” (29.10.2026)
+- În formatul dosarelor din bază (cerere PDF, bilanț PDF, extras CSV), cu firmele adăugate în `sherlock.db`
+  (`tools_dev/generate_dosare_noi.py`):
+  - `demo_dosare/4_dosar_eligibil_nou/`: CARPAT MOBILIER DESIGN SRL → verde, risc 0;
+  - `demo_dosare/5_dosar_de_verificat/`: DUNAREA TRANS LOGISTIC SRL → portocaliu, risc 24 (bilanț +16% față de ANAF
+    și doar 57% din cifra declarată intră în cont; două avertizări, nicio alarmă critică).
+
 ## Rezultatele după extindere (setul de test, 253 de dosare: 26 de fraude, 227 legitime)
 
 | Configurație | Recall | Precizie | Alarme false | Legitime la analist | Credite frauduloase oprite |

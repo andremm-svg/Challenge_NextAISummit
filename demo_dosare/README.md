@@ -44,6 +44,27 @@ declarați. Sherlock arată că banii nu există, salariile nu se plătesc și c
 3. Reîncarcă `1_dosar_eligibil/situatii_financiare.pdf`: verificarea se reia, iar dosarul devine verde.
    Scanarea înlocuită rămâne în dosar, la „Înlocuite (păstrate pentru audit)”.
 
+## 4. `4_dosar_eligibil_nou/`: CARPAT MOBILIER DESIGN SRL → verde, „Dosar eligibil”
+
+Credit de 600.000 lei pe 48 de luni, în același format ca dosarele din bază (cerere, bilanț, extras; fără contract).
+Bilanțul din dosar e identic cu ANAF (3,12 mil. lei), în cont intră ~3,1 mil. lei pe an, salariile se plătesc
+pentru toți cei 16 angajați, același administrator din 2016. Risc: **0**, toți sub-agenții dau OK.
+
+## 5. `5_dosar_de_verificat/`: DUNAREA TRANS LOGISTIC SRL → portocaliu, „De verificat”
+
+Credit de 450.000 lei pe 36 de luni. Nu e o fraudă evidentă, ci un caz pentru analist:
+
+| Sub-agent | Constatare | Dovada |
+|---|---|---|
+| Agentul financiar | bilanț diferit de ANAF (avertizare) | dosar 2,15 mil. lei vs. ANAF 1,85 mil. lei (+16%; avertizare de la 8%, critic de la 25%) |
+| Agentul financiar | banii intră doar parțial în cont (avertizare) | ~1,23 mil. lei pe an, 57% din cifra declarată (avertizare sub 75%, critic sub 50%) |
+| Agentul de documente, de firmă, de contracte | OK | firmă din 2018, același administrator, 9 angajați plătiți |
+
+Risc: **24**. Contra-verificarea nu poate lămuri cele două avertizări (se susțin una pe alta), așa că dosarul
+ajunge la analist. Profitul acoperă ratele doar de 0,8 ori (informativ).
+
+Regenerare pentru 4 și 5: `python backend/tools_dev/generate_dosare_noi.py` (după `generate_demo.py`, dacă baza a fost refăcută).
+
 ## După demo
 
 Dosarele încărcate apar în tab-ul „Dosare”, la „Dosare noi” (`N001`, `N002`…). Pentru o repetiție de la zero:
