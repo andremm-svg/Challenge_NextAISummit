@@ -14,7 +14,7 @@ from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
-from sherlock.agent import investigate, investigate_folder
+from sherlock.agent import investigate_folder
 
 ROOT = Path(__file__).resolve().parent
 DEMO = ROOT / "data" / "dosare"

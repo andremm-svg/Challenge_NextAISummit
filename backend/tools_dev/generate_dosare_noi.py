@@ -18,7 +18,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import generate_demo as D  # noqa: E402
-import generate_firme as G  # noqa: E402
 
 R = random.Random(2910)
 

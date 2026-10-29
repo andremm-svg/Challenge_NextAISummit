@@ -6,7 +6,7 @@ Toate deciziile sunt deterministe si vin cu dovezi; LLM-ul doar orchestreaza si 
 """
 import json
 import sqlite3
-from datetime import date, datetime
+from datetime import date
 from pathlib import Path
 
 import yaml

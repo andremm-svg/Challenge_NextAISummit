@@ -10,13 +10,21 @@ se regăsesc în realitate**.
 
 ## Pornire rapidă
 
+Necesar: Git și Python 3.11+ (`winget install --id Git.Git -e`, `winget install --id Python.Python.3.12 -e`;
+după instalare, PowerShell se redeschide).
+
 ```powershell
-cd backend
+git clone https://github.com/andremm-svg/Challenge_NextAISummit.git
+cd Challenge_NextAISummit\backend
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1             # dacă e blocat: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 pip install -r requirements.txt
+copy .env.example .env                   # AWS_REGION și AWS_BEARER_TOKEN_BEDROCK, primite pe privat
 python -m uvicorn main:app --reload      # aplicația: http://127.0.0.1:8000/app/  ·  API: /docs
 ```
+
+După o clonă nouă, cele 506 dosare de test apar „Neanalizat” până la prima scanare: tab-ul Portofoliu → Scanează acum
+(~1 minut, fără cheie), apoi F5. Rezultatul scanării și dosarele încărcate rămân locale (nu intră în git).
 
 Aplicația rulează cu **Claude pe Amazon Bedrock** (cheile AWS în `backend/.env`, vezi „Alegerea LLM-ului”).
 Antetul aplicației arată dacă Claude răspunde; dacă tokenul AWS a expirat, apare „Claude indisponibil”.
@@ -314,7 +322,7 @@ cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-copy .env.example .env      # apoi pune cheia Featherless în .env
+copy .env.example .env      # apoi cheile Bedrock (sau Featherless) în .env
 ```
 
 ## Alegerea LLM-ului
